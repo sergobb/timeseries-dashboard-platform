@@ -4,6 +4,8 @@ All code generated with AI.
 
 Next.js application for working with time series data from external databases (PostgreSQL, ClickHouse) with role-based access control, metadata management, and interactive dashboard building using Highcharts.
 
+📖 **[User Guide](doc/user-guide.md)** - Complete user documentation with step-by-step instructions for all features.
+
 ## Key Features
 
 - **External Database Connections** - PostgreSQL and ClickHouse
