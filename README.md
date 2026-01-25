@@ -1,100 +1,221 @@
+All code generated with AI.
+
 # Timeseries Dashboard Platform
 
-Next.js приложение для работы с временными рядами из внешних баз данных (PostgreSQL, ClickHouse) с системой ролей, метаданных и построением дашбордов на Plotly.
+Next.js application for working with time series data from external databases (PostgreSQL, ClickHouse) with role-based access control, metadata management, and interactive dashboard building using Highcharts.
 
-## Основные возможности
+## Key Features
 
-- Подключение к внешним базам данных (PostgreSQL, ClickHouse)
-- Управление метаданными таблиц и колонок
-- Создание интерактивных дашбордов с графиками Plotly
-- Система ролей и авторизации
-- Публичный доступ к дашбордам
+- **External Database Connections** - PostgreSQL and ClickHouse
+- **Metadata Management** - table and column descriptions for convenient work
+- **Data Sources** - table selection from connected databases
+- **Data Sets** - combining data sources with support for pre-aggregation
+- **Chart Creation** - various chart types (line, bar, scatter, area, spline) with axis configuration, filters, and aggregations
+- **Interactive Dashboards** - building dashboards with multiple charts, customizable layouts
+- **Role-Based Access Control** - NextAuth with support for various roles
+- **User Groups** - collaborative work on dashboards
+- **Public Access** - ability to share dashboards without authentication
+- **Dark Theme** - support for light and dark interface themes
 
-## Системные требования
+## Tech Stack
 
-- Node.js 18+
-- MongoDB (для хранения данных приложения)
-- PostgreSQL или ClickHouse (внешние базы данных для временных рядов)
+- **Frontend**: Next.js 16 (App Router), React 19, TypeScript
+- **Styling**: Tailwind CSS 4
+- **Charts**: Highcharts 12
+- **Database**: MongoDB (for metadata and configurations)
+- **External DBs**: PostgreSQL, ClickHouse
+- **Authentication**: NextAuth 5
+- **Validation**: Zod
+- **Forms**: React Hook Form
 
-## Установка
+## System Requirements
 
-1. Установите зависимости:
+- Node.js 20+
+- MongoDB (for application data storage)
+- PostgreSQL or ClickHouse (external databases for time series)
+
+## Installation
+
+### Local Development
+
+1. Install dependencies:
 ```bash
 npm install
 ```
 
-2. Создайте файл `.env.local` на основе `.env.local.example`:
+2. Create `.env.local` file:
 ```bash
 MONGODB_URI=mongodb://localhost:27017/timeseries-dashboard
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=your-secret-key-here
 ENCRYPTION_KEY=your-encryption-key-here
+AUTH_TRUST_HOST=true
 ```
 
-3. Запустите приложение в режиме разработки:
+3. Run the application in development mode:
 ```bash
 npm run dev
 ```
 
-Откройте [http://localhost:3000](http://localhost:3000) в браузере.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Роли пользователей
+### Docker
 
-- **db_admin** - управление подключениями к внешним БД
-- **metadata_editor** - создание и редактирование метаданных
-- **dashboard_creator** - создание дашбордов
-- **public** (без авторизации) - просмотр публичных дашбордов
+1. Ensure the `constructor_net` network is created:
+```bash
+docker network create constructor_net
+```
 
-## Структура проекта
+2. Start via docker-compose:
+```bash
+docker-compose up -d
+```
 
-- `app/` - Next.js App Router страницы и API routes
-- `lib/` - сервисы, утилиты, драйверы БД
-- `components/` - React компоненты
-- `types/` - TypeScript типы
+The application will be available at [http://localhost:8080](http://localhost:8080) (through nginx).
+
+On first startup, an administrative user is automatically created via the `create-user-admin.cjs` script.
+
+## User Roles
+
+- **db_admin** - manage connections to external databases
+- **metadata_editor** - create and edit metadata, data sources, and data sets
+- **dashboard_creator** - create and edit dashboards
+- **public** (without authentication) - view public dashboards
+
+## Project Structure
+
+```
+├── app/                    # Next.js App Router
+│   ├── (auth)/            # Authentication pages
+│   ├── api/               # API routes
+│   ├── dashboards/        # Dashboard pages
+│   ├── data-sets/         # Data set pages
+│   ├── data-sources/      # Data source pages
+│   ├── database-connections/ # Database connection pages
+│   ├── groups/            # Group pages
+│   └── users/             # User pages
+├── components/            # React components
+│   ├── dashboard/         # Dashboard components
+│   ├── data-sets/         # Data set components
+│   ├── data-sources/      # Data source components
+│   ├── database-connections/ # Connection components
+│   ├── groups/            # Group components
+│   ├── ui/                # UI components
+│   └── providers/         # React providers
+├── lib/                   # Libraries and utilities
+│   ├── services/         # Business logic (services)
+│   ├── drivers/           # Database drivers (PostgreSQL, ClickHouse)
+│   └── ...                # Utilities
+├── hooks/                 # React hooks
+├── types/                 # TypeScript types
+└── scripts/               # Database utility scripts
+```
 
 ## API Endpoints
 
-### Аутентификация
-- `POST /api/auth/register` - регистрация пользователя
+### Authentication
+- `POST /api/auth/register` - user registration
 - `POST /api/auth/[...nextauth]` - NextAuth endpoints
 
-### Подключения к БД
-- `GET /api/database-connections` - список подключений
-- `POST /api/database-connections` - создание подключения
-- `GET /api/database-connections/[id]` - получение подключения
-- `PUT /api/database-connections/[id]` - обновление подключения
-- `DELETE /api/database-connections/[id]` - удаление подключения
-- `POST /api/database-connections/[id]/test` - тест подключения
-- `GET /api/database-connections/[id]/tables` - список таблиц
-- `POST /api/database-connections/[id]/tables` - выбор таблицы
+### Database Connections
+- `GET /api/database-connections` - list connections
+- `POST /api/database-connections` - create connection
+- `GET /api/database-connections/[id]` - get connection
+- `PUT /api/database-connections/[id]` - update connection
+- `DELETE /api/database-connections/[id]` - delete connection
+- `POST /api/database-connections/[id]/test` - test connection
+- `GET /api/database-connections/[id]/tables` - list tables
+- `GET /api/database-connections/[id]/schemas` - list schemas
+- `GET /api/database-connections/[id]/schemas/[schema]/tables` - tables in schema
 
-### Метаданные
-- `GET /api/metadata` - список метаданных
-- `POST /api/metadata` - создание метаданных
-- `GET /api/metadata/[id]` - получение метаданных
-- `PUT /api/metadata/[id]` - обновление метаданных
-- `DELETE /api/metadata/[id]` - удаление метаданных
+### Data Sources
+- `GET /api/data-sources` - list data sources
+- `POST /api/data-sources` - create data sources from tables
+- `GET /api/data-sources/[id]` - get data source
+- `PUT /api/data-sources/[id]` - update data source
+- `DELETE /api/data-sources/[id]` - delete data source
 
-### Дашборды
-- `GET /api/dashboards` - список дашбордов
-- `POST /api/dashboards` - создание дашборда
-- `GET /api/dashboards/[id]` - получение дашборда
-- `PUT /api/dashboards/[id]` - обновление дашборда
-- `DELETE /api/dashboards/[id]` - удаление дашборда
-- `POST /api/dashboards/[id]/share` - поделиться дашбордом
+### Data Sets
+- `GET /api/data-sets` - list data sets
+- `POST /api/data-sets` - create data set
+- `GET /api/data-sets/[id]` - get data set
+- `PUT /api/data-sets/[id]` - update data set
+- `DELETE /api/data-sets/[id]` - delete data set
 
-### Данные
-- `POST /api/data/query` - выполнение запроса данных для графиков
+### Metadata
+- `GET /api/metadata` - list metadata
+- `POST /api/metadata` - create metadata
+- `GET /api/metadata/[id]` - get metadata
+- `PUT /api/metadata/[id]` - update metadata
+- `DELETE /api/metadata/[id]` - delete metadata
+- `GET /api/metadata/table/[tableId]` - table metadata
 
-## Разработка
+### Charts
+- `GET /api/charts` - list charts (optional: `?dashboardId=...`)
+- `POST /api/charts` - create chart
+- `GET /api/charts/[id]` - get chart
+- `PUT /api/charts/[id]` - update chart
+- `DELETE /api/charts/[id]` - delete chart
 
-Для сборки продакшн версии:
+### Dashboards
+- `GET /api/dashboards` - list dashboards
+- `POST /api/dashboards` - create dashboard
+- `GET /api/dashboards/[id]` - get dashboard
+- `PUT /api/dashboards/[id]` - update dashboard
+- `DELETE /api/dashboards/[id]` - delete dashboard
+- `POST /api/dashboards/[id]/share` - share dashboard
+
+### Groups
+- `GET /api/groups` - list user groups
+- `POST /api/groups` - create group
+- `GET /api/groups/[id]` - get group
+- `PUT /api/groups/[id]` - update group
+- `DELETE /api/groups/[id]` - delete group
+
+### Users
+- `GET /api/users` - list users
+- `PUT /api/users/roles` - update user roles
+
+### Profile
+- `GET /api/profile` - get profile
+- `PUT /api/profile` - update profile
+- `PUT /api/profile/password` - change password
+
+### Data
+- `POST /api/data/query` - execute data query for charts
+
+## Development
+
+### Production Build
 ```bash
 npm run build
 npm start
 ```
 
-Для проверки линтера:
+### Linter Check
 ```bash
 npm run lint
 ```
+
+## Scripts
+
+The `scripts/` folder contains database utility scripts:
+
+- **create-user-admin.cjs** - create administrative user (automatically runs on Docker container startup)
+- **add-roles-to-user.js** - add roles to user
+- **backfill-series-labels.js** - migration: populate series labels from Y-column description
+
+For more details, see [scripts/README.md](scripts/README.md)
+
+## Features
+
+- **Credential Encryption** - passwords and database connection strings are encrypted before storage
+- **Query Caching** - support for data caching to optimize performance
+- **Pre-aggregation** - ability to configure data pre-aggregation in data sets
+- **Flexible Layouts** - support for various chart placement options on dashboards
+- **Data Filtering** - time ranges and value filters
+- **Aggregations** - support for various aggregation types (avg, sum, min, max, count)
+
+## License
+
+Private
