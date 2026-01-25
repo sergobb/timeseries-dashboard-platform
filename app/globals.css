@@ -1,0 +1,150 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --surface: #ffffff;
+  --surface-muted: #f4f4f5;
+  --border: #e4e4e7;
+  --border-muted: #d4d4d8;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  --primary: #0f172a;
+  --primary-foreground: #ffffff;
+  --secondary: #e4e4e7;
+  --secondary-foreground: #0f172a;
+  --accent: #2563eb;
+  --accent-foreground: #ffffff;
+  --ring: #0f172a;
+  --input: #ffffff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-border: var(--border);
+  --color-border-muted: var(--border-muted);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* Dark theme */
+.dark {
+  --background: #0a0a0a;
+  --foreground: #f4f4f5;
+  --surface: #18181b;
+  --surface-muted: #27272a;
+  --border: #3f3f46;
+  --border-muted: #52525b;
+  --muted: #27272a;
+  --muted-foreground: #a1a1aa;
+  --primary: #f4f4f5;
+  --primary-foreground: #0a0a0a;
+  --secondary: #3f3f46;
+  --secondary-foreground: #f4f4f5;
+  --accent: #3b82f6;
+  --accent-foreground: #eff6ff;
+  --ring: #60a5fa;
+  --input: #18181b;
+}
+
+/* Light theme (explicit) */
+.light {
+  --background: #ffffff;
+  --foreground: #171717;
+  --surface: #ffffff;
+  --surface-muted: #f4f4f5;
+  --border: #e4e4e7;
+  --border-muted: #d4d4d8;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  --primary: #0f172a;
+  --primary-foreground: #ffffff;
+  --secondary: #e4e4e7;
+  --secondary-foreground: #0f172a;
+  --accent: #2563eb;
+  --accent-foreground: #ffffff;
+  --ring: #0f172a;
+  --input: #ffffff;
+}
+
+/* Light blue theme */
+.light-blue {
+  --background: #eaf3ff;
+  --foreground: #0b1b2b;
+  --surface: #f7fbff;
+  --surface-muted: #e6f0ff;
+  --border: #c7ddff;
+  --border-muted: #a9c9ff;
+  --muted: #e3efff;
+  --muted-foreground: #3a4f6a;
+  --primary: #1d4ed8;
+  --primary-foreground: #f7fbff;
+  --secondary: #d6e7ff;
+  --secondary-foreground: #0b1b2b;
+  --accent: #2563eb;
+  --accent-foreground: #f7fbff;
+  --ring: #1d4ed8;
+  --input: #f7fbff;
+}
+
+/* Dark blue theme */
+.dark-blue {
+  --background: #0b1220;
+  --foreground: #e6f0ff;
+  --surface: #0f1b2d;
+  --surface-muted: #13233a;
+  --border: #1f2a44;
+  --border-muted: #2a3a5c;
+  --muted: #13233a;
+  --muted-foreground: #b9c7dd;
+  --primary: #60a5fa;
+  --primary-foreground: #0b1220;
+  --secondary: #1f2a44;
+  --secondary-foreground: #e6f0ff;
+  --accent: #93c5fd;
+  --accent-foreground: #0b1220;
+  --ring: #60a5fa;
+  --input: #0f1b2d;
+}
+
+/* System theme fallback */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light):not(.dark):not(.light-blue):not(.dark-blue) {
+    --background: #0a0a0a;
+    --foreground: #f4f4f5;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* React Day Picker styles */
+.rdp {
+  --rdp-cell-size: 36px;
+  --rdp-accent-color: var(--accent);
+  --rdp-background-color: transparent;
+  --rdp-accent-color-dark: var(--accent);
+  --rdp-background-color-dark: transparent;
+  --rdp-outline: 2px solid var(--rdp-accent-color);
+  --rdp-outline-selected: 2px solid var(--rdp-accent-color);
+}
+
