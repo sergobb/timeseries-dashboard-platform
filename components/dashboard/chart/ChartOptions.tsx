@@ -3,6 +3,7 @@
 import Label from '@/components/ui/Label';
 import Select from '@/components/ui/Select';
 import Input from '@/components/ui/Input';
+import Checkbox from '@/components/ui/Checkbox';
 import { ChartOptions } from '@/types/chart';
 
 export type ChartOptionsField =
@@ -21,7 +22,9 @@ export type ChartOptionsField =
   | 'height'
   | 'plotBackgroundColor'
   | 'plotBorderWidth'
-  | 'plotBorderColor';
+  | 'plotBorderColor'
+  | 'tooltip.split'
+  | 'tooltip.shared';
 
 interface ChartOptionsProps {
   chartId: string;
@@ -70,6 +73,19 @@ export default function ChartOptionsComponent({
       ...options,
       subtitleStyle: {
         ...options.subtitleStyle,
+        [key]: value,
+      },
+    });
+  };
+
+  const updateTooltip = <K extends keyof NonNullable<ChartOptions['tooltip']>>(
+    key: K,
+    value: NonNullable<ChartOptions['tooltip']>[K]
+  ) => {
+    onOptionsChange({
+      ...options,
+      tooltip: {
+        ...options.tooltip,
         [key]: value,
       },
     });
@@ -329,6 +345,32 @@ export default function ChartOptionsComponent({
             value={options.plotBorderColor || '#cccccc'}
             onChange={(e) => updateOption('plotBorderColor', e.target.value)}
           />
+        </div>
+      )}
+
+      {isVisible('tooltip.split') && (
+        <div className="flex items-center gap-2">
+          <Checkbox
+            id={`chart-tooltip-split-${chartId}`}
+            checked={options.tooltip?.split || false}
+            onChange={(e) => updateTooltip('split', e.target.checked)}
+          />
+          <Label htmlFor={`chart-tooltip-split-${chartId}`} className="text-xs cursor-pointer">
+            Split
+          </Label>
+        </div>
+      )}
+
+      {isVisible('tooltip.shared') && (
+        <div className="flex items-center gap-2">
+          <Checkbox
+            id={`chart-tooltip-shared-${chartId}`}
+            checked={options.tooltip?.shared || false}
+            onChange={(e) => updateTooltip('shared', e.target.checked)}
+          />
+          <Label htmlFor={`chart-tooltip-shared-${chartId}`} className="text-xs cursor-pointer">
+            Shared
+          </Label>
         </div>
       )}
     </div>

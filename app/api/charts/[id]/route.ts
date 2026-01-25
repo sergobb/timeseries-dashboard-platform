@@ -88,6 +88,10 @@ const chartOptionsSchema = z.object({
   plotBackgroundColor: z.string().optional(),
   plotBorderWidth: z.number().optional(),
   plotBorderColor: z.string().optional(),
+  tooltip: z.object({
+    split: z.boolean().optional(),
+    shared: z.boolean().optional(),
+  }).optional(),
 });
 
 const xAxisOptionsSchema = z.object({

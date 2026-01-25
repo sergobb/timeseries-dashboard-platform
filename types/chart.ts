@@ -73,6 +73,10 @@ export interface ChartOptions {
   plotBackgroundColor?: string;
   plotBorderWidth?: number;
   plotBorderColor?: string;
+  tooltip?: {
+    split?: boolean;
+    shared?: boolean;
+  };
 }
 
 export interface XAxisOptions {

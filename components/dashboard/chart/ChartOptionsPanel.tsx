@@ -184,6 +184,15 @@ export default function ChartOptionsPanel({
                 ]}
               />
             </ChartOptionsAccordion>
+
+            <ChartOptionsAccordion title="ToolTips">
+              <ChartOptionsComponent
+                chartId={dashboardId}
+                options={chartOptions}
+                onOptionsChange={onChartOptionsChange}
+                visibleFields={['tooltip.split', 'tooltip.shared']}
+              />
+            </ChartOptionsAccordion>
           </div>
         ),
       },

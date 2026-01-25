@@ -126,6 +126,8 @@ export function buildHighchartsOptions(
       style: {
         color: colors.textColor,
       },
+      split: chartOptions.tooltip?.split ?? false,
+      shared: chartOptions.tooltip?.shared ?? false,
     },
     xAxis: {
       title: {
