@@ -61,7 +61,7 @@ interface Series {
   yAxisId: string;
   chartType: ChartType;
   options?: SeriesOptions;
-  chartData?: [number, number][];
+  chartData?: [number, number | null][];
 }
 
 interface ThemeColors {
@@ -268,6 +268,8 @@ export function buildHighchartsOptions(
           yAxis: resolvedYAxisIndex,
           xAxis: 0,
           data: s.chartData || [],
+          nullInteraction: false,
+          connectNulls: false,
         };
 
         if (s.chartType === 'line') {

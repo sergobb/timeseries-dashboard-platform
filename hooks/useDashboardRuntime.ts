@@ -12,7 +12,7 @@ export type DashboardChartSeriesWithData = {
   yAxisId: string;
   chartType: Chart['series'][number]['chartType'];
   options?: Chart['series'][number]['options'];
-  chartData: [number, number][];
+  chartData: [number, number | null][];
 };
 
 export type UseDashboardRuntimeResult = {
@@ -79,7 +79,7 @@ export function useDashboardRuntime(dashboard: Dashboard): UseDashboardRuntimeRe
 
           const result = await response.json();
           const rows = ((result as { data?: Array<Record<string, unknown>> }).data || []) as Array<Record<string, unknown>>;
-          const chartData: [number, number][] = rows
+          const chartData: [number, number | null][] = rows
             .map((row) => {
               const xValue = row[s.xAxisColumn];
               const yValue = row[s.yColumnName];
@@ -90,8 +90,17 @@ export function useDashboardRuntime(dashboard: Dashboard): UseDashboardRuntimeRe
               else if (typeof xValue === 'number') timestamp = xValue;
               else timestamp = Date.parse(String(xValue));
 
-              const numValue = typeof yValue === 'number' ? yValue : parseFloat(String(yValue)) || 0;
-              return [timestamp, numValue] as [number, number];
+              // Преобразуем yValue в число, сохраняя null значения
+              let numValue: number | null;
+              if (yValue === null || yValue === undefined) {
+                numValue = null;
+              } else if (typeof yValue === 'number') {
+                numValue = yValue;
+              } else {
+                const parsed = parseFloat(String(yValue));
+                numValue = isNaN(parsed) ? null : parsed;
+              }
+              return [timestamp, numValue] as [number, number | null];
             })
             .sort((a, b) => a[0] - b[0]);
 

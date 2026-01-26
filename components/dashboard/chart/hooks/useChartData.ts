@@ -90,7 +90,7 @@ export function useChartData() {
     seriesId: string,
     series: Series,
     dateRange: { from: Date; to: Date }
-  ): Promise<[number, number][] | null> => {
+  ): Promise<[number, number | null][] | null> => {
     if (!series.dataSetId || !series.xAxisColumn || !series.yColumnName || !dateRange) {
       return null;
     }
@@ -124,7 +124,7 @@ export function useChartData() {
       const data = ((result as { data?: Array<Record<string, unknown>> }).data || []) as Array<Record<string, unknown>>;
 
       // Преобразуем данные в формат Highcharts [timestamp, value]
-      const chartData: [number, number][] = data.map((row) => {
+      const chartData: [number, number | null][] = data.map((row) => {
         const xValue = row[series.xAxisColumn];
         const yValue = row[series.yColumnName];
 
@@ -140,8 +140,16 @@ export function useChartData() {
           timestamp = Date.parse(String(xValue));
         }
 
-        // Преобразуем yValue в число
-        const numValue = typeof yValue === 'number' ? yValue : parseFloat(String(yValue)) || 0;
+        // Преобразуем yValue в число, сохраняя null значения
+        let numValue: number | null;
+        if (yValue === null || yValue === undefined) {
+          numValue = null;
+        } else if (typeof yValue === 'number') {
+          numValue = yValue;
+        } else {
+          const parsed = parseFloat(String(yValue));
+          numValue = isNaN(parsed) ? null : parsed;
+        }
 
         return [timestamp, numValue];
       });

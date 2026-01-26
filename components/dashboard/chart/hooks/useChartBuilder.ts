@@ -19,7 +19,7 @@ export interface Series {
   yAxisId: string;
   chartType: ChartType;
   options?: SeriesOptions;
-  chartData?: [number, number][];
+  chartData?: [number, number | null][];
 }
 
 export function useChartBuilder() {
