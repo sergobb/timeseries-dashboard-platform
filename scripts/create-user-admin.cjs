@@ -1,7 +1,7 @@
 const { MongoClient } = require('mongodb');
 const bcrypt = require('bcryptjs');
 
-const email = 'user_admin';
+const email = 'user_admin@gmail.com';
 const password = 'user_admin';
 const role = 'user_admin';
 

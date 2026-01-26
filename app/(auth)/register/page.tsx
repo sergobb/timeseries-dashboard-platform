@@ -8,7 +8,7 @@ import Container from '@/components/ui/Container';
 import Card from '@/components/ui/Card';
 import Box from '@/components/ui/Box';
 import Flex from '@/components/ui/Flex';
-import Label from '@/components/ui/Label';
+import FormField from '@/components/ui/FormField';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import Text from '@/components/ui/Text';
@@ -90,12 +90,8 @@ export default function RegisterPage() {
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             {error && <ErrorMessage message={error} />}
             <Flex direction="col" gap="4" align="stretch">
-              <Box>
-                <Label htmlFor="email" className="mb-1">
-                  E-mail address/Login <span className="text-red-500">*</span>
-                </Label>
+              <FormField label="E-mail address/Login" required>
                 <Input
-                  id="email"
                   name="email"
                   type="email"
                   required
@@ -103,13 +99,9 @@ export default function RegisterPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
-              </Box>
-              <Box>
-                <Label htmlFor="lastName" className="mb-1">
-                  Last Name <span className="text-red-500">*</span>
-                </Label>
+              </FormField>
+              <FormField label="Last Name" required>
                 <Input
-                  id="lastName"
                   name="lastName"
                   type="text"
                   required
@@ -117,13 +109,9 @@ export default function RegisterPage() {
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                 />
-              </Box>
-              <Box>
-                <Label htmlFor="firstName" className="mb-1">
-                  First Name <span className="text-red-500">*</span>
-                </Label>
+              </FormField>
+              <FormField label="First Name" required>
                 <Input
-                  id="firstName"
                   name="firstName"
                   type="text"
                   required
@@ -131,52 +119,36 @@ export default function RegisterPage() {
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                 />
-              </Box>
-              <Box>
-                <Label htmlFor="middleName" className="mb-1">
-                  Middle Name (optional)
-                </Label>
+              </FormField>
+              <FormField label="Middle Name (optional)">
                 <Input
-                  id="middleName"
                   name="middleName"
                   type="text"
                   placeholder="Enter middle name (optional)"
                   value={middleName}
                   onChange={(e) => setMiddleName(e.target.value)}
                 />
-              </Box>
-              <Box>
-                <Label htmlFor="organization" className="mb-1">
-                  Organization (optional)
-                </Label>
+              </FormField>
+              <FormField label="Organization (optional)">
                 <Input
-                  id="organization"
                   name="organization"
                   type="text"
                   placeholder="Enter organization (optional)"
                   value={organization}
                   onChange={(e) => setOrganization(e.target.value)}
                 />
-              </Box>
-              <Box>
-                <Label htmlFor="department" className="mb-1">
-                  Department (optional)
-                </Label>
+              </FormField>
+              <FormField label="Department (optional)">
                 <Input
-                  id="department"
                   name="department"
                   type="text"
                   placeholder="Enter department (optional)"
                   value={department}
                   onChange={(e) => setDepartment(e.target.value)}
                 />
-              </Box>
-              <Box>
-                <Label htmlFor="password" className="mb-1">
-                  Password <span className="text-red-500">*</span>
-                </Label>
+              </FormField>
+              <FormField label="Password" required>
                 <Input
-                  id="password"
                   name="password"
                   type="password"
                   required
@@ -185,13 +157,13 @@ export default function RegisterPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
-              </Box>
-              <Box>
-                <Label htmlFor="confirmPassword" className="mb-1">
-                  Confirm Password <span className="text-red-500">*</span>
-                </Label>
+              </FormField>
+              <FormField
+                label="Confirm Password"
+                required
+                error={passwordsMismatch ? 'Passwords do not match' : undefined}
+              >
                 <Input
-                  id="confirmPassword"
                   name="confirmPassword"
                   type="password"
                   required
@@ -205,7 +177,7 @@ export default function RegisterPage() {
                       : ''
                   }
                 />
-              </Box>
+              </FormField>
             </Flex>
             <Box className="flex justify-center">
               <Button type="submit" disabled={!canSubmit}>

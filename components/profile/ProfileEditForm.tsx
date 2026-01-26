@@ -1,7 +1,5 @@
-import { ChangeEvent } from 'react';
 import Card from '@/components/ui/Card';
-import Box from '@/components/ui/Box';
-import Label from '@/components/ui/Label';
+import FormField from '@/components/ui/FormField';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import Text from '@/components/ui/Text';
@@ -40,83 +38,58 @@ export default function ProfileEditForm({
   onDepartmentChange,
   onSave,
 }: ProfileEditFormProps) {
-  const handleFirstNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    onFirstNameChange(e.target.value);
-  };
-
-  const handleLastNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    onLastNameChange(e.target.value);
-  };
-
-  const handleMiddleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    onMiddleNameChange(e.target.value);
-  };
-
-  const handleOrganizationChange = (e: ChangeEvent<HTMLInputElement>) => {
-    onOrganizationChange(e.target.value);
-  };
-
-  const handleDepartmentChange = (e: ChangeEvent<HTMLInputElement>) => {
-    onDepartmentChange(e.target.value);
-  };
-
   return (
     <Card className="p-6 space-y-6">
-      <Box>
-        <Label className="mb-2">
-          Email <span className="text-red-500">*</span>
-        </Label>
+      <FormField
+        label="Email"
+        required
+        hint="Email cannot be changed."
+      >
         <Input value={email} disabled />
-        <Text size="xs" variant="muted" className="mt-2">
-          Email cannot be changed.
-        </Text>
-      </Box>
-      <Box>
-        <Label className="mb-2">
-          Last Name <span className="text-red-500">*</span>
-        </Label>
+      </FormField>
+      <FormField
+        label="Last Name"
+        required
+      >
         <Input
           value={lastName}
-          onChange={handleLastNameChange}
+          onChange={(e) => onLastNameChange(e.target.value)}
           placeholder="Enter last name"
           required
         />
-      </Box>
-      <Box>
-        <Label className="mb-2">
-          First Name <span className="text-red-500">*</span>
-        </Label>
+      </FormField>
+      <FormField
+        label="First Name"
+        required
+      >
         <Input
           value={firstName}
-          onChange={handleFirstNameChange}
+          onChange={(e) => onFirstNameChange(e.target.value)}
           placeholder="Enter first name"
           required
         />
-      </Box>
-      <Box>
-        <Label className="mb-2">Middle Name</Label>
+      </FormField>
+      <FormField label="Middle Name">
         <Input
           value={middleName}
-          onChange={handleMiddleNameChange}
+          onChange={(e) => onMiddleNameChange(e.target.value)}
           placeholder="Enter middle name (optional)"
         />
-      </Box>
-      <Box>
-        <Label className="mb-2">Organization</Label>
+      </FormField>
+      <FormField label="Organization">
         <Input
           value={organization}
-          onChange={handleOrganizationChange}
+          onChange={(e) => onOrganizationChange(e.target.value)}
           placeholder="Enter organization (optional)"
         />
-      </Box>
-      <Box>
-        <Label className="mb-2">Department</Label>
+      </FormField>
+      <FormField label="Department">
         <Input
           value={department}
-          onChange={handleDepartmentChange}
+          onChange={(e) => onDepartmentChange(e.target.value)}
           placeholder="Enter department (optional)"
         />
-      </Box>
+      </FormField>
       <Flex justify="between" align="center">
         {success ? (
           <Text size="sm" variant="muted">

@@ -1,7 +1,6 @@
-import { ChangeEvent } from 'react';
 import Card from '@/components/ui/Card';
 import Box from '@/components/ui/Box';
-import Label from '@/components/ui/Label';
+import FormField from '@/components/ui/FormField';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import Text from '@/components/ui/Text';
@@ -32,18 +31,6 @@ export default function ProfilePasswordForm({
   onConfirmNewPasswordChange,
   onSave,
 }: ProfilePasswordFormProps) {
-  const handleCurrentPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-    onCurrentPasswordChange(e.target.value);
-  };
-
-  const handleNewPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-    onNewPasswordChange(e.target.value);
-  };
-
-  const handleConfirmPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-    onConfirmNewPasswordChange(e.target.value);
-  };
-
   const passwordsMismatch =
     newPassword.length > 0 &&
     confirmNewPassword.length > 0 &&
@@ -58,36 +45,31 @@ export default function ProfilePasswordForm({
 
   return (
     <Card className="p-6 space-y-6">
-      <Box>
-        <Label className="mb-2">
-          Current Password <span className="text-red-500">*</span>
-        </Label>
+      <FormField label="Current Password" required>
         <Input
           value={currentPassword}
-          onChange={handleCurrentPasswordChange}
+          onChange={(e) => onCurrentPasswordChange(e.target.value)}
           placeholder="Current password"
           type="password"
         />
-      </Box>
-      <Box>
-        <Label className="mb-2">
-          New Password <span className="text-red-500">*</span>
-        </Label>
+      </FormField>
+      <FormField label="New Password" required>
         <Input
           value={newPassword}
-          onChange={handleNewPasswordChange}
+          onChange={(e) => onNewPasswordChange(e.target.value)}
           placeholder="Enter new password"
           type="password"
           minLength={6}
         />
-      </Box>
-      <Box>
-        <Label className="mb-2">
-          Confirm New Password <span className="text-red-500">*</span>
-        </Label>
+      </FormField>
+      <FormField
+        label="Confirm New Password"
+        required
+        error={passwordsMismatch ? 'Passwords do not match' : undefined}
+      >
         <Input
           value={confirmNewPassword}
-          onChange={handleConfirmPasswordChange}
+          onChange={(e) => onConfirmNewPasswordChange(e.target.value)}
           placeholder="Confirm new password"
           type="password"
           minLength={6}
@@ -97,7 +79,7 @@ export default function ProfilePasswordForm({
               : ''
           }
         />
-      </Box>
+      </FormField>
       <Flex justify="between" align="center">
         <Box>
           {error && (

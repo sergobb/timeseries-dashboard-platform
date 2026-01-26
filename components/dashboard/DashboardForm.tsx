@@ -1,8 +1,7 @@
+import FormField from '@/components/ui/FormField';
 import Input from '@/components/ui/Input';
 import Textarea from '@/components/ui/Textarea';
 import Select from '@/components/ui/Select';
-import Label from '@/components/ui/Label';
-import Box from '@/components/ui/Box';
 import { PRESET_RANGES } from '@/lib/date-ranges';
 import { Group } from '@/types/group';
 import DashboardGroupsSelector from './DashboardGroupsSelector';
@@ -40,37 +39,25 @@ export default function DashboardForm({
 }: DashboardFormProps) {
   return (
     <>
-      <Box>
-        <Label htmlFor="title" className="mb-2">
-          Title
-        </Label>
+      <FormField label="Title" required>
         <Input
-          id="title"
           type="text"
           required
           value={title}
           onChange={(e) => onTitleChange(e.target.value)}
         />
-      </Box>
+      </FormField>
 
-      <Box>
-        <Label htmlFor="description" className="mb-2">
-          Description
-        </Label>
+      <FormField label="Description">
         <Textarea
-          id="description"
           value={description}
           onChange={(e) => onDescriptionChange(e.target.value)}
           rows={3}
         />
-      </Box>
+      </FormField>
 
-      <Box>
-        <Label htmlFor="access" className="mb-2">
-          Access Level
-        </Label>
+      <FormField label="Access Level">
         <Select
-          id="access"
           value={access}
           onChange={(e) => onAccessChange(e.target.value as 'public' | 'private' | 'shared')}
         >
@@ -78,7 +65,7 @@ export default function DashboardForm({
           <option value="public">Public</option>
           <option value="shared">Shared</option>
         </Select>
-      </Box>
+      </FormField>
 
       {access === 'shared' && (
         <DashboardGroupsSelector
@@ -90,12 +77,8 @@ export default function DashboardForm({
         />
       )}
 
-      <Box>
-        <Label htmlFor="defaultDateRange" className="mb-2">
-          Default Date Range
-        </Label>
+      <FormField label="Default Date Range">
         <Select
-          id="defaultDateRange"
           value={defaultDateRange}
           onChange={(e) => onDefaultDateRangeChange(e.target.value)}
         >
@@ -105,7 +88,7 @@ export default function DashboardForm({
             </option>
           ))}
         </Select>
-      </Box>
+      </FormField>
     </>
   );
 }

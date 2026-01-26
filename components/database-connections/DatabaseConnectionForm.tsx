@@ -2,11 +2,9 @@ import { DatabaseType } from '@/types/database';
 import { DatabaseConnectionFormData } from '@/hooks/useDatabaseConnection';
 import ErrorMessage from '@/components/ErrorMessage';
 import Card from '@/components/ui/Card';
-import Box from '@/components/ui/Box';
-import Label from '@/components/ui/Label';
+import FormField from '@/components/ui/FormField';
 import Input from '@/components/ui/Input';
 import Select from '@/components/ui/Select';
-import Text from '@/components/ui/Text';
 import Button from '@/components/ui/Button';
 import Flex from '@/components/ui/Flex';
 
@@ -37,18 +35,19 @@ export default function DatabaseConnectionForm({
       <form onSubmit={onSubmit} className="space-y-6">
         {error && <ErrorMessage message={error} />}
 
-        <Box>
-          <Label className="mb-2">Name</Label>
+        <FormField label="Name" required>
           <Input
             type="text"
             required
             value={formData.name}
             onChange={(e) => onFieldChange('name', e.target.value)}
           />
-        </Box>
+        </FormField>
 
-        <Box>
-          <Label className="mb-2">Type</Label>
+        <FormField
+          label="Type"
+          hint={isEdit ? 'Type cannot be changed after creation' : undefined}
+        >
           <Select
             value={formData.type}
             onChange={(e) => onFieldChange('type', e.target.value as DatabaseType)}
@@ -57,64 +56,55 @@ export default function DatabaseConnectionForm({
             <option value="postgresql">PostgreSQL</option>
             <option value="clickhouse">ClickHouse</option>
           </Select>
-          {isEdit && (
-            <Text size="sm" variant="muted" className="mt-1">
-              Type cannot be changed after creation
-            </Text>
-          )}
-        </Box>
+        </FormField>
 
-        <Box>
-          <Label className="mb-2">Host</Label>
+        <FormField label="Host" required>
           <Input
             type="text"
             required
             value={formData.host}
             onChange={(e) => onFieldChange('host', e.target.value)}
           />
-        </Box>
+        </FormField>
 
-        <Box>
-          <Label className="mb-2">Port</Label>
+        <FormField label="Port" required>
           <Input
             type="number"
             required
             value={formData.port}
             onChange={(e) => onFieldChange('port', parseInt(e.target.value))}
           />
-        </Box>
+        </FormField>
 
-        <Box>
-          <Label className="mb-2">Database</Label>
+        <FormField label="Database" required>
           <Input
             type="text"
             required
             value={formData.database}
             onChange={(e) => onFieldChange('database', e.target.value)}
           />
-        </Box>
+        </FormField>
 
-        <Box>
-          <Label className="mb-2">Username</Label>
+        <FormField label="Username" required>
           <Input
             type="text"
             required
             value={formData.username}
             onChange={(e) => onFieldChange('username', e.target.value)}
           />
-        </Box>
+        </FormField>
 
-        <Box>
-          <Label className="mb-2">
-            {isEdit ? 'Password (leave empty to keep current)' : 'Password'}
-          </Label>
+        <FormField
+          label={isEdit ? 'Password (leave empty to keep current)' : 'Password'}
+          required={!isEdit}
+        >
           <Input
             type="password"
             required={!isEdit}
             value={formData.password}
             onChange={(e) => onFieldChange('password', e.target.value)}
           />
-        </Box>
+        </FormField>
 
         <Flex gap="4">
           <Button type="submit" disabled={loading}>
