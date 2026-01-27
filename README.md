@@ -63,19 +63,34 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ### Docker
 
-1. Ensure the `constructor_net` network is created:
+При развёртывании через docker-compose поднимаются приложение, nginx и MongoDB. База данных приложения: `timeseries-dashboard-platform-db`.
+
+Перед запуском создайте `.env` из шаблона и задайте секреты:
+
 ```bash
-docker network create constructor_net
+cp .env.example .env
+# Отредактируйте .env: NEXTAUTH_SECRET, ENCRYPTION_KEY (и при необходимости MONGO_USER, MONGO_PASSWORD, NEXTAUTH_URL)
 ```
 
-2. Start via docker-compose:
+Переменные в `.env`:
+
+| Переменная       | Обязательно | Описание |
+|------------------|-------------|----------|
+| `NEXTAUTH_SECRET` | да         | Секрет NextAuth (≥32 символов) |
+| `ENCRYPTION_KEY`  | да         | Ключ шифрования (≥32 символов) |
+| `MONGO_USER`      | нет        | Пользователь MongoDB (по умолчанию: `mongoadmin`) |
+| `MONGO_PASSWORD`  | нет        | Пароль MongoDB (по умолчанию: `mongoadmin`) |
+| `NEXTAUTH_URL`    | нет        | URL приложения (по умолчанию: `http://localhost:8080`) |
+
+Запуск:
+
 ```bash
 docker-compose up -d
 ```
 
-The application will be available at [http://localhost:8080](http://localhost:8080) (through nginx).
+Приложение доступно по [http://localhost:8080](http://localhost:8080) (через nginx). Данные MongoDB сохраняются в volume `mongo_data`.
 
-On first startup, an administrative user is automatically created via the `create-user-admin.cjs` script.
+При первом запуске скрипт `create-user-admin.cjs` создаёт административного пользователя.
 
 ## User Roles
 

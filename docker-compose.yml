@@ -1,22 +1,38 @@
 services:
+  mongo:
+    image: mongo:8
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-mongoadmin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-mongoadmin}
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - constructor_net
+
   app:
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        MONGODB_URI: ${MONGODB_URI:-mongodb://mongoadmin:mongoadmin@mongo:27017/}
+        # только для прохождения сборки; реальный URI задаётся в environment при запуске
+        MONGODB_URI: ${MONGODB_URI:-mongodb://localhost:27017/timeseries-dashboard-platform-db}
     env_file:
-      - .env.local
+      - .env
     environment:
       NODE_ENV: production
       PORT: 3000
-      MONGODB_URI: mongodb://mongoadmin:mongoadmin@mongo:27017/
-      NEXTAUTH_URL: http://localhost:8080
+      MONGODB_URI: mongodb://${MONGO_USER:-mongoadmin}:${MONGO_PASSWORD:-mongoadmin}@mongo:27017/timeseries-dashboard-platform-db?authSource=admin
+      NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:8080}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
       AUTH_TRUST_HOST: "true"
     extra_hosts:
       - "host.docker.internal:host-gateway"
     expose:
       - "3000"
+    depends_on:
+      - mongo
     networks:
       - constructor_net
 
@@ -33,4 +49,7 @@ services:
 
 networks:
   constructor_net:
-    external: true
+    driver: bridge
+
+volumes:
+  mongo_data:
