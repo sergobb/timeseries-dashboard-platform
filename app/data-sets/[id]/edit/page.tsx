@@ -66,7 +66,7 @@ export default function EditDataSetPage() {
   const showTypeSelection = totalSelected > 1 && selectedDataSets.size === 0;
 
   return (
-    <PageContainer flex innerClassName="lg:flex-1 flex flex-col lg:min-h-0">
+    <PageContainer className="min-h-screen" innerClassName="max-w-7xl mx-auto">
         <PageTitle className="mb-6">Edit Data Set</PageTitle>
         {error && <ErrorMessage message={error} className="mb-4" />}
       <DataSetEditForm

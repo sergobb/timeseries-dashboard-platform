@@ -3,6 +3,11 @@ import { useRouter } from 'next/navigation';
 import { DataSource } from '@/types/data-source';
 import { DataSet } from '@/types/data-set';
 
+interface UseDataSetSelectionOptions {
+  /** Only allow selecting data sources (no Data Sets panel). Skips fetching data sets. */
+  sourcesOnly?: boolean;
+}
+
 interface UseDataSetSelectionReturn {
   dataSources: DataSource[];
   dataSets: DataSet[];
@@ -21,7 +26,8 @@ interface UseDataSetSelectionReturn {
   next: () => void;
 }
 
-export function useDataSetSelection(): UseDataSetSelectionReturn {
+export function useDataSetSelection(options: UseDataSetSelectionOptions = {}): UseDataSetSelectionReturn {
+  const { sourcesOnly = false } = options;
   const router = useRouter();
   const [dataSources, setDataSources] = useState<DataSource[]>([]);
   const [dataSets, setDataSets] = useState<DataSet[]>([]);
@@ -35,25 +41,24 @@ export function useDataSetSelection(): UseDataSetSelectionReturn {
   const load = useCallback(async () => {
     try {
       setError(null);
-      const [sourcesResponse, setsResponse] = await Promise.all([
-        fetch('/api/data-sources', { credentials: 'include' }),
-        fetch('/api/data-sets', { credentials: 'include' }),
-      ]);
-
+      const sourcesResponse = await fetch('/api/data-sources', { credentials: 'include' });
       if (!sourcesResponse.ok) throw new Error('Failed to fetch data sources');
       const sourcesData = await sourcesResponse.json();
       setDataSources(sourcesData);
 
-      if (setsResponse.ok) {
-        const setsData = await setsResponse.json();
-        setDataSets(setsData);
+      if (!sourcesOnly) {
+        const setsResponse = await fetch('/api/data-sets', { credentials: 'include' });
+        if (setsResponse.ok) {
+          const setsData = await setsResponse.json();
+          setDataSets(setsData);
+        }
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load data');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [sourcesOnly]);
 
   useEffect(() => {
     load();
