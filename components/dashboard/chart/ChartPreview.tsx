@@ -19,6 +19,8 @@ interface ChartPreviewProps {
   dateRange: { from: Date; to: Date };
   onRangeChange: (range: { from: Date; to: Date } | null) => void;
   isDark: boolean;
+  /** Полное имя темы (light/dark/light-blue/dark-blue); нужно чтобы фон чарта обновлялся при смене dark↔dark-blue */
+  theme: string;
 }
 
 export default function ChartPreview({
@@ -29,6 +31,7 @@ export default function ChartPreview({
   dateRange,
   onRangeChange,
   isDark,
+  theme,
 }: ChartPreviewProps) {
   const [themeColors, setThemeColors] = useState(() => getThemeColors(isDark));
 
@@ -37,7 +40,7 @@ export default function ChartPreview({
       setThemeColors(getThemeColors(isDark));
     });
     return () => cancelAnimationFrame(id);
-  }, [isDark]);
+  }, [theme, isDark]);
 
   const colors = useMemo(() => themeColors, [themeColors]);
   

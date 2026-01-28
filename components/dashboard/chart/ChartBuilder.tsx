@@ -24,7 +24,7 @@ interface ChartBuilderProps {
 
 export default function ChartBuilder({ dashboardId, chartId }: ChartBuilderProps) {
   const router = useRouter();
-  const { resolvedTheme } = useTheme();
+  const { theme, resolvedTheme } = useTheme();
 
   const {
     setDataSets,
@@ -360,6 +360,7 @@ export default function ChartBuilder({ dashboardId, chartId }: ChartBuilderProps
             dateRange={dateRange}
             onRangeChange={handleRangeChange}
             isDark={resolvedTheme === 'dark'}
+            theme={theme}
           />
         }
       />

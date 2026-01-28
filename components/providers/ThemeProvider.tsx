@@ -2,7 +2,31 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 
+export const THEME_STORAGE_KEY = 'theme';
+
 type Theme = 'light' | 'dark' | 'light-blue' | 'dark-blue';
+
+const VALID_THEMES: Theme[] = ['light', 'dark', 'light-blue', 'dark-blue'];
+
+function readStoredTheme(): Theme {
+  if (typeof window === 'undefined') return 'light';
+  try {
+    const stored = localStorage.getItem(THEME_STORAGE_KEY);
+    if (stored && VALID_THEMES.includes(stored as Theme)) return stored as Theme;
+    if (stored === 'system') {
+      const resolved: Theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      localStorage.setItem(THEME_STORAGE_KEY, resolved);
+      return resolved;
+    }
+  } catch (_) {}
+  return 'light';
+}
+
+function writeStoredTheme(theme: Theme): void {
+  try {
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
+  } catch (_) {}
+}
 
 interface ThemeContextType {
   theme: Theme;
@@ -13,40 +37,21 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>(() => {
-    if (typeof window === 'undefined') return 'light';
-
-    const stored = localStorage.getItem('theme');
-    if (stored === 'light' || stored === 'dark' || stored === 'light-blue' || stored === 'dark-blue') {
-      return stored;
-    }
-
-    if (stored === 'system') {
-      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const resolved: Theme = systemPrefersDark ? 'dark' : 'light';
-      localStorage.setItem('theme', resolved);
-      return resolved;
-    }
-
-    return 'light';
-  });
+  const [theme, setThemeState] = useState<Theme>(readStoredTheme);
 
   const resolvedTheme: ThemeContextType['resolvedTheme'] =
     theme === 'dark' || theme === 'dark-blue' ? 'dark' : 'light';
 
   useEffect(() => {
     const root = document.documentElement;
-    const themeClasses: Theme[] = ['light', 'dark', 'light-blue', 'dark-blue'];
-    root.classList.remove(...themeClasses, 'dark');
+    root.classList.remove(...VALID_THEMES, 'dark');
     root.classList.add(theme);
-    if (theme === 'dark' || theme === 'dark-blue') {
-      root.classList.add('dark');
-    }
+    if (theme === 'dark' || theme === 'dark-blue') root.classList.add('dark');
   }, [theme]);
 
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
-    localStorage.setItem('theme', newTheme);
+    writeStoredTheme(newTheme);
   };
 
   return (

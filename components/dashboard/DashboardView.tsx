@@ -14,7 +14,7 @@ import { useDashboardRuntime, type UseDashboardRuntimeResult } from '@/hooks/use
 import type { Dashboard } from '@/types/dashboard';
 
 export default function DashboardView({ dashboard }: { dashboard: Dashboard }) {
-  const { resolvedTheme } = useTheme();
+  const { theme, resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
   const [themeColors, setThemeColors] = useState(() => getThemeColors(isDark));
 
@@ -23,7 +23,7 @@ export default function DashboardView({ dashboard }: { dashboard: Dashboard }) {
       setThemeColors(getThemeColors(isDark));
     });
     return () => cancelAnimationFrame(id);
-  }, [resolvedTheme, isDark]);
+  }, [theme, isDark]);
 
   const colors = useMemo(() => themeColors, [themeColors]);
   const { charts, seriesByChartId, seriesLoadingByChartId, dateRange, setDateRange, loading, error } =
@@ -95,7 +95,7 @@ export default function DashboardView({ dashboard }: { dashboard: Dashboard }) {
                 </Text>
               )}
               <HighchartsReact
-                key={`${chart.id}-${resolvedTheme}`}
+                key={`${chart.id}-${theme}`}
                 highcharts={Highcharts}
                 options={options}
                 containerProps={{ style: { width: '100%' } }}
