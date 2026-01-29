@@ -42,10 +42,12 @@ The main navigation menu is located at the top of the page. Available menu items
 - **Connections** - Manage database connections (requires `db_admin` role)
 - **Data Sources** - Manage data sources (requires `metadata_editor` role)
 - **Data Sets** - Manage data sets (requires `metadata_editor` role)
-- **Dashboards** - View and manage dashboards
+- **Dashboards** - View and manage dashboards (available to all; unauthenticated users see only the list of public dashboards and a **Login** button)
 - **Groups** - Manage user groups
 - **Users** - Manage users (requires `user_admin` role)
 - **Profile** - Edit your profile
+
+**Without logging in** you can open **Dashboards**: the page shows only public dashboards, without the ability to edit or delete them. In the header, instead of the user menu, a **Login** button is displayed.
 
 You can also toggle between light and dark themes using the theme toggle button.
 
@@ -427,8 +429,23 @@ If you select "Shared" access:
 #### Public Sharing
 
 1. Set the dashboard access to **Public**
-2. Click **Share** to get a shareable link
-3. Anyone with the link can view the dashboard without logging in
+2. Anyone with the link can view the dashboard without logging in
+
+**Public dashboard page (standalone view)**  
+For embedding or full-screen display without the application header and navigation, use the public URL:
+
+- **URL**: `/dashboards/{dashboard-id}/public`  
+  Example: `https://your-app.example/dashboards/507f1f77bcf86cd799439011/public`
+
+- **Behaviour**:
+  - The dashboard is shown on the full width of the page, without the platform header, title, or description.
+  - Only dashboards with **Public** access open; for others the user is redirected to the dashboards list.
+  - **Date range picker** (choice of time interval):
+    - If the dashboard is configured with “Show date range picker” disabled, the picker is never shown.
+    - Otherwise you can hide it via the query parameter: add `?showDateRange=false` or `?showDateRange=0` to the URL.  
+  Example: `/dashboards/507f1f77bcf86cd799439011/public?showDateRange=false`
+
+Use this URL in iframes, kiosks, or when you need a minimal view with only the dashboard charts.
 
 #### Group Sharing
 

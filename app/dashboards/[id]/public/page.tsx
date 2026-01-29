@@ -2,10 +2,20 @@ import { redirect } from 'next/navigation';
 import DashboardView from '@/components/dashboard/DashboardView';
 import { DashboardService } from '@/lib/services/dashboard.service';
 
+function parseShowDateRange(
+  param: string | string[] | undefined
+): boolean {
+  if (param === undefined) return true;
+  const v = Array.isArray(param) ? param[0] : param;
+  return v !== '0' && v !== 'false';
+}
+
 export default async function PublicDashboardPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { id } = await params;
   const dashboard = await DashboardService.getById(id);
@@ -15,22 +25,20 @@ export default async function PublicDashboardPage({
   }
 
   if (dashboard.access !== 'public') {
-    redirect('/login');
+    redirect('/dashboards');
   }
 
+  const resolvedSearchParams = await searchParams;
+  const showDateRangeOverride = parseShowDateRange(
+    resolvedSearchParams.showDateRange
+  );
+
   return (
-    <div className="min-h-screen bg-[var(--color-background)] p-8">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-[var(--color-foreground)] mb-2">
-          {dashboard.title}
-        </h1>
-        {dashboard.description && (
-          <p className="text-[var(--color-muted-foreground)] mb-8">
-            {dashboard.description}
-          </p>
-        )}
-        <DashboardView dashboard={dashboard} />
-      </div>
+    <div className="min-h-screen w-full bg-[var(--color-background)] p-4 md:p-6">
+      <DashboardView
+        dashboard={dashboard}
+        showDateRangeOverride={showDateRangeOverride}
+      />
     </div>
   );
 }

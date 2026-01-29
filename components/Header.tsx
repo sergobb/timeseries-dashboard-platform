@@ -50,7 +50,84 @@ export default function Header() {
   };
 
   if (!session) {
-    return null;
+    return (
+      <header className="border-b border-[var(--color-border)] bg-[var(--color-surface)] transition-colors relative">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center gap-6">
+              <Link
+                href="/"
+                className="text-xl font-bold text-[var(--color-foreground)] hover:text-[var(--color-muted-foreground)] transition-colors"
+              >
+                Dashboard Platform
+              </Link>
+              <nav className="hidden md:flex gap-4">
+                <Link
+                  href="/dashboards"
+                  className="text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  Dashboards
+                </Link>
+              </nav>
+            </div>
+            <div className="flex items-center gap-4">
+              <ThemeToggle />
+              <Link
+                href="/login"
+                className="hidden sm:inline-flex rounded-md bg-[var(--color-primary)] px-4 py-2 text-sm font-medium text-[var(--color-primary-foreground)] hover:opacity-90 transition-colors"
+              >
+                Login
+              </Link>
+              <button
+                onClick={toggleMenu}
+                className="md:hidden p-2 rounded-md text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] hover:bg-[var(--color-surface-muted)] transition-colors"
+                aria-label="Toggle menu"
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  {isMenuOpen ? (
+                    <path d="M6 18L18 6M6 6l12 12" />
+                  ) : (
+                    <path d="M4 6h16M4 12h16M4 18h16" />
+                  )}
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          className={`
+            md:hidden absolute top-16 left-0 right-0 bg-[var(--color-surface)] border-b border-[var(--color-border)]
+            transition-all duration-300 ease-in-out overflow-hidden
+            ${isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}
+          `}
+        >
+          <nav className="flex flex-col px-4 py-4 space-y-2">
+            <Link
+              href="/dashboards"
+              className="text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              onClick={closeMenu}
+            >
+              Dashboards
+            </Link>
+            <Link
+              href="/login"
+              className="rounded-md bg-[var(--color-primary)] px-4 py-2 text-sm font-medium text-[var(--color-primary-foreground)] hover:opacity-90 transition-colors text-center"
+              onClick={closeMenu}
+            >
+              Login
+            </Link>
+          </nav>
+        </div>
+      </header>
+    );
   }
 
   return (

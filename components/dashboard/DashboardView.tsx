@@ -13,7 +13,13 @@ import { buildHighchartsOptions, getThemeColors } from '@/lib/highcharts-utils';
 import { useDashboardRuntime, type UseDashboardRuntimeResult } from '@/hooks/useDashboardRuntime';
 import type { Dashboard } from '@/types/dashboard';
 
-export default function DashboardView({ dashboard }: { dashboard: Dashboard }) {
+interface DashboardViewProps {
+  dashboard: Dashboard;
+  /** Переопределение отображения выбора интервала (только скрытие). Если false — не показывать. Не влияет, если у дашборда showDateRangePicker === false. */
+  showDateRangeOverride?: boolean;
+}
+
+export default function DashboardView({ dashboard, showDateRangeOverride = true }: DashboardViewProps) {
   const { theme, resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
   const [themeColors, setThemeColors] = useState(() => getThemeColors(isDark));
@@ -28,7 +34,8 @@ export default function DashboardView({ dashboard }: { dashboard: Dashboard }) {
   const colors = useMemo(() => themeColors, [themeColors]);
   const { charts, seriesByChartId, seriesLoadingByChartId, dateRange, setDateRange, loading, error } =
     useDashboardRuntime(dashboard) as UseDashboardRuntimeResult;
-  const showDateRangePicker = dashboard.showDateRangePicker ?? true;
+  const showDateRangePicker =
+    (dashboard.showDateRangePicker ?? true) && (showDateRangeOverride ?? true);
 
   if (loading && charts.length === 0) {
     return (

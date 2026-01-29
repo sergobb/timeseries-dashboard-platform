@@ -38,14 +38,19 @@ export class DashboardService {
 
   static async getAll(userId?: string): Promise<Dashboard[]> {
     const db = await getDatabase();
-    
-    // Get all dashboards that are public, created by user, or shared with user
-    const query: { $or: Array<Record<string, unknown>> } = {
-      $or: [
-        { access: 'public' },
-        { createdBy: userId },
-      ],
-    };
+
+    let query: Record<string, unknown>;
+
+    if (!userId) {
+      query = { access: 'public' };
+    } else {
+      query = {
+        $or: [
+          { access: 'public' },
+          { createdBy: userId },
+        ],
+      };
+    }
 
     let editableGroupIds: string[] = [];
     let shareAccessMap = new Map<string, 'view' | 'edit'>();
@@ -53,7 +58,7 @@ export class DashboardService {
     if (userId) {
       const userGroupIds = await this.getUserGroupIds(userId);
       if (userGroupIds.length > 0) {
-        query.$or.push({
+        (query.$or as Array<Record<string, unknown>>).push({
           access: 'shared',
           groupIds: { $in: userGroupIds },
         });
@@ -67,7 +72,7 @@ export class DashboardService {
       });
       const sharedDashboardIds = shares.map((share) => String(share.dashboardId));
       if (sharedDashboardIds.length > 0) {
-        query.$or.push({ _id: { $in: sharedDashboardIds.map(id => new ObjectId(id)) } });
+        (query.$or as Array<Record<string, unknown>>).push({ _id: { $in: sharedDashboardIds.map(id => new ObjectId(id)) } });
       }
     }
 
