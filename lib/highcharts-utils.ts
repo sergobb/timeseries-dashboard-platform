@@ -206,20 +206,27 @@ export function buildHighchartsOptions(
       },
     },
     yAxis: yAxes.map((axis) => {
+      const titleShift = axis.options?.titleShift;
+      const opposite = axis.options?.opposite ?? false;
+      const titleConfig: YAxisOptionsHighcharts['title'] = {
+        text: axis.options?.title || axis.label || '',
+        style: axis.options?.titleStyle
+          ? {
+              fontSize: axis.options.titleStyle.fontSize || '14px',
+              fontWeight: axis.options.titleStyle.fontWeight || 'normal',
+              color: axis.options.titleStyle.color || colors.textColorSecondary,
+            }
+          : {
+              color: colors.textColorSecondary,
+            },
+      };
+      if (titleShift !== undefined && titleShift >= 0) {
+        titleConfig.x = opposite ? -titleShift : titleShift;
+        titleConfig.margin = titleShift + 10;
+      }
       const axisOptions: YAxisOptionsHighcharts = {
         id: axis.id,
-        title: {
-          text: axis.options?.title || axis.label || '',
-          style: axis.options?.titleStyle
-            ? {
-                fontSize: axis.options.titleStyle.fontSize || '14px',
-                fontWeight: axis.options.titleStyle.fontWeight || 'normal',
-                color: axis.options.titleStyle.color || colors.textColorSecondary,
-              }
-            : {
-                color: colors.textColorSecondary,
-              },
-        },
+        title: titleConfig,
         labels: {
           enabled: axis.options?.labelsEnabled !== false,
           format: axis.options?.labelsFormat || '{value}',

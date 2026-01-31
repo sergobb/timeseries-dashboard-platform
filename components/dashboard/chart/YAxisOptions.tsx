@@ -86,6 +86,59 @@ export default function YAxisOptionsComponent({
       </div>
 
       <div>
+        <Label htmlFor={`yaxis-opposite-${seriesId}`} className="mb-1 text-xs">
+          Opposite Side
+        </Label>
+        <Select
+          id={`yaxis-opposite-${seriesId}`}
+          value={options.opposite ? 'true' : 'false'}
+          onChange={(e) => updateOption('opposite', e.target.value === 'true')}
+        >
+          <option value="false">Left</option>
+          <option value="true">Right</option>
+        </Select>
+      </div>
+
+      <div>
+        <Label htmlFor={`yaxis-labels-enabled-${seriesId}`} className="mb-1 text-xs">
+          Labels Enabled
+        </Label>
+        <Select
+          id={`yaxis-labels-enabled-${seriesId}`}
+          value={options.labelsEnabled !== false ? 'true' : 'false'}
+          onChange={(e) => updateOption('labelsEnabled', e.target.value === 'true')}
+        >
+          <option value="true">Enabled</option>
+          <option value="false">Disabled</option>
+        </Select>
+      </div>
+
+      <div>
+        <Label htmlFor={`yaxis-title-shift-${seriesId}`} className="mb-1 text-xs">
+          Axis Shift (px)
+        </Label>
+        <Input
+          id={`yaxis-title-shift-${seriesId}`}
+          type="number"
+          min={0}
+          step={1}
+          value={options.titleShift ?? ''}
+          onChange={(e) => {
+            const raw = e.target.value;
+            if (raw === '') {
+              updateOption('titleShift', undefined);
+              return;
+            }
+            const n = parseInt(raw, 10);
+            if (!Number.isNaN(n) && n >= 0) updateOption('titleShift', n);
+          }}
+          placeholder="0"
+        />
+      </div>
+
+      <hr className="my-2" />
+
+      <div>
         <Label htmlFor={`yaxis-title-font-size-${seriesId}`} className="mb-1 text-xs">
           Title Font Size
         </Label>
@@ -108,20 +161,6 @@ export default function YAxisOptionsComponent({
           value={options.titleStyle?.color || '#666666'}
           onChange={(e) => updateTitleStyle('color', e.target.value)}
         />
-      </div>
-
-      <div>
-        <Label htmlFor={`yaxis-labels-enabled-${seriesId}`} className="mb-1 text-xs">
-          Labels Enabled
-        </Label>
-        <Select
-          id={`yaxis-labels-enabled-${seriesId}`}
-          value={options.labelsEnabled !== false ? 'true' : 'false'}
-          onChange={(e) => updateOption('labelsEnabled', e.target.value === 'true')}
-        >
-          <option value="true">Enabled</option>
-          <option value="false">Disabled</option>
-        </Select>
       </div>
 
       <div>
@@ -190,20 +229,6 @@ export default function YAxisOptionsComponent({
           }
           placeholder="Auto"
         />
-      </div>
-
-      <div>
-        <Label htmlFor={`yaxis-opposite-${seriesId}`} className="mb-1 text-xs">
-          Opposite Side
-        </Label>
-        <Select
-          id={`yaxis-opposite-${seriesId}`}
-          value={options.opposite ? 'true' : 'false'}
-          onChange={(e) => updateOption('opposite', e.target.value === 'true')}
-        >
-          <option value="false">Left</option>
-          <option value="true">Right</option>
-        </Select>
       </div>
 
       <div>

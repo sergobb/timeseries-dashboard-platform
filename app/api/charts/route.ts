@@ -73,6 +73,7 @@ const yAxisOptionsSchema = z.object({
     color: z.string().optional(),
   }).optional(),
   labelsEnabled: z.boolean().optional(),
+  titleShift: z.number().int().min(0).optional(),
   labelsFormat: z.string().optional(),
   labelsStyle: z.object({
     fontSize: z.string().optional(),

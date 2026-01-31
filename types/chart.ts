@@ -30,6 +30,8 @@ export interface YAxisOptions {
     color?: string;
   };
   labelsEnabled?: boolean;
+  /** Positive integer: Y axis title shift (px). Drives Highcharts title.x and title.margin. */
+  titleShift?: number;
   labelsFormat?: string;
   labelsStyle?: {
     fontSize?: string;
