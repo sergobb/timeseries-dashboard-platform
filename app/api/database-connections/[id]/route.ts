@@ -58,7 +58,7 @@ export async function PUT(
     const body = await request.json();
     const data = updateSchema.parse(body);
 
-    const connection = await DatabaseConnectionService.update(id, data, session.user.id);
+    const connection = await DatabaseConnectionService.update(id, data, session.user.id, { ignoreOwnership: true });
     
     if (!connection) {
       return NextResponse.json({ error: 'Not found' }, { status: 404 });
@@ -96,7 +96,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const success = await DatabaseConnectionService.delete(id, session.user.id);
+    const success = await DatabaseConnectionService.delete(id, session.user.id, { ignoreOwnership: true });
     
     if (!success) {
       return NextResponse.json({ error: 'Not found' }, { status: 404 });

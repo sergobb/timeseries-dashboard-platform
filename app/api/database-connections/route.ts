@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const session = await auth();
-    const connections = await DatabaseConnectionService.getAll(session?.user?.id);
+    const connections = await DatabaseConnectionService.getAll();
     
     // Don't return passwords
     const safeConnections = connections.map(({ password, ...rest }) => rest);

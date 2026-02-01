@@ -100,7 +100,8 @@ export class DataSourceService {
   static async update(
     id: string,
     updates: Partial<Omit<DataSource, 'id' | 'createdAt' | 'createdBy'>>,
-    userId: string
+    userId: string,
+    options?: { ignoreOwnership?: boolean }
   ): Promise<DataSource | null> {
     const db = await getDatabase();
     
@@ -109,8 +110,13 @@ export class DataSourceService {
       updatedAt: new Date(),
     };
 
+    const query: Record<string, unknown> = { _id: new ObjectId(id) };
+    if (!options?.ignoreOwnership) {
+      query.createdBy = userId;
+    }
+
     const result = await db.collection('data_sources').findOneAndUpdate(
-      { _id: new ObjectId(id), createdBy: userId },
+      query,
       { $set: updateDoc },
       { returnDocument: 'after' }
     );
@@ -130,12 +136,13 @@ export class DataSourceService {
     } as DataSource;
   }
 
-  static async delete(id: string, userId: string): Promise<boolean> {
+  static async delete(id: string, userId: string, options?: { ignoreOwnership?: boolean }): Promise<boolean> {
     const db = await getDatabase();
-    const result = await db.collection('data_sources').deleteOne({
-      _id: new ObjectId(id),
-      createdBy: userId,
-    });
+    const query: Record<string, unknown> = { _id: new ObjectId(id) };
+    if (!options?.ignoreOwnership) {
+      query.createdBy = userId;
+    }
+    const result = await db.collection('data_sources').deleteOne(query);
     
     return result.deletedCount > 0;
   }

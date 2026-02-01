@@ -76,7 +76,12 @@ export class DatabaseConnectionService {
     };
   }
 
-  static async update(id: string, updates: Partial<Omit<DatabaseConnection, 'id' | 'createdAt' | 'updatedAt'>>, userId: string): Promise<DatabaseConnection | null> {
+  static async update(
+    id: string,
+    updates: Partial<Omit<DatabaseConnection, 'id' | 'createdAt' | 'updatedAt'>>,
+    userId: string,
+    options?: { ignoreOwnership?: boolean }
+  ): Promise<DatabaseConnection | null> {
     const db = await getDatabase();
     
     const updateDoc: Record<string, unknown> = {
@@ -88,8 +93,13 @@ export class DatabaseConnectionService {
       updateDoc.password = encrypt(updates.password);
     }
 
+    const query: Record<string, unknown> = { _id: new ObjectId(id) };
+    if (!options?.ignoreOwnership) {
+      query.createdBy = userId;
+    }
+
     const result = await db.collection('database_connections').findOneAndUpdate(
-      { _id: new ObjectId(id), createdBy: userId },
+      query,
       { $set: updateDoc },
       { returnDocument: 'after' }
     );
@@ -112,12 +122,13 @@ export class DatabaseConnectionService {
     } as DatabaseConnection;
   }
 
-  static async delete(id: string, userId: string): Promise<boolean> {
+  static async delete(id: string, userId: string, options?: { ignoreOwnership?: boolean }): Promise<boolean> {
     const db = await getDatabase();
-    const result = await db.collection('database_connections').deleteOne({
-      _id: new ObjectId(id),
-      createdBy: userId,
-    });
+    const query: Record<string, unknown> = { _id: new ObjectId(id) };
+    if (!options?.ignoreOwnership) {
+      query.createdBy = userId;
+    }
+    const result = await db.collection('database_connections').deleteOne(query);
     
     return result.deletedCount > 0;
   }

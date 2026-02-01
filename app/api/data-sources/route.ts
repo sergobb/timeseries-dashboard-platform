@@ -104,7 +104,8 @@ export async function POST(request: NextRequest) {
           {
             columns: mergedColumns,
           },
-          session.user.id
+          session.user.id,
+          { ignoreOwnership: true }
         );
         if (updated) {
           results.push(updated);

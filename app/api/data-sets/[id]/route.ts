@@ -38,8 +38,9 @@ export async function GET(
     }
 
     const userRoles = session.user.roles || [];
-    const hasMetadataRole = userRoles.includes('metadata_editor');
-    if (!hasMetadataRole) {
+    const canReadAllDataSets =
+      userRoles.includes('metadata_editor') || userRoles.includes('dashboard_creator');
+    if (!canReadAllDataSets) {
       const dashboardIds = await ChartService.getDashboardIdsByDataSetId(id);
       if (dashboardIds.length === 0) {
         return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
@@ -106,7 +107,8 @@ export async function PUT(
         dataSetIds: data.dataSetIds,
         preaggregationConfig: data.preaggregationConfig || [],
       },
-      session.user.id
+      session.user.id,
+      { ignoreOwnership: true }
     );
 
     if (!dataSet) {
@@ -142,7 +144,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const deleted = await DataSetService.delete(id, session.user.id);
+    const deleted = await DataSetService.delete(id, session.user.id, { ignoreOwnership: true });
 
     if (!deleted) {
       return NextResponse.json({ error: 'Data set not found' }, { status: 404 });

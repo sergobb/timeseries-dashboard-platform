@@ -28,10 +28,11 @@ export async function GET(request: NextRequest) {
     }
 
     const userRoles = session.user.roles || [];
-    const hasMetadataRole = userRoles.includes('metadata_editor');
+    const canReadAllDataSets =
+      userRoles.includes('metadata_editor') || userRoles.includes('dashboard_creator');
 
-    if (hasMetadataRole) {
-      const dataSets = await DataSetService.getAll(session.user.id);
+    if (canReadAllDataSets) {
+      const dataSets = await DataSetService.getAll();
       return NextResponse.json(dataSets);
     }
 

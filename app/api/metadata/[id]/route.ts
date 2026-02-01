@@ -59,7 +59,7 @@ export async function PUT(
     const body = await request.json();
     const data = updateMetadataSchema.parse(body);
 
-    const dataSource = await DataSourceService.update(id, data, session.user.id);
+    const dataSource = await DataSourceService.update(id, data, session.user.id, { ignoreOwnership: true });
     
     if (!dataSource) {
       return NextResponse.json({ error: 'Not found' }, { status: 404 });
@@ -94,7 +94,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const success = await DataSourceService.delete(id, session.user.id);
+    const success = await DataSourceService.delete(id, session.user.id, { ignoreOwnership: true });
     
     if (!success) {
       return NextResponse.json({ error: 'Not found' }, { status: 404 });
