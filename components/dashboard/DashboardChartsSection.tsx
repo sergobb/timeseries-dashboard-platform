@@ -101,13 +101,13 @@ export default function DashboardChartsSection({
           >
             Create New Chart
           </LinkButton>
-          <LinkButton
+          {/* <LinkButton
             variant="secondary"
             href={`/dashboards/${dashboardId}/charts/select`}
             title="Add Existing Chart"
           >
             Add Existing Chart
-          </LinkButton>
+          </LinkButton> */}
         </Flex>
       </Flex>
       {loadingCharts ? (

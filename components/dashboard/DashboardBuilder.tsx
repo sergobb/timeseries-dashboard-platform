@@ -63,7 +63,7 @@ export default function DashboardBuilder({ dashboardId }: DashboardBuilderProps)
   } = useDashboardGroups();
 
   const handleCancel = () => {
-    router.back();
+    router.push('/dashboards');
   };
 
   const handleRemoveChart = useCallback(async (chartId: string) => {

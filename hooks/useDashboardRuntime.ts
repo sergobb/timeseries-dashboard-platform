@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState, type Dispatch, type SetStateAction } from 'react';
-import { PRESET_RANGES } from '@/lib/date-ranges';
+import { getInitialDateRange } from '@/lib/date-ranges';
 import type { Chart } from '@/types/chart';
 import type { Dashboard } from '@/types/dashboard';
 
@@ -24,12 +24,6 @@ export type UseDashboardRuntimeResult = {
   loading: boolean;
   error: string | null;
 };
-
-function getInitialDateRange(defaultDateRange?: string) {
-  const preset = PRESET_RANGES.find((p) => p.label === (defaultDateRange || 'Last 7 Days'));
-  const fallback = PRESET_RANGES.find((p) => p.label === 'Last 7 Days');
-  return (preset || fallback)?.getRange() || { from: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), to: new Date() };
-}
 
 export function useDashboardRuntime(dashboard: Dashboard): UseDashboardRuntimeResult {
   const chartIdsKey = useMemo(() => (dashboard.chartIds || []).join('|'), [dashboard.chartIds]);

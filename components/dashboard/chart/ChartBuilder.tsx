@@ -11,6 +11,8 @@ import ErrorMessage from '@/components/ErrorMessage';
 import { AccordionContainerRef } from '@/components/ui/AccordionContainer';
 import { Chart } from '@/types/chart';
 import { useTheme } from '@/components/providers/ThemeProvider';
+import { useDashboard } from '@/components/dashboard/hooks/useDashboard';
+import { getInitialDateRange } from '@/lib/date-ranges';
 import { useChartBuilder, type Series } from './hooks/useChartBuilder';
 import { useChartData } from './hooks/useChartData';
 import ChartPreview from './ChartPreview';
@@ -25,6 +27,8 @@ interface ChartBuilderProps {
 export default function ChartBuilder({ dashboardId, chartId }: ChartBuilderProps) {
   const router = useRouter();
   const { theme, resolvedTheme } = useTheme();
+  const { dashboard } = useDashboard(dashboardId);
+  const hasSetInitialRange = useRef(false);
 
   const {
     setDataSets,
@@ -77,6 +81,14 @@ export default function ChartBuilder({ dashboardId, chartId }: ChartBuilderProps
       setError(chartDataError);
     }
   }, [chartDataError]);
+
+  // Начальный интервал дат из настройки дашборда defaultDateRange
+  useEffect(() => {
+    if (dashboard?.defaultDateRange && !hasSetInitialRange.current) {
+      hasSetInitialRange.current = true;
+      handleRangeChange(getInitialDateRange(dashboard.defaultDateRange));
+    }
+  }, [dashboard?.defaultDateRange, handleRangeChange]);
 
   // Автоматически открываем новую серию при её добавлении
   useEffect(() => {

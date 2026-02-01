@@ -10,8 +10,10 @@ import Tabs, { TabsItem } from '@/components/ui/Tabs';
 import AccordionContainer, { AccordionContainerRef } from '@/components/ui/AccordionContainer';
 import ChartOptionsComponent from '@/components/dashboard/chart/ChartOptions';
 import XAxisOptionsComponent from '@/components/dashboard/chart/XAxisOptions';
+import YAxisOptionsComponent from '@/components/dashboard/chart/YAxisOptions';
 import SeriesForm from '@/components/dashboard/chart/SeriesForm';
 import ChartOptionsAccordion from '@/components/ui/ChartOptionsAccordion';
+import AccordionElement from '@/components/ui/AccordionElement';
 import { ChartOptions, XAxisOptions, YAxis } from '@/types/chart';
 import { DataSet } from '@/types/data-set';
 import { Series } from './hooks/useChartBuilder';
@@ -40,7 +42,7 @@ interface ChartOptionsPanelProps {
   accordionRef: React.RefObject<AccordionContainerRef | null>;
 }
 
-type TabValue = 'general' | 'xAxis' | 'extra' | 'series';
+type TabValue = 'general' | 'xAxis' | 'yAxes' | 'extra' | 'series';
 
 export default function ChartOptionsPanel({
   dashboardId,
@@ -114,6 +116,47 @@ export default function ChartOptionsPanel({
         ),
       },
       {
+        value: 'series',
+        label: 'Series',
+        content: (
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <Text size="sm" className="font-semibold">
+                Series
+              </Text>
+              <Button onClick={onAddSeries} size="sm">
+                Add Series
+              </Button>
+            </div>
+
+            {series.length === 0 ? (
+              <Text variant="muted">
+                No series added yet. Click &quot;Add Series&quot; to get started.
+              </Text>
+            ) : (
+              <AccordionContainer ref={accordionRef}>
+                {series.map((s, index) => (
+                  <SeriesForm
+                    key={s.id}
+                    series={s}
+                    index={index}
+                    yAxes={yAxes}
+                    dataSetFilter={dataSetFilter}
+                    filteredDataSets={filteredDataSets}
+                    loadingSeries={Boolean(loadingSeriesById[s.id])}
+                    onDataSetFilterChange={onDataSetFilterChange}
+                    onDataSetChange={onDataSetChange}
+                    onUpdateSeries={onUpdateSeries}
+                    onRemoveSeries={onRemoveSeries}
+                    onAddYAxis={onAddYAxis}
+                  />
+                ))}
+              </AccordionContainer>
+            )}
+          </div>
+        ),
+      },
+      {
         value: 'xAxis',
         label: 'X Axis',
         content: (
@@ -130,6 +173,38 @@ export default function ChartOptionsPanel({
                 visibleFields={['title', 'labelsEnabled', 'tickPosition']}
               />
             </div>
+          </div>
+        ),
+      },
+      {
+        value: 'yAxes',
+        label: 'Y Axes',
+        content: (
+          <div className="space-y-4">
+            {yAxes.length === 0 ? (
+              <Text variant="muted">
+                No Y axes yet. Add a series and use &quot;New Axis&quot; in the Data tab to create one.
+              </Text>
+            ) : (
+              <AccordionContainer>
+                {yAxes.map((axis) => (
+                  <AccordionElement
+                    key={axis.id}
+                    id={axis.id}
+                    title={`${axis.label}${axis.options?.title ? ` (${axis.options.title})` : ''}`}
+                  >
+                    <YAxisOptionsComponent
+                      seriesId={axis.id}
+                      axisId={axis.id}
+                      options={axis.options}
+                      onOptionsChange={(newOptions) =>
+                        onUpdateYAxis(axis.id, { options: newOptions })
+                      }
+                    />
+                  </AccordionElement>
+                ))}
+              </AccordionContainer>
+            )}
           </div>
         ),
       },
@@ -193,48 +268,6 @@ export default function ChartOptionsPanel({
                 visibleFields={['tooltip.split', 'tooltip.shared']}
               />
             </ChartOptionsAccordion>
-          </div>
-        ),
-      },
-      {
-        value: 'series',
-        label: 'Series',
-        content: (
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <Text size="sm" className="font-semibold">
-                Series
-              </Text>
-              <Button onClick={onAddSeries} size="sm">
-                Add Series
-              </Button>
-            </div>
-
-            {series.length === 0 ? (
-              <Text variant="muted">
-                No series added yet. Click &quot;Add Series&quot; to get started.
-              </Text>
-            ) : (
-              <AccordionContainer ref={accordionRef}>
-                {series.map((s, index) => (
-                  <SeriesForm
-                    key={s.id}
-                    series={s}
-                    index={index}
-                    yAxes={yAxes}
-                    dataSetFilter={dataSetFilter}
-                    filteredDataSets={filteredDataSets}
-                    loadingSeries={Boolean(loadingSeriesById[s.id])}
-                    onDataSetFilterChange={onDataSetFilterChange}
-                    onDataSetChange={onDataSetChange}
-                    onUpdateSeries={onUpdateSeries}
-                    onRemoveSeries={onRemoveSeries}
-                    onAddYAxis={onAddYAxis}
-                    onUpdateYAxis={onUpdateYAxis}
-                  />
-                ))}
-              </AccordionContainer>
-            )}
           </div>
         ),
       },

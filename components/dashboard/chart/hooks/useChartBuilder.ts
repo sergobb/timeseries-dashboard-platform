@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { getInitialDateRange } from '@/lib/date-ranges';
 import { ChartType, SeriesOptions, YAxisOptions, ChartOptions, XAxisOptions, YAxis } from '@/types/chart';
 import { DataSet } from '@/types/data-set';
 import { ColumnMetadata } from '@/types/metadata';
@@ -29,13 +30,9 @@ export function useChartBuilder() {
   const [yAxes, setYAxes] = useState<YAxis[]>([]);
   const [chartOptions, setChartOptions] = useState<ChartOptions>({});
   const [xAxisOptions, setXAxisOptions] = useState<XAxisOptions>({});
-  const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>(() => {
-    const to = new Date();
-    const from = new Date();
-    from.setDate(from.getDate() - (365*6 + 7));
-    to.setDate(to.getDate() - (365*6));
-    return { from, to };
-  });
+  const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>(() =>
+    getInitialDateRange('Last 7 Days')
+  );
 
   const filteredDataSets = dataSets.filter((ds) => {
     if (!dataSetFilter.trim()) return true;

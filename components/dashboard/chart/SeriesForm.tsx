@@ -10,9 +10,8 @@ import Button from '@/components/ui/Button';
 import Tabs, { TabsItem } from '@/components/ui/Tabs';
 import AccordionElement from '@/components/ui/AccordionElement';
 import SeriesOptionsComponent from '@/components/dashboard/chart/SeriesOptions';
-import YAxisOptionsComponent from '@/components/dashboard/chart/YAxisOptions';
 import { Series } from './hooks/useChartBuilder';
-import { YAxis, ChartType } from '@/types/chart';
+import { ChartType, YAxis } from '@/types/chart';
 import { DataSet } from '@/types/data-set';
 
 interface SeriesFormProps {
@@ -27,7 +26,6 @@ interface SeriesFormProps {
   onUpdateSeries: (seriesId: string, updates: Partial<Series>) => void;
   onRemoveSeries: (seriesId: string) => void;
   onAddYAxis: (seriesId: string) => void;
-  onUpdateYAxis: (axisId: string, updates: Partial<YAxis>) => void;
 }
 
 export default function SeriesForm({
@@ -42,9 +40,8 @@ export default function SeriesForm({
   onUpdateSeries,
   onRemoveSeries,
   onAddYAxis,
-  onUpdateYAxis,
 }: SeriesFormProps) {
-  type SeriesTab = 'data' | 'options' | 'yAxis';
+  type SeriesTab = 'data' | 'options';
   const [tab, setTab] = useState<SeriesTab>('data');
 
   const timestampColumns = (series.seriesData?.columns || []).filter(
@@ -53,10 +50,6 @@ export default function SeriesForm({
       col.dataType?.toLowerCase().includes('date') ||
       col.dataType?.toLowerCase().includes('time')
   );
-
-  const selectedYAxis = series.yAxisId
-    ? yAxes.find((a) => a.id === series.yAxisId)
-    : undefined;
 
   const tabItems = useMemo<readonly TabsItem[]>(() => {
     return [
@@ -257,33 +250,6 @@ export default function SeriesForm({
           </div>
         ),
       },
-      {
-        value: 'yAxis',
-        label: 'Y Axis',
-        content: (
-          <div className="space-y-3">
-            {!series.yAxisId || !selectedYAxis ? (
-              <Text size="sm" variant="muted">
-                Select a Y axis in the Data tab to configure it here.
-              </Text>
-            ) : (
-              <div>
-                <Text size="sm" className="mb-2 font-semibold">
-                  YAxis Options
-                </Text>
-                <YAxisOptionsComponent
-                  seriesId={series.id}
-                  axisId={series.yAxisId}
-                  options={selectedYAxis.options}
-                  onOptionsChange={(newOptions) =>
-                    onUpdateYAxis(series.yAxisId, { options: newOptions })
-                  }
-                />
-              </div>
-            )}
-          </div>
-        ),
-      },
     ] as const;
   }, [
     dataSetFilter,
@@ -293,8 +259,6 @@ export default function SeriesForm({
     onDataSetChange,
     onDataSetFilterChange,
     onUpdateSeries,
-    onUpdateYAxis,
-    selectedYAxis,
     series.chartType,
     series.dataSetId,
     series.id,
