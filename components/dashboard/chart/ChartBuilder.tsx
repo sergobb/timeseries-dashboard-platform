@@ -260,15 +260,20 @@ export default function ChartBuilder({ dashboardId, chartId }: ChartBuilderProps
     try {
       const chartData = {
         ...(chartId ? {} : { dashboardId }),
-        series: series.map((s) => ({
-          id: s.id,
-          dataSetId: s.dataSetId,
-          xAxisColumn: s.xAxisColumn,
-          yColumnName: s.yColumnName,
-          yAxisId: s.yAxisId,
-          chartType: s.chartType,
-          options: s.options,
-        })),
+        series: series.map((s) => {
+          const yColumn = s.seriesData?.columns?.find((col) => col.columnName === s.yColumnName);
+          const effectiveLabel =
+            (s.options?.label?.trim() || '') ? s.options!.label : (yColumn?.description ?? s.yColumnName ?? '');
+          return {
+            id: s.id,
+            dataSetId: s.dataSetId,
+            xAxisColumn: s.xAxisColumn,
+            yColumnName: s.yColumnName,
+            yAxisId: s.yAxisId,
+            chartType: s.chartType,
+            options: { ...s.options, label: effectiveLabel },
+          };
+        }),
         yAxes,
         chartOptions,
         xAxisOptions,

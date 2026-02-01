@@ -210,6 +210,7 @@ export function buildHighchartsOptions(
       const opposite = axis.options?.opposite ?? false;
       const titleConfig: YAxisOptionsHighcharts['title'] = {
         text: axis.options?.title || axis.label || '',
+        useHTML: true,
         style: axis.options?.titleStyle
           ? {
               fontSize: axis.options.titleStyle.fontSize || '14px',
@@ -230,6 +231,7 @@ export function buildHighchartsOptions(
         labels: {
           enabled: axis.options?.labelsEnabled !== false,
           format: axis.options?.labelsFormat || '{value}',
+          useHTML: true,
           style: axis.options?.labelsStyle
             ? {
                 fontSize: axis.options.labelsStyle.fontSize || '12px',
