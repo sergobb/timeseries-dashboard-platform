@@ -72,6 +72,7 @@ interface ThemeColors {
   gridLineColor: string;
   lineColor: string;
   borderColor: string;
+  chartColors: string[];
 }
 
 export function buildHighchartsOptions(
@@ -88,6 +89,7 @@ export function buildHighchartsOptions(
   const yAxisIndexById = new Map(yAxes.map((a, idx) => [a.id, idx] as const));
 
   const options: HighchartsOptions = {
+    colors: colors.chartColors,
     chart: {
       backgroundColor: chartOptions.backgroundColor || (isDark ? colors.backgroundColor : 'transparent'),
       height: chartOptions.height ?? 400,
@@ -96,6 +98,11 @@ export function buildHighchartsOptions(
       plotBackgroundColor: chartOptions.plotBackgroundColor || (isDark ? colors.backgroundColor : 'transparent'),
       plotBorderWidth: chartOptions.plotBorderWidth || 0,
       plotBorderColor: chartOptions.plotBorderColor || colors.borderColor,
+    },
+    plotOptions: {
+      series: {
+        borderWidth: 0
+    }
     },
     title: {
       text: chartOptions.title || '',
@@ -371,6 +378,10 @@ export function buildHighchartsOptions(
 }
 
 export function getThemeColors(isDark: boolean): ThemeColors {
+  const defaultChartColors = isDark
+    ? ['#60a5fa', '#34d399', '#fbbf24', '#a78bfa', '#f87171']
+    : ['#2563eb', '#059669', '#d97706', '#7c3aed', '#dc2626'];
+
   if (typeof window === 'undefined') {
     return isDark
       ? {
@@ -381,6 +392,7 @@ export function getThemeColors(isDark: boolean): ThemeColors {
           gridLineColor: '#3f3f46',
           lineColor: '#52525b',
           borderColor: '#52525b',
+          chartColors: defaultChartColors,
         }
       : {
           backgroundColor: '#ffffff',
@@ -390,12 +402,17 @@ export function getThemeColors(isDark: boolean): ThemeColors {
           gridLineColor: '#e4e4e7',
           lineColor: '#ccd6eb',
           borderColor: '#cccccc',
+          chartColors: defaultChartColors,
         };
   }
 
   const styles = getComputedStyle(document.documentElement);
   const getVar = (name: string, fallback: string) =>
     styles.getPropertyValue(name).trim() || fallback;
+
+  const chartColors = [1, 2, 3, 4, 5]
+    .map((i) => getVar(`--chart-${i}`, defaultChartColors[i - 1]))
+    .filter(Boolean);
 
   return {
     backgroundColor: getVar('--surface', isDark ? '#18181b' : '#ffffff'),
@@ -405,6 +422,7 @@ export function getThemeColors(isDark: boolean): ThemeColors {
     gridLineColor: getVar('--border', isDark ? '#3f3f46' : '#e4e4e7'),
     lineColor: getVar('--border-muted', isDark ? '#52525b' : '#ccd6eb'),
     borderColor: getVar('--border', isDark ? '#52525b' : '#cccccc'),
+    chartColors: chartColors.length ? chartColors : defaultChartColors,
   };
 }
 
