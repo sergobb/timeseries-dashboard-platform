@@ -86,6 +86,8 @@ const chartOptionsSchema = z.object({
   creditsEnabled: z.boolean().optional(),
   backgroundColor: z.string().optional(),
   height: z.number().optional(),
+  spaceLeft: z.number().optional(),
+  spaceRight: z.number().optional(),
   plotBackgroundColor: z.string().optional(),
   plotBorderWidth: z.number().optional(),
   plotBorderColor: z.string().optional(),

@@ -72,6 +72,8 @@ export interface ChartOptions {
   creditsEnabled?: boolean;
   backgroundColor?: string;
   height?: number;
+  spaceLeft?: number;
+  spaceRight?: number;
   plotBackgroundColor?: string;
   plotBorderWidth?: number;
   plotBorderColor?: string;

@@ -48,16 +48,6 @@ export default function ChartPreview({
     return buildHighchartsOptions(series, yAxes, chartOptions, xAxisOptions, colors, isDark, dateRange, Highcharts);
   }, [series, yAxes, chartOptions, xAxisOptions, colors, isDark, dateRange]);
 
-  const previewOptions = useMemo(() => {
-    return {
-      ...highchartsOptions,
-      chart: {
-        ...highchartsOptions.chart,
-        height: null, // Убираем фиксированную высоту для preview
-      },
-    };
-  }, [highchartsOptions]);
-
   return (
     <Card className="p-6">
       <Text size="lg" className="mb-4 font-semibold">
@@ -67,7 +57,7 @@ export default function ChartPreview({
       <Box className="w-full rounded p-4">
         <HighchartsReact
           highcharts={Highcharts}
-          options={previewOptions}
+          options={highchartsOptions}
           containerProps={{ style: { width: '100%' } }}
         />
       </Box>

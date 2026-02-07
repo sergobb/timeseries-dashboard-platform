@@ -20,6 +20,8 @@ export type ChartOptionsField =
   | 'creditsEnabled'
   | 'backgroundColor'
   | 'height'
+  | 'spaceLeft'
+  | 'spaceRight'
   | 'plotBackgroundColor'
   | 'plotBorderWidth'
   | 'plotBorderColor'
@@ -256,6 +258,57 @@ export default function ChartOptionsComponent({
         </div>
       )}
 
+      {isVisible('height') && (
+        <div>
+          <Label htmlFor={`chart-height-${chartId}`} className="mb-1 text-xs">
+            Height
+          </Label>
+          <Input
+            id={`chart-height-${chartId}`}
+            type="number"
+            min="100"
+            value={options.height ?? 400}
+            onChange={(e) =>
+              updateOption('height', e.target.value ? parseInt(e.target.value) : undefined)
+            }
+          />
+        </div>
+      )}
+
+      {isVisible('spaceLeft') && (
+        <div>
+          <Label htmlFor={`chart-space-left-${chartId}`} className="mb-1 text-xs">
+            Space Left
+          </Label>
+          <Input
+            id={`chart-space-left-${chartId}`}
+            type="number"
+            min="0"
+            value={options.spaceLeft ?? 0}
+            onChange={(e) =>
+              updateOption('spaceLeft', e.target.value ? parseInt(e.target.value) : undefined)
+            }
+          />
+        </div>
+      )}
+
+      {isVisible('spaceRight') && (
+        <div>
+          <Label htmlFor={`chart-space-right-${chartId}`} className="mb-1 text-xs">
+            Space Right
+          </Label>
+          <Input
+            id={`chart-space-right-${chartId}`}
+            type="number"
+            min="0"
+            value={options.spaceRight ?? 0}
+            onChange={(e) =>
+              updateOption('spaceRight', e.target.value ? parseInt(e.target.value) : undefined)
+            }
+          />
+        </div>
+      )}
+
       {isVisible('creditsEnabled') && (
         <div>
           <Label htmlFor={`chart-credits-enabled-${chartId}`} className="mb-1 text-xs">
@@ -282,24 +335,6 @@ export default function ChartOptionsComponent({
             type="color"
             value={options.backgroundColor || '#ffffff'}
             onChange={(e) => updateOption('backgroundColor', e.target.value)}
-          />
-        </div>
-      )}
-
-      {isVisible('height') && (
-        <div>
-          <Label htmlFor={`chart-height-${chartId}`} className="mb-1 text-xs">
-            Height
-          </Label>
-          <Input
-            id={`chart-height-${chartId}`}
-            type="number"
-            min="100"
-            value={options.height !== undefined ? options.height : ''}
-            onChange={(e) =>
-              updateOption('height', e.target.value ? parseInt(e.target.value) : undefined)
-            }
-            placeholder="Auto"
           />
         </div>
       )}

@@ -90,7 +90,9 @@ export function buildHighchartsOptions(
   const options: HighchartsOptions = {
     chart: {
       backgroundColor: chartOptions.backgroundColor || (isDark ? colors.backgroundColor : 'transparent'),
-      height: chartOptions.height || null,
+      height: chartOptions.height ?? 400,
+      spacingLeft: chartOptions.spaceLeft ?? 0,
+      spacingRight: chartOptions.spaceRight ?? 0,
       plotBackgroundColor: chartOptions.plotBackgroundColor || (isDark ? colors.backgroundColor : 'transparent'),
       plotBorderWidth: chartOptions.plotBorderWidth || 0,
       plotBorderColor: chartOptions.plotBorderColor || colors.borderColor,

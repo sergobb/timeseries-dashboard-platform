@@ -104,11 +104,13 @@ export default function ChartOptionsPanel({
                   'title',
                   'subtitle',
                   'height',
+                  'spaceLeft',
+                  'spaceRight',
+                  'creditsEnabled',
                   'backgroundColor',
                   'plotBackgroundColor',
                   'plotBorderWidth',
                   'plotBorderColor',
-                  'creditsEnabled',
                 ]}
               />
             </div>
