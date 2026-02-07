@@ -1,19 +1,22 @@
-import { LabelHTMLAttributes, forwardRef, ReactNode } from 'react';
+'use client';
 
-interface LabelProps extends Omit<LabelHTMLAttributes<HTMLLabelElement>, 'className'> {
+import * as LabelPrimitive from '@radix-ui/react-label';
+import { forwardRef, ReactNode } from 'react';
+
+interface LabelProps extends React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> {
   children: ReactNode;
   className?: string;
 }
 
-const Label = forwardRef<HTMLLabelElement, LabelProps>(
+const Label = forwardRef<React.ElementRef<typeof LabelPrimitive.Root>, LabelProps>(
   ({ children, className = '', ...props }, ref) => {
     const baseClasses = 'block text-sm font-medium text-[var(--color-foreground)]';
     const classes = `${baseClasses} ${className}`.trim();
 
     return (
-      <label ref={ref} className={classes} {...props}>
+      <LabelPrimitive.Root ref={ref} className={classes} {...props}>
         {children}
-      </label>
+      </LabelPrimitive.Root>
     );
   }
 );
@@ -21,4 +24,3 @@ const Label = forwardRef<HTMLLabelElement, LabelProps>(
 Label.displayName = 'Label';
 
 export default Label;
-

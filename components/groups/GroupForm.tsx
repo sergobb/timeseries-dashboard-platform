@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, type ChangeEvent } from 'react';
+import { useMemo } from 'react';
 import PageHeader from '@/components/ui/PageHeader';
 import PageTitle from '@/components/ui/PageTitle';
 import Input from '@/components/ui/Input';
@@ -65,8 +65,8 @@ export default function GroupForm({
   onSave,
   onCancel,
 }: GroupFormProps) {
-  const handleRoleChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    onRoleChange(event.target.value as GroupRole);
+  const handleRoleChange = (e: { target: { value: string } }) => {
+    onRoleChange(e.target.value as GroupRole);
   };
 
   const userCounts = useMemo(() => {

@@ -388,7 +388,7 @@ export default function ChartOptionsComponent({
           <Checkbox
             id={`chart-tooltip-split-${chartId}`}
             checked={options.tooltip?.split || false}
-            onChange={(e) => updateTooltip('split', e.target.checked)}
+            onCheckedChange={(checked) => updateTooltip('split', checked === true)}
           />
           <Label htmlFor={`chart-tooltip-split-${chartId}`} className="text-xs cursor-pointer">
             Split
@@ -401,7 +401,7 @@ export default function ChartOptionsComponent({
           <Checkbox
             id={`chart-tooltip-shared-${chartId}`}
             checked={options.tooltip?.shared || false}
-            onChange={(e) => updateTooltip('shared', e.target.checked)}
+            onCheckedChange={(checked) => updateTooltip('shared', checked === true)}
           />
           <Label htmlFor={`chart-tooltip-shared-${chartId}`} className="text-xs cursor-pointer">
             Shared

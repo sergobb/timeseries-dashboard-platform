@@ -60,7 +60,7 @@ export default function DashboardLayoutSelector({
           <Checkbox
             id="dashboardShowDateRangePicker"
             checked={showDateRangePicker}
-            onChange={(e) => handleShowDateRangePickerChange(e.target.checked)}
+            onCheckedChange={(checked) => handleShowDateRangePickerChange(checked === true)}
           />
           <Label htmlFor="dashboardShowDateRangePicker" className="mb-0">
             Show date range picker

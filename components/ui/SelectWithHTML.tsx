@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useRef, useEffect, ReactNode } from 'react';
+import * as SelectPrimitive from '@radix-ui/react-select';
+import { ReactNode } from 'react';
 
 interface SelectOption {
   value: string;
@@ -18,6 +19,9 @@ interface SelectWithHTMLProps {
   className?: string;
 }
 
+const triggerClasses =
+  'w-full rounded-md border border-[var(--color-border)] bg-[var(--color-input)] px-3 py-2 text-sm text-[var(--color-foreground)] shadow-sm focus:border-[var(--color-ring)] focus:outline-none focus:ring-[var(--color-ring)] flex items-center justify-between disabled:opacity-50 disabled:cursor-not-allowed';
+
 export default function SelectWithHTML({
   id,
   value,
@@ -27,108 +31,66 @@ export default function SelectWithHTML({
   disabled = false,
   className = '',
 }: SelectWithHTMLProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen]);
-
-  const selectedOption = options.find((opt) => opt.value === value);
-
-  const baseClasses =
-    'w-full rounded-md border border-[var(--color-border)] bg-[var(--color-input)] px-3 py-2 text-sm text-[var(--color-foreground)] shadow-sm focus:border-[var(--color-ring)] focus:outline-none focus:ring-[var(--color-ring)]';
-  const classes = `${baseClasses} ${className}`.trim();
+  const filteredOptions = options.filter((opt) => opt.value !== '');
 
   return (
-    <div ref={containerRef} className="relative w-full">
-      <button
+    <SelectPrimitive.Root value={value} onValueChange={onChange} disabled={disabled}>
+      <SelectPrimitive.Trigger
         id={id}
-        type="button"
-        onClick={() => !disabled && setIsOpen(!isOpen)}
-        disabled={disabled}
-        className={`${classes} flex items-center justify-between cursor-pointer ${
-          disabled ? 'opacity-50 cursor-not-allowed' : ''
-        }`}
+        className={`${triggerClasses} ${className}`.trim()}
       >
-        <span className="flex-1 text-left">
-          {selectedOption ? (
-            <span dangerouslySetInnerHTML={{ __html: String(selectedOption.label) }} />
-          ) : (
-            <span className="text-[var(--color-muted-foreground)]">{placeholder}</span>
-          )}
-        </span>
-        <svg
-          className={`ml-2 h-4 w-4 transition-transform ${
-            isOpen ? 'rotate-180' : ''
-          }`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
+        <SelectPrimitive.Value placeholder={placeholder} />
+        <SelectPrimitive.Icon>
+          <svg
+            className="ml-2 h-4 w-4 transition-transform"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </SelectPrimitive.Icon>
+      </SelectPrimitive.Trigger>
+      <SelectPrimitive.Portal>
+        <SelectPrimitive.Content
+          position="popper"
+          sideOffset={4}
+          className="z-50 max-h-60 w-full min-w-[8rem] overflow-hidden rounded-md border-2 border-[var(--color-border)] bg-[var(--color-surface)] shadow-xl"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
-      </button>
-
-      {isOpen && !disabled && (
-        <div className="absolute z-50 w-full mt-1 bg-[var(--color-surface)] border-2 border-[var(--color-border)] rounded-md shadow-xl max-h-60 overflow-auto">
-          {options.filter((opt) => opt.value !== '').length === 0 ? (
-            <div className="px-3 py-2 text-sm text-[var(--color-muted-foreground)] font-medium">
-              No options available
-            </div>
-          ) : (
-            options
-              .filter((opt) => opt.value !== '')
-              .map((option, index, array) => (
-                <button
+          <SelectPrimitive.Viewport className="p-0">
+            {filteredOptions.length === 0 ? (
+              <div className="px-3 py-2 text-sm text-[var(--color-muted-foreground)] font-medium">
+                No options available
+              </div>
+            ) : (
+              filteredOptions.map((option) => (
+                <SelectPrimitive.Item
                   key={option.value}
-                  type="button"
-                  onClick={() => {
-                    if (!option.disabled) {
-                      onChange(option.value);
-                      setIsOpen(false);
-                    }
-                  }}
+                  value={option.value}
                   disabled={option.disabled}
-                  className={`w-full text-left px-3 py-2.5 text-sm transition-colors ${
+                  className={`relative flex cursor-pointer select-none items-center rounded-none px-3 py-2.5 text-sm outline-none ${
                     option.value === value
-                      ? 'bg-[var(--color-secondary)] text-[var(--color-secondary-foreground)] font-semibold border-l-4 border-[var(--color-primary)]'
+                      ? 'bg-[var(--color-secondary)] font-semibold text-[var(--color-secondary-foreground)] border-l-4 border-[var(--color-primary)]'
                       : 'bg-[var(--color-surface)] text-[var(--color-foreground)]'
                   } ${
                     !option.disabled
-                      ? 'hover:bg-[var(--color-secondary)] hover:text-[var(--color-foreground)] cursor-pointer'
+                      ? 'hover:bg-[var(--color-secondary)] hover:text-[var(--color-foreground)] data-[highlighted]:bg-[var(--color-secondary)] data-[highlighted]:text-[var(--color-foreground)]'
                       : 'opacity-50 cursor-not-allowed'
-                  } ${
-                    index < array.length - 1 ? 'border-b border-[var(--color-border)]' : ''
-                  }`}
+                  } border-b border-[var(--color-border)] last:border-b-0`}
                 >
-                  <span dangerouslySetInnerHTML={{ __html: String(option.label) }} />
-                </button>
+                  <SelectPrimitive.ItemText>
+                    {typeof option.label === 'string' && option.label.includes('<') ? (
+                      <span dangerouslySetInnerHTML={{ __html: option.label }} />
+                    ) : (
+                      option.label
+                    )}
+                  </SelectPrimitive.ItemText>
+                </SelectPrimitive.Item>
               ))
-          )}
-        </div>
-      )}
-    </div>
+            )}
+          </SelectPrimitive.Viewport>
+        </SelectPrimitive.Content>
+      </SelectPrimitive.Portal>
+    </SelectPrimitive.Root>
   );
 }
-

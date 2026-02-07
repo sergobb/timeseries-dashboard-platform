@@ -1,21 +1,7 @@
 'use client';
 
-import { ReactNode, useState, createContext, useContext, useImperativeHandle, forwardRef, useEffect } from 'react';
-
-interface AccordionContextType {
-  activeId: string | null;
-  setActiveId: (id: string | null) => void;
-}
-
-const AccordionContext = createContext<AccordionContextType | undefined>(undefined);
-
-export const useAccordion = () => {
-  const context = useContext(AccordionContext);
-  if (!context) {
-    throw new Error('useAccordion must be used within AccordionContainer');
-  }
-  return context;
-};
+import * as AccordionPrimitive from '@radix-ui/react-accordion';
+import { forwardRef, ReactNode, useImperativeHandle, useRef, useState } from 'react';
 
 export interface AccordionContainerRef {
   setActiveId: (id: string | null) => void;
@@ -29,27 +15,36 @@ interface AccordionContainerProps {
 
 const AccordionContainer = forwardRef<AccordionContainerRef, AccordionContainerProps>(
   ({ children, defaultActiveId = null, activeId: controlledActiveId }, ref) => {
-    const [internalActiveId, setInternalActiveId] = useState<string | null>(defaultActiveId);
-    const activeId = controlledActiveId !== undefined ? controlledActiveId : internalActiveId;
+    const [internalValue, setInternalValue] = useState<string | undefined>(
+      defaultActiveId ?? undefined
+    );
+    const value =
+      controlledActiveId !== undefined
+        ? controlledActiveId ?? undefined
+        : internalValue;
 
     useImperativeHandle(ref, () => ({
       setActiveId: (id: string | null) => {
         if (controlledActiveId === undefined) {
-          setInternalActiveId(id);
+          setInternalValue(id ?? undefined);
         }
       },
     }));
 
-    const setActiveId = (id: string | null) => {
-      if (controlledActiveId === undefined) {
-        setInternalActiveId(id);
-      }
-    };
-
     return (
-      <AccordionContext.Provider value={{ activeId, setActiveId }}>
-        <div className="space-y-4">{children}</div>
-      </AccordionContext.Provider>
+      <AccordionPrimitive.Root
+        type="single"
+        collapsible
+        value={value ?? ''}
+        onValueChange={(v) => {
+          if (controlledActiveId === undefined) {
+            setInternalValue(v || undefined);
+          }
+        }}
+        className="space-y-4"
+      >
+        {children}
+      </AccordionPrimitive.Root>
     );
   }
 );
@@ -57,4 +52,3 @@ const AccordionContainer = forwardRef<AccordionContainerRef, AccordionContainerP
 AccordionContainer.displayName = 'AccordionContainer';
 
 export default AccordionContainer;
-
