@@ -3,7 +3,7 @@
 // Или: mongosh и затем скопировать содержимое скрипта
 
 // Определяем все доступные роли в системе
-const allRoles = ['db_admin', 'metadata_editor', 'dashboard_creator', 'public'];
+const allRoles = ['db_admin', 'metadata_editor', 'dashboard_creator', 'user_admin', 'public'];
 
 // Имя пользователя для обновления
 const username = 'sergo';

@@ -1,6 +1,10 @@
 import { redirect } from 'next/navigation';
 import DashboardView from '@/components/dashboard/DashboardView';
+import PublicThemeFromUrl from '@/components/PublicThemeFromUrl';
 import { DashboardService } from '@/lib/services/dashboard.service';
+
+const THEMES = ['light', 'dark', 'light-blue', 'dark-blue'] as const;
+type ThemeParam = (typeof THEMES)[number];
 
 function parseShowDateRange(
   param: string | string[] | undefined
@@ -8,6 +12,16 @@ function parseShowDateRange(
   if (param === undefined) return true;
   const v = Array.isArray(param) ? param[0] : param;
   return v !== '0' && v !== 'false';
+}
+
+function parseTheme(
+  param: string | string[] | undefined
+): ThemeParam | null {
+  if (param === undefined) return null;
+  const v = Array.isArray(param) ? param[0] : param;
+  return typeof v === 'string' && (THEMES as readonly string[]).includes(v)
+    ? (v as ThemeParam)
+    : null;
 }
 
 export default async function PublicDashboardPage({
@@ -33,14 +47,17 @@ export default async function PublicDashboardPage({
   const showDateRangeOverride = parseShowDateRange(
     resolvedSearchParams.showDateRange
   );
+  const themeFromUrl = parseTheme(resolvedSearchParams.theme);
 
   return (
-    <div className="min-h-screen w-full bg-[var(--color-background)] p-4 md:p-6">
-      <DashboardView
-        dashboard={dashboard}
-        showDateRangeOverride={showDateRangeOverride}
-      />
-    </div>
+    <PublicThemeFromUrl themeFromUrl={themeFromUrl}>
+      <div className="min-h-screen w-full bg-[var(--color-background)] p-4 md:p-6">
+        <DashboardView
+          dashboard={dashboard}
+          showDateRangeOverride={showDateRangeOverride}
+        />
+      </div>
+    </PublicThemeFromUrl>
   );
 }
 

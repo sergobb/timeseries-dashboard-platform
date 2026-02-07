@@ -4,9 +4,6 @@ import { createContext, useContext, useEffect, useState } from 'react';
 
 export const THEME_STORAGE_KEY = 'theme';
 
-type Theme = 'light' | 'dark' | 'light-blue' | 'dark-blue';
-
-const VALID_THEMES: Theme[] = ['light', 'dark', 'light-blue', 'dark-blue'];
 
 function readStoredTheme(): Theme {
   if (typeof window === 'undefined') return 'light';
@@ -28,21 +25,32 @@ function writeStoredTheme(theme: Theme): void {
   } catch (_) {}
 }
 
+export type Theme = 'light' | 'dark' | 'light-blue' | 'dark-blue';
+
+export const VALID_THEMES: Theme[] = ['light', 'dark', 'light-blue', 'dark-blue'];
+
+export function isValidTheme(value: string): value is Theme {
+  return VALID_THEMES.includes(value as Theme);
+}
+
 interface ThemeContextType {
   theme: Theme;
   setTheme: (theme: Theme) => void;
+  setThemeOverride: (theme: Theme | null) => void;
   resolvedTheme: 'light' | 'dark';
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>('light');
+  const [storedTheme, setStoredTheme] = useState<Theme>('light');
+  const [urlOverride, setThemeOverride] = useState<Theme | null>(null);
 
   useEffect(() => {
-    setThemeState(readStoredTheme());
+    setStoredTheme(readStoredTheme());
   }, []);
 
+  const theme = urlOverride ?? storedTheme;
   const resolvedTheme: ThemeContextType['resolvedTheme'] =
     theme === 'dark' || theme === 'dark-blue' ? 'dark' : 'light';
 
@@ -54,12 +62,16 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, [theme]);
 
   const setTheme = (newTheme: Theme) => {
-    setThemeState(newTheme);
-    writeStoredTheme(newTheme);
+    if (urlOverride !== null) {
+      setThemeOverride(newTheme);
+    } else {
+      setStoredTheme(newTheme);
+      writeStoredTheme(newTheme);
+    }
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, resolvedTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme, setThemeOverride, resolvedTheme }}>
       {children}
     </ThemeContext.Provider>
   );

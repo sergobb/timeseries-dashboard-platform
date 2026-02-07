@@ -1,42 +1,56 @@
-# Скрипты для работы с базой данных MongoDB
+# MongoDB Database Utility Scripts
 
-## Добавление ролей пользователю
+## Create Administrator (create-user-admin.cjs)
 
-Скрипт `add-roles-to-user.js` добавляет все доступные роли пользователю "sergo".
+On first Docker container startup, an administrative user is created:
+- **Email**: `user_admin@gmail.com`
+- **Password**: `user_admin`
+- **Role**: `user_admin`
 
-### Доступные роли в системе:
-- `db_admin` - администратор базы данных
-- `metadata_editor` - редактор метаданных
-- `dashboard_creator` - создатель дашбордов
-- `public` - публичный доступ
+For manual run, set `MONGODB_URI` and execute:
+```bash
+MONGODB_URI=mongodb://user:pass@localhost:27017/db node scripts/create-user-admin.cjs
+```
+In Docker, variables are taken from `.env` (docker-compose).
 
-### Способы запуска:
+## Add Roles to User
 
-#### Способ 1: Через mongosh (рекомендуется)
+The `add-roles-to-user.js` script adds all available roles to user "sergo".
+
+### Available roles:
+- `db_admin` - manage connections to external databases
+- `metadata_editor` - edit metadata, data sources, and data sets
+- `dashboard_creator` - create dashboards
+- `user_admin` - manage users and roles
+- `public` - public access to dashboards
+
+### How to run:
+
+#### Method 1: Via mongosh (recommended)
 ```bash
 mongosh "mongodb://localhost:27017/your-database-name" < scripts/add-roles-to-user.js
 ```
 
-Если у вас есть файл `.env.local` с `MONGODB_URI`, используйте:
+If you have `.env.local` with `MONGODB_URI`, use:
 ```bash
 mongosh "$(grep MONGODB_URI .env.local | cut -d '=' -f2)" < scripts/add-roles-to-user.js
 ```
 
-#### Способ 2: Интерактивно через mongosh
+#### Method 2: Interactively via mongosh
 ```bash
 mongosh "mongodb://your-connection-string"
 ```
-Затем скопируйте и вставьте содержимое файла `add-roles-to-user.js`
+Then copy and paste the contents of `add-roles-to-user.js`
 
-#### Способ 3: Через Node.js с MongoDB драйвером
-Если вы предпочитаете использовать Node.js, создайте файл `add-roles-node.js`:
+#### Method 3: Via Node.js with MongoDB driver
+If you prefer Node.js, create `add-roles-node.js`:
 
 ```javascript
 const { MongoClient } = require('mongodb');
 require('dotenv').config({ path: '.env.local' });
 
 const uri = process.env.MONGODB_URI;
-const allRoles = ['db_admin', 'metadata_editor', 'dashboard_creator', 'public'];
+const allRoles = ['db_admin', 'metadata_editor', 'dashboard_creator', 'user_admin', 'public'];
 const username = 'sergo';
 
 async function addRoles() {
@@ -55,7 +69,7 @@ async function addRoles() {
     });
     
     if (!user) {
-      console.error(`Пользователь "${username}" не найден!`);
+      console.error(`User "${username}" not found!`);
       return;
     }
     
@@ -63,7 +77,7 @@ async function addRoles() {
     const newRoles = [...new Set([...currentRoles, ...allRoles])];
     
     if (currentRoles.length === newRoles.length) {
-      console.log('Пользователь уже имеет все роли.');
+      console.log('User already has all roles.');
       return;
     }
     
@@ -77,8 +91,8 @@ async function addRoles() {
       }
     );
     
-    console.log(`✓ Роли успешно добавлены!`);
-    console.log(`  Новые роли: [${newRoles.join(', ')}]`);
+    console.log(`✓ Roles added successfully!`);
+    console.log(`  New roles: [${newRoles.join(', ')}]`);
     
   } finally {
     await client.close();
@@ -88,22 +102,22 @@ async function addRoles() {
 addRoles().catch(console.error);
 ```
 
-Затем запустите:
+Then run:
 ```bash
 node scripts/add-roles-node.js
 ```
 
-### Примечания:
-- Скрипт ищет пользователя по email или name, содержащему "sergo" (регистр не важен)
-- Если пользователь уже имеет все роли, скрипт сообщит об этом
-- Скрипт не удаляет существующие роли, только добавляет новые
+### Notes:
+- The script searches for a user by email or name containing "sergo" (case-insensitive)
+- If the user already has all roles, the script will report it
+- The script does not remove existing roles, only adds new ones
 
-## Миграция: заполнение label у series из description Y-колонки
+## Migration: Populate series labels from Y-column description
 
-Скрипт `backfill-series-labels.js` заполняет `series.options.label` для старых чартов.
-Берёт `description` Y-колонки из `data_sources`, при отсутствии — использует `columnName`.
+The `backfill-series-labels.js` script populates `series.options.label` for legacy charts.
+Uses the Y-column `description` from `data_sources`, or falls back to `columnName` if missing.
 
-### Запуск:
+### Run:
 ```bash
 node scripts/backfill-series-labels.js
 ```
@@ -112,4 +126,3 @@ node scripts/backfill-series-labels.js
 ```bash
 node scripts/backfill-series-labels.js --dry-run
 ```
-

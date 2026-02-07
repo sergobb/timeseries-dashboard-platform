@@ -104,6 +104,12 @@ The platform uses role-based access control. Different roles have access to diff
   - Create, edit, and delete charts
   - View dashboards you created or have access to
 
+### user_admin
+- **Purpose**: Manage users and assign roles
+- **Permissions**:
+  - View list of users
+  - Assign or revoke roles for users
+
 ### public
 - **Purpose**: View public dashboards
 - **Permissions**:
@@ -444,6 +450,8 @@ For embedding or full-screen display without the application header and navigati
     - If the dashboard is configured with “Show date range picker” disabled, the picker is never shown.
     - Otherwise you can hide it via the query parameter: add `?showDateRange=false` or `?showDateRange=0` to the URL.  
   Example: `/dashboards/507f1f77bcf86cd799439011/public?showDateRange=false`
+  - **Theme** (colour scheme): add `?theme=light`, `?theme=dark`, `?theme=light-blue` or `?theme=dark-blue` to force the theme for this view. If omitted, the viewer’s saved theme (or default) is used.  
+  Example: `/dashboards/507f1f77bcf86cd799439011/public?theme=dark`
 
 Use this URL in iframes, kiosks, or when you need a minimal view with only the dashboard charts.
 
@@ -638,4 +646,4 @@ If you encounter issues or need assistance:
 
 ---
 
-**Last Updated**: January 2026
+**Last Updated**: February 2026

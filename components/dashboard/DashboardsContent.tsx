@@ -7,17 +7,24 @@ import Card from '@/components/ui/Card';
 import Text from '@/components/ui/Text';
 import Box from '@/components/ui/Box';
 import Flex from '@/components/ui/Flex';
+import Input from '@/components/ui/Input';
 
 interface DashboardsContentProps {
   dashboards: Dashboard[];
+  filteredDashboards: Dashboard[];
+  filterText: string;
   error: string | null;
+  onFilterChange: (text: string) => void;
   onDelete: (dashboardId: string, title: string) => void;
   currentUserId?: string | null;
 }
 
 export default function DashboardsContent({
   dashboards,
+  filteredDashboards,
+  filterText,
   error,
+  onFilterChange,
   onDelete,
   currentUserId,
 }: DashboardsContentProps) {
@@ -26,13 +33,28 @@ export default function DashboardsContent({
     Boolean(currentUserId && dashboard.createdBy === currentUserId);
   const canEdit = (dashboard: Dashboard) =>
     isOwner(dashboard) || Boolean(dashboard.canEdit);
-  const sortedDashboards = [...dashboards].sort(
+  const sortedDashboards = [...filteredDashboards].sort(
     (a, b) => Number(isOwner(b)) - Number(isOwner(a)),
   );
 
   return (
     <>
       {error && <ErrorMessage message={error} className="mb-4" />}
+
+      <Box className="mb-6">
+        <Input
+          type="text"
+          placeholder="Filter by description..."
+          value={filterText}
+          onChange={(e) => onFilterChange(e.target.value)}
+        />
+      </Box>
+
+      {dashboards.length === 0 ? null : sortedDashboards.length === 0 ? (
+        <Box className="text-center py-12">
+          <Text variant="muted">No dashboards match the filter.</Text>
+        </Box>
+      ) : (
       <Box className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {sortedDashboards.map((dashboard) => (
           <Card
@@ -83,6 +105,7 @@ export default function DashboardsContent({
           </Card>
         ))}
       </Box>
+      )}
     </>
   );
 }

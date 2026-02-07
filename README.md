@@ -63,40 +63,41 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ### Docker
 
-При развёртывании через docker-compose поднимаются приложение, nginx и MongoDB. База данных приложения: `timeseries-dashboard-platform-db`.
+When deploying via docker-compose, the application, nginx, and MongoDB are started. Application database: `timeseries-dashboard-platform-db`.
 
-Перед запуском создайте `.env` из шаблона и задайте секреты:
+Before starting, create `.env` from the template and set the secrets:
 
 ```bash
 cp .env.example .env
-# Отредактируйте .env: NEXTAUTH_SECRET, ENCRYPTION_KEY (и при необходимости MONGO_USER, MONGO_PASSWORD, NEXTAUTH_URL)
+# Edit .env: NEXTAUTH_SECRET, ENCRYPTION_KEY (and optionally MONGO_USER, MONGO_PASSWORD, NEXTAUTH_URL)
 ```
 
-Переменные в `.env`:
+Variables in `.env`:
 
-| Переменная       | Обязательно | Описание |
-|------------------|-------------|----------|
-| `NEXTAUTH_SECRET` | да         | Секрет NextAuth (≥32 символов) |
-| `ENCRYPTION_KEY`  | да         | Ключ шифрования (≥32 символов) |
-| `MONGO_USER`      | нет        | Пользователь MongoDB (по умолчанию: `mongoadmin`) |
-| `MONGO_PASSWORD`  | нет        | Пароль MongoDB (по умолчанию: `mongoadmin`) |
-| `NEXTAUTH_URL`    | нет        | URL приложения (по умолчанию: `http://localhost:8080`) |
+| Variable          | Required | Description |
+|-------------------|----------|-------------|
+| `NEXTAUTH_SECRET` | yes      | NextAuth secret (≥32 characters) |
+| `ENCRYPTION_KEY`  | yes      | Encryption key (≥32 characters) |
+| `MONGO_USER`      | no       | MongoDB user (default: `mongoadmin`) |
+| `MONGO_PASSWORD`  | no       | MongoDB password (default: `mongoadmin`) |
+| `NEXTAUTH_URL`    | no       | Application URL (default: `http://localhost:8080`) |
 
-Запуск:
+Start:
 
 ```bash
 docker-compose up -d
 ```
 
-Приложение доступно по [http://localhost:8080](http://localhost:8080) (через nginx). Данные MongoDB сохраняются в volume `mongo_data`.
+The application is available at [http://localhost:8080](http://localhost:8080) (via nginx). MongoDB data is persisted in the `mongo_data` volume.
 
-При первом запуске скрипт `create-user-admin.cjs` создаёт административного пользователя.
+On first startup, the `create-user-admin.cjs` script creates an administrative user.
 
 ## User Roles
 
 - **db_admin** - manage connections to external databases
 - **metadata_editor** - create and edit metadata, data sources, and data sets
 - **dashboard_creator** - create and edit dashboards
+- **user_admin** - manage users and assign roles
 - **public** (without authentication) - view public dashboards
 
 ## Project Structure

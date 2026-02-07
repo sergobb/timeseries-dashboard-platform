@@ -9,7 +9,7 @@ import DashboardsContent from '@/components/dashboard/DashboardsContent';
 
 export default function DashboardsPage() {
   const { data: session, status } = useSession();
-  const { dashboards, loading, error, remove } = useDashboards();
+  const { dashboards, loading, error, filterText, setFilterText, filteredDashboards, remove } = useDashboards();
 
   if (status === 'loading' || loading) {
     return (
@@ -24,7 +24,10 @@ export default function DashboardsPage() {
       <DashboardsHeader />
       <DashboardsContent
         dashboards={dashboards}
+        filteredDashboards={filteredDashboards}
+        filterText={filterText}
         error={error}
+        onFilterChange={setFilterText}
         onDelete={remove}
         currentUserId={session?.user?.id}
       />
