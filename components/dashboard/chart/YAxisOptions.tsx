@@ -114,6 +114,50 @@ export default function YAxisOptionsComponent({
       </div>
 
       <div>
+        <Label htmlFor={`yaxis-min-${seriesId}`} className="mb-1 text-xs">
+          Min
+        </Label>
+        <Input
+          id={`yaxis-min-${seriesId}`}
+          type="number"
+          step="any"
+          value={options.min !== undefined ? options.min : ''}
+          onChange={(e) => {
+            const raw = e.target.value;
+            if (raw === '') {
+              updateOption('min', undefined);
+              return;
+            }
+            const n = parseFloat(raw);
+            if (!Number.isNaN(n)) updateOption('min', n);
+          }}
+          placeholder="Auto"
+        />
+      </div>
+
+      <div>
+        <Label htmlFor={`yaxis-max-${seriesId}`} className="mb-1 text-xs">
+          Max
+        </Label>
+        <Input
+          id={`yaxis-max-${seriesId}`}
+          type="number"
+          step="any"
+          value={options.max !== undefined ? options.max : ''}
+          onChange={(e) => {
+            const raw = e.target.value;
+            if (raw === '') {
+              updateOption('max', undefined);
+              return;
+            }
+            const n = parseFloat(raw);
+            if (!Number.isNaN(n)) updateOption('max', n);
+          }}
+          placeholder="Auto"
+        />
+      </div>
+
+      <div>
         <Label htmlFor={`yaxis-title-shift-${seriesId}`} className="mb-1 text-xs">
           Axis Shift (px)
         </Label>

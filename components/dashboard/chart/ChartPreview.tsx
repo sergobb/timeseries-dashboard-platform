@@ -43,7 +43,8 @@ export default function ChartPreview({
   }, [theme, isDark]);
 
   const colors = useMemo(() => themeColors, [themeColors]);
-  
+
+  // Превью использует те же опции, что и дашборд: series, yAxes (в т.ч. min/max оси Y), chartOptions, xAxisOptions
   const highchartsOptions = useMemo(() => {
     return buildHighchartsOptions(series, yAxes, chartOptions, xAxisOptions, colors, isDark, dateRange, Highcharts);
   }, [series, yAxes, chartOptions, xAxisOptions, colors, isDark, dateRange]);
