@@ -30,14 +30,14 @@ export default function DashboardBuilder({ dashboardId }: DashboardBuilderProps)
     dashboard,
     title,
     description,
-    access,
+    isPublic,
     defaultDateRange,
     groupIds,
     showDateRangePicker,
     layout,
     setTitle,
     setDescription,
-    setAccess,
+    setIsPublic,
     setDefaultDateRange,
     toggleGroupId,
     setShowDateRangePicker,
@@ -102,7 +102,7 @@ export default function DashboardBuilder({ dashboardId }: DashboardBuilderProps)
             <DashboardForm
               title={title}
               description={description}
-              access={access}
+              isPublic={isPublic}
               defaultDateRange={defaultDateRange}
               groups={groups}
               selectedGroupIds={groupIds}
@@ -110,7 +110,7 @@ export default function DashboardBuilder({ dashboardId }: DashboardBuilderProps)
               groupsError={groupsError}
               onTitleChange={setTitle}
               onDescriptionChange={setDescription}
-              onAccessChange={setAccess}
+              onIsPublicChange={setIsPublic}
               onDefaultDateRangeChange={setDefaultDateRange}
               onGroupToggle={toggleGroupId}
             />
@@ -146,7 +146,7 @@ export default function DashboardBuilder({ dashboardId }: DashboardBuilderProps)
       },
     ];
   }, [
-    access,
+    isPublic,
     chartCount,
     charts,
     dashboardId,
@@ -160,7 +160,7 @@ export default function DashboardBuilder({ dashboardId }: DashboardBuilderProps)
     layout,
     handleChartsPerRowChange,
     loadingCharts,
-    setAccess,
+    setIsPublic,
     setDefaultDateRange,
     setDescription,
     setShowDateRangePicker,

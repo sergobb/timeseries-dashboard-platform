@@ -24,7 +24,8 @@ export default async function PublicDashboardPage({
     redirect('/dashboards');
   }
 
-  if (dashboard.access !== 'public') {
+  const isPublic = dashboard.isPublic ?? dashboard.access === 'public';
+  if (!isPublic) {
     redirect('/dashboards');
   }
 

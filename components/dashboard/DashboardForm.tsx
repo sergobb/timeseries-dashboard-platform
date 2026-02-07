@@ -2,6 +2,7 @@ import FormField from '@/components/ui/FormField';
 import Input from '@/components/ui/Input';
 import Textarea from '@/components/ui/Textarea';
 import Select from '@/components/ui/Select';
+import Checkbox from '@/components/ui/Checkbox';
 import { PRESET_RANGES } from '@/lib/date-ranges';
 import { Group } from '@/types/group';
 import DashboardGroupsSelector from './DashboardGroupsSelector';
@@ -9,7 +10,7 @@ import DashboardGroupsSelector from './DashboardGroupsSelector';
 interface DashboardFormProps {
   title: string;
   description: string;
-  access: 'public' | 'private' | 'shared';
+  isPublic: boolean;
   defaultDateRange: string;
   groups: Group[];
   selectedGroupIds: string[];
@@ -17,7 +18,7 @@ interface DashboardFormProps {
   groupsError: string | null;
   onTitleChange: (title: string) => void;
   onDescriptionChange: (description: string) => void;
-  onAccessChange: (access: 'public' | 'private' | 'shared') => void;
+  onIsPublicChange: (isPublic: boolean) => void;
   onDefaultDateRangeChange: (range: string) => void;
   onGroupToggle: (groupId: string) => void;
 }
@@ -25,7 +26,7 @@ interface DashboardFormProps {
 export default function DashboardForm({
   title,
   description,
-  access,
+  isPublic,
   defaultDateRange,
   groups,
   selectedGroupIds,
@@ -33,7 +34,7 @@ export default function DashboardForm({
   groupsError,
   onTitleChange,
   onDescriptionChange,
-  onAccessChange,
+  onIsPublicChange,
   onDefaultDateRangeChange,
   onGroupToggle,
 }: DashboardFormProps) {
@@ -56,18 +57,17 @@ export default function DashboardForm({
         />
       </FormField>
 
-      <FormField label="Access Level">
-        <Select
-          value={access}
-          onChange={(e) => onAccessChange(e.target.value as 'public' | 'private' | 'shared')}
-        >
-          <option value="private">Private</option>
-          <option value="public">Public</option>
-          <option value="shared">Shared</option>
-        </Select>
+      <FormField label="Access">
+        <label className="flex items-center gap-2 cursor-pointer">
+          <Checkbox
+            checked={isPublic}
+            onCheckedChange={(checked) => onIsPublicChange(checked === true)}
+          />
+          <span>Public — anyone can view</span>
+        </label>
       </FormField>
 
-      {access === 'shared' && (
+      <FormField label="Shared with groups">
         <DashboardGroupsSelector
           groups={groups}
           selectedGroupIds={selectedGroupIds}
@@ -75,7 +75,7 @@ export default function DashboardForm({
           error={groupsError}
           onToggle={onGroupToggle}
         />
-      )}
+      </FormField>
 
       <FormField label="Default Date Range">
         <Select

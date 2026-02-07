@@ -1,22 +1,27 @@
 import { getDatabase } from '@/lib/db/mongodb';
-import { Dashboard, DashboardShare, DashboardAccess, DashboardLayout } from '@/types/dashboard';
+import { Dashboard, DashboardShare, DashboardLayout } from '@/types/dashboard';
 import { DEFAULT_CHARTS_PER_ROW, normalizeDashboardLayout } from '@/lib/dashboard-layout';
 import { ObjectId } from 'mongodb';
 
 const DEFAULT_LAYOUT: DashboardLayout = { chartsPerRow: DEFAULT_CHARTS_PER_ROW };
 const DEFAULT_SHOW_DATE_RANGE_PICKER = true;
 
+function resolveIsPublic(doc: Record<string, unknown>): boolean {
+  if (typeof doc.isPublic === 'boolean') return doc.isPublic;
+  return doc.access === 'public';
+}
+
 export class DashboardService {
   static async create(dashboard: Omit<Dashboard, 'id' | 'createdAt' | 'updatedAt'>): Promise<Dashboard> {
     const db = await getDatabase();
-    
+    const isPublic = dashboard.isPublic ?? false;
     const doc = {
       title: dashboard.title,
       description: dashboard.description || null,
       charts: dashboard.charts,
       chartIds: dashboard.chartIds || [],
       groupIds: dashboard.groupIds || [],
-      access: dashboard.access,
+      isPublic,
       defaultDateRange: dashboard.defaultDateRange || null,
       showDateRangePicker: dashboard.showDateRangePicker ?? DEFAULT_SHOW_DATE_RANGE_PICKER,
       layout: normalizeDashboardLayout(
@@ -42,10 +47,11 @@ export class DashboardService {
     let query: Record<string, unknown>;
 
     if (!userId) {
-      query = { access: 'public' };
+      query = { $or: [{ isPublic: true }, { access: 'public' }] };
     } else {
       query = {
         $or: [
+          { isPublic: true },
           { access: 'public' },
           { createdBy: userId },
         ],
@@ -59,7 +65,6 @@ export class DashboardService {
       const userGroupIds = await this.getUserGroupIds(userId);
       if (userGroupIds.length > 0) {
         (query.$or as Array<Record<string, unknown>>).push({
-          access: 'shared',
           groupIds: { $in: userGroupIds },
         });
       }
@@ -85,7 +90,7 @@ export class DashboardService {
       charts: dash.charts,
       chartIds: dash.chartIds || [],
       groupIds: dash.groupIds || [],
-      access: dash.access,
+      isPublic: resolveIsPublic(dash),
       defaultDateRange: dash.defaultDateRange,
       canEdit: userId
         ? dash.createdBy === userId ||
@@ -109,36 +114,25 @@ export class DashboardService {
     
     if (!dashboard) return null;
 
-    // Check access
-    if (dashboard.access === 'public') {
-      return this.mapDashboard(dashboard);
-    }
+    const isPublic = resolveIsPublic(dashboard);
+    const createdBy = String(dashboard.createdBy || '');
 
-    if (dashboard.access === 'private' && dashboard.createdBy !== userId) {
-      return null;
-    }
+    if (createdBy === userId) return this.mapDashboard(dashboard);
+    if (isPublic) return this.mapDashboard(dashboard);
 
-    if (dashboard.access === 'shared' && userId) {
-      if (dashboard.createdBy === userId) {
-        return this.mapDashboard(dashboard);
-      }
+    if (!userId) return null;
 
-      const share = await db.collection('dashboard_shares').findOne({
-        dashboardId: id,
-        userId,
-      });
-      if (share) {
-        return this.mapDashboard(dashboard);
-      }
+    const share = await db.collection('dashboard_shares').findOne({
+      dashboardId: id,
+      userId,
+    });
+    if (share) return this.mapDashboard(dashboard);
 
-      const groupIds = (dashboard.groupIds as string[] | undefined) || [];
-      const hasGroupAccess = await this.userHasGroupAccess(userId, groupIds);
-      if (!hasGroupAccess) {
-        return null;
-      }
-    }
+    const groupIds = (dashboard.groupIds as string[] | undefined) || [];
+    const hasGroupAccess = await this.userHasGroupAccess(userId, groupIds);
+    if (hasGroupAccess) return this.mapDashboard(dashboard);
 
-    return this.mapDashboard(dashboard);
+    return null;
   }
 
   static async update(id: string, updates: Partial<Omit<Dashboard, 'id' | 'createdAt' | 'createdBy'>>, userId: string): Promise<Dashboard | null> {
@@ -213,7 +207,6 @@ export class DashboardService {
 
     if (!dashboard) return false;
     if (dashboard.createdBy === userId) return true;
-    if (dashboard.access === 'private') return false;
 
     const share = await db.collection('dashboard_shares').findOne({
       dashboardId,
@@ -234,7 +227,7 @@ export class DashboardService {
       charts: (doc.charts as Dashboard['charts']) || [],
       chartIds: (doc.chartIds as string[] | undefined) || [],
       groupIds: (doc.groupIds as string[] | undefined) || [],
-      access: (doc.access as DashboardAccess) || 'private',
+      isPublic: resolveIsPublic(doc),
       defaultDateRange: (doc.defaultDateRange as string | undefined) ?? undefined,
       showDateRangePicker: (doc.showDateRangePicker as boolean | undefined) ?? DEFAULT_SHOW_DATE_RANGE_PICKER,
       layout: normalizeDashboardLayout(

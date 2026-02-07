@@ -29,7 +29,7 @@ const updateDashboardSchema = z.object({
   charts: z.array(chartConfigSchema).optional(),
   chartIds: z.array(z.string()).optional(),
   groupIds: z.array(z.string()).optional(),
-  access: z.enum(['public', 'private', 'shared']).optional(),
+  isPublic: z.boolean().optional(),
   defaultDateRange: z.string().optional(),
   showDateRangePicker: z.boolean().optional(),
   layout: z

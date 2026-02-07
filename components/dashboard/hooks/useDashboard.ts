@@ -7,14 +7,14 @@ interface UseDashboardReturn {
   dashboard: Dashboard | null;
   title: string;
   description: string;
-  access: 'public' | 'private' | 'shared';
+  isPublic: boolean;
   defaultDateRange: string;
   groupIds: string[];
   showDateRangePicker: boolean;
   layout: DashboardLayout;
   setTitle: (title: string) => void;
   setDescription: (description: string) => void;
-  setAccess: (access: 'public' | 'private' | 'shared') => void;
+  setIsPublic: (isPublic: boolean) => void;
   setDefaultDateRange: (range: string) => void;
   toggleGroupId: (groupId: string) => void;
   setShowDateRangePicker: (next: boolean) => void;
@@ -32,7 +32,7 @@ export function useDashboard(dashboardId?: string): UseDashboardReturn {
   const router = useRouter();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [access, setAccess] = useState<'public' | 'private' | 'shared'>('private');
+  const [isPublic, setIsPublic] = useState(false);
   const [defaultDateRange, setDefaultDateRange] = useState<string>('Last 7 Days');
   const [groupIds, setGroupIds] = useState<string[]>([]);
   const [showDateRangePicker, setShowDateRangePicker] = useState<boolean>(DEFAULT_SHOW_DATE_RANGE_PICKER);
@@ -57,7 +57,7 @@ export function useDashboard(dashboardId?: string): UseDashboardReturn {
       setDashboard(data);
       setTitle(data.title || '');
       setDescription(data.description || '');
-      setAccess(data.access || 'private');
+      setIsPublic(data.isPublic ?? data.access === 'public');
       setDefaultDateRange(data.defaultDateRange || 'Last 7 Days');
       setGroupIds(data.groupIds || []);
       setShowDateRangePicker(data.showDateRangePicker ?? DEFAULT_SHOW_DATE_RANGE_PICKER);
@@ -81,9 +81,9 @@ export function useDashboard(dashboardId?: string): UseDashboardReturn {
         title,
         description,
         charts: [],
-        access,
+        isPublic,
         defaultDateRange,
-        groupIds: access === 'shared' ? groupIds : [],
+        groupIds,
         showDateRangePicker,
         layout,
       };
@@ -117,14 +117,14 @@ export function useDashboard(dashboardId?: string): UseDashboardReturn {
     dashboard,
     title,
     description,
-    access,
+    isPublic,
     defaultDateRange,
     groupIds,
     showDateRangePicker,
     layout,
     setTitle,
     setDescription,
-    setAccess,
+    setIsPublic,
     setDefaultDateRange,
     toggleGroupId,
     setShowDateRangePicker,

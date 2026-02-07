@@ -33,6 +33,7 @@ export interface ChartConfig {
   };
 }
 
+/** @deprecated Used for backward compat when reading old docs. New model: isPublic + groupIds. */
 export type DashboardAccess = 'public' | 'private' | 'shared';
 
 export type LegacyDashboardLayoutType = 'row' | 'column' | 'grid';
@@ -61,7 +62,10 @@ export interface Dashboard {
   charts: ChartConfig[];
   chartIds?: string[]; // IDs новых charts
   groupIds?: string[];
-  access: DashboardAccess;
+  /** Public for view by anyone. Default false (private). Can be combined with groupIds sharing. */
+  isPublic?: boolean;
+  /** @deprecated Read from old docs. New code uses isPublic. */
+  access?: DashboardAccess;
   defaultDateRange?: string;
   canEdit?: boolean;
   /**

@@ -107,10 +107,7 @@ export default function ChartOptionsPanel({
                   'spaceLeft',
                   'spaceRight',
                   'creditsEnabled',
-                  'backgroundColor',
-                  'plotBackgroundColor',
                   'plotBorderWidth',
-                  'plotBorderColor',
                 ]}
               />
             </div>
@@ -215,6 +212,15 @@ export default function ChartOptionsPanel({
         label: 'Extra',
         content: (
           <div className="space-y-4">
+            <ChartOptionsAccordion title="General">
+              <ChartOptionsComponent
+                chartId={dashboardId}
+                options={chartOptions}
+                onOptionsChange={onChartOptionsChange}
+                visibleFields={['backgroundColor', 'plotBackgroundColor', 'plotBorderColor']}
+              />
+            </ChartOptionsAccordion>
+
             <ChartOptionsAccordion title="Title">
               <ChartOptionsComponent
                 chartId={dashboardId}
