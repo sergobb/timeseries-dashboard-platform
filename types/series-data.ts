@@ -5,5 +5,9 @@ export interface SeriesDataContext {
   xColumnName: string;
   yColumnName: string;
   dateRange: { from: Date; to: Date } | null;
+  aggregation?: {
+    resolution: 'seconds' | 'minutes' | 'hours' | 'days';
+    type: 'none' | 'avg' | 'min' | 'max';
+  } | null;
 }
 

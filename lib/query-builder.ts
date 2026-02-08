@@ -7,10 +7,10 @@ interface ParsedQueryConfig {
   dateRange: { from: Date; to: Date } | null;
   groupBy?: string;
   aggregation?: {
-    type: 'avg' | 'sum' | 'min' | 'max' | 'count';
-    column: string;
+    type: 'none'| 'avg' | 'min' | 'max' ;
+    resolution: 'seconds' | 'minutes' | 'hours' | 'days';
     groupBy?: string;
-  };
+  } | null;
   valueFilters?: Array<{
     column: string;
     operator: 'eq' | 'gt' | 'lt' | 'gte' | 'lte' | 'in';
@@ -31,7 +31,12 @@ export class QueryBuilder {
     // Build SELECT clause
     if (config.aggregation) {
       const aggFunc = config.aggregation.type.toUpperCase();
-      selectClause = `SELECT ${config.xAxis}, ${aggFunc}(${config.aggregation.column}) as ${config.yAxis}`;
+      if (aggFunc === 'NONE') {
+        selectClause = `SELECT ${config.xAxis}, ${config.yAxis}::numeric(18,3)`;
+      } else {
+        const pgResolution = config?.aggregation?.groupBy?.replace(/s$/, '');
+        selectClause = `SELECT date_trunc('${pgResolution}', ${config.xAxis}) as ${config.xAxis}, ${aggFunc}(${config.yAxis}::numeric(18,3)) as ${config.yAxis}`;
+      }
     } else {
       selectClause = `SELECT ${config.xAxis}, ${config.yAxis}::numeric(18,3)`;
       if (config.groupBy) {
@@ -43,20 +48,25 @@ export class QueryBuilder {
     const whereConditions: string[] = [];
     
     if (config.dateRange) {
-      const fromDate = config.dateRange.from instanceof Date 
-        ? config.dateRange.from.toISOString() 
-        : config.dateRange.from;
-      const toDate = config.dateRange.to instanceof Date 
-        ? config.dateRange.to.toISOString() 
-        : config.dateRange.to;
-      
+      // Всегда UTC: берём epoch ms и форматируем ISO, чтобы исключить влияние локального пояса
+      const toUtcIso = (d: Date | string): string =>
+        typeof d === 'string' ? d : new Date(d.getTime()).toISOString();
+      const fromDate = toUtcIso(config.dateRange.from);
+      const toDate = toUtcIso(config.dateRange.to);
+
       if (dbType === 'postgresql') {
-        whereConditions.push(`${config.xAxis} >= '${fromDate}'`);
-        whereConditions.push(`${config.xAxis} <= '${toDate}'`);
+        // Явный ::timestamptz — литерал трактуется как UTC, сравнение с колонкой без сдвига
+        whereConditions.push(`${config.xAxis} >= '${fromDate}'::timestamptz`);
+        whereConditions.push(`${config.xAxis} <= '${toDate}'::timestamptz`);
       } else if (dbType === 'clickhouse') {
         whereConditions.push(`${config.xAxis} >= '${fromDate}'`);
         whereConditions.push(`${config.xAxis} <= '${toDate}'`);
       }
+    }
+
+    if (config.aggregation && config?.aggregation?.type === 'none' && dbType === 'postgresql') {
+      const pgRes = config.aggregation.resolution.replace(/s$/, '');
+      whereConditions.push(`${config.xAxis} = date_trunc('${pgRes}', ${config.xAxis})`);
     }
 
     if (config.valueFilters) {
@@ -73,20 +83,24 @@ export class QueryBuilder {
     // Build GROUP BY clause
     if (config.aggregation) {
       if (config.aggregation.groupBy) {
-        // Time-based grouping
-        if (dbType === 'postgresql') {
-          groupByClause = `GROUP BY date_trunc('${config.aggregation.groupBy}', ${config.xAxis})`;
-          selectClause = `SELECT date_trunc('${config.aggregation.groupBy}', ${config.xAxis}) as ${config.xAxis}, ${config.aggregation.type.toUpperCase()}(${config.aggregation.column}) as ${config.yAxis}`;
-        } else if (dbType === 'clickhouse') {
-          groupByClause = `GROUP BY toStartOfInterval(${config.xAxis}, INTERVAL 1 ${config.aggregation.groupBy})`;
-          selectClause = `SELECT toStartOfInterval(${config.xAxis}, INTERVAL 1 ${config.aggregation.groupBy}) as ${config.xAxis}, ${config.aggregation.type.toUpperCase()}(${config.aggregation.column}) as ${config.yAxis}`;
+        // Time-based grouping (PostgreSQL date_trunc wants singular: minute, hour, day)
+        const aggFunc = config.aggregation.type.toUpperCase();
+        const yExpr = aggFunc === 'NONE' ? `${config.yAxis}::numeric(18,3) as ${config.yAxis}` : `${aggFunc}(${config.yAxis}::numeric(18,3)) as ${config.yAxis}`;
+        if (aggFunc !== 'NONE') {
+          if (dbType === 'postgresql') {
+            // groupByClause = `GROUP BY date_trunc('${pgResolution}', ${config.xAxis})`;
+            groupByClause = `GROUP BY 1`;
+            // selectClause = `SELECT date_trunc('${pgResolution}', ${config.xAxis}) as ${config.xAxis}, ${yExpr}`;
+          } else if (dbType === 'clickhouse') {
+            groupByClause = `GROUP BY toStartOfInterval(${config.xAxis}, INTERVAL 1 ${config.aggregation.groupBy})`;
+            selectClause = `SELECT toStartOfInterval(${config.xAxis}, INTERVAL 1 ${config.aggregation.groupBy}) as ${config.xAxis}, ${yExpr}`;
+          }
         }
-      } else {
-        groupByClause = `GROUP BY ${config.xAxis}`;
-      }
-    } else if (config.groupBy) {
-      groupByClause = `GROUP BY ${config.xAxis}, ${config.groupBy}`;
-    }
+      } 
+      // else {
+      //   groupByClause = `GROUP BY ${config.xAxis}`;
+      // }
+    } 
 
     // Build ORDER BY clause
     orderByClause = `ORDER BY ${config.xAxis} ASC`;
@@ -100,6 +114,8 @@ export class QueryBuilder {
       orderByClause,
     ].filter(Boolean).join(' ');
 
+    console.log(query);
+
     return query;
   }
 
@@ -108,6 +124,11 @@ export class QueryBuilder {
       xAxis: context.xColumnName,
       yAxis: context.yColumnName,
       dateRange: context.dateRange,
+      aggregation: context.aggregation ? {
+        type: context.aggregation?.type,
+        resolution: context.aggregation?.resolution,
+        groupBy: context.aggregation?.resolution ?? undefined
+      }:null
       // TODO: Реализовать извлечение groupBy, aggregation, valueFilters из context
     };
   }

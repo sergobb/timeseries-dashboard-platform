@@ -37,6 +37,23 @@ export function useDashboardRuntime(dashboard: Dashboard): UseDashboardRuntimeRe
   const [seriesLoadingByChartId, setSeriesLoadingByChartId] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
 
+  /** Календарные компоненты как есть → момент в UTC, без сдвига по поясу. */
+  const dateRangeToUtcSameCalendar = useCallback((range: { from: Date; to: Date }) => {
+    const toUtc = (d: Date) =>
+      new Date(
+        Date.UTC(
+          d.getFullYear(),
+          d.getMonth(),
+          d.getDate(),
+          d.getHours(),
+          d.getMinutes(),
+          d.getSeconds(),
+          d.getMilliseconds()
+        )
+      );
+    return { from: toUtc(range.from), to: toUtc(range.to) };
+  }, []);
+
   const loadCharts = useCallback(async (): Promise<Chart[]> => {
     const ids = dashboard.chartIds || [];
     if (ids.length === 0) return [];
@@ -62,7 +79,7 @@ export function useDashboardRuntime(dashboard: Dashboard): UseDashboardRuntimeRe
               dataSetId: s.dataSetId,
               xColumnName: s.xAxisColumn,
               yColumnName: s.yColumnName,
-              dateRange,
+              dateRange: dateRangeToUtcSameCalendar(dateRange),
             }),
           });
 
@@ -112,7 +129,7 @@ export function useDashboardRuntime(dashboard: Dashboard): UseDashboardRuntimeRe
         })
       );
     },
-    [dateRange]
+    [dateRange, dateRangeToUtcSameCalendar]
   );
 
   const load = useCallback(async () => {

@@ -86,6 +86,23 @@ export function useChartData() {
     }
   }, []);
 
+  /** Календарные компоненты (год/месяц/день/час/мин) как есть → момент в UTC, без сдвига по поясу. */
+  const dateRangeToUtcSameCalendar = useCallback((range: { from: Date; to: Date }) => {
+    const toUtc = (d: Date) =>
+      new Date(
+        Date.UTC(
+          d.getFullYear(),
+          d.getMonth(),
+          d.getDate(),
+          d.getHours(),
+          d.getMinutes(),
+          d.getSeconds(),
+          d.getMilliseconds()
+        )
+      );
+    return { from: toUtc(range.from), to: toUtc(range.to) };
+  }, []);
+
   const fetchSeriesChartData = useCallback(async (
     seriesId: string,
     series: Series,
@@ -103,7 +120,7 @@ export function useChartData() {
         dataSetId: series.dataSetId,
         xColumnName: series.xAxisColumn,
         yColumnName: series.yColumnName,
-        dateRange,
+        dateRange: dateRangeToUtcSameCalendar(dateRange),
       };
 
       const response = await fetch('/api/data/query', {

@@ -26,6 +26,7 @@ export class PostgresDriver implements DatabaseDriver {
 
   async connect(): Promise<void> {
     await this.client.connect();
+    await this.client.query("SET timezone = 'UTC'");
   }
 
   async testConnection(): Promise<boolean> {
@@ -109,7 +110,8 @@ export class PostgresDriver implements DatabaseDriver {
     if (!this.client) {
       await this.connect();
     }
-
+    // Гарантируем UTC перед каждым запросом (на случай пула/ленивого подключения)
+    await this.client.query("SET timezone = 'UTC'");
     const result = await this.client.query(sql, params);
     return result.rows;
   }

@@ -34,6 +34,7 @@ interface DataSet {
 
 type DataSetType = 'combined' | 'preaggregated';
 type TimeUnit = 'seconds' | 'minutes' | 'hours' | 'days';
+type AggregationFunction = 'none' | 'average' | 'minimum' | 'maximum';
 
 interface PreaggregationConfig {
   dataSourceId: string;
@@ -71,6 +72,10 @@ function NewDataSetEditPageInner() {
   const [dataSetType, setDataSetType] = useState<DataSetType>('combined');
   const [creating, setCreating] = useState(false);
   const [preaggregationConfig, setPreaggregationConfig] = useState<Map<string, PreaggregationConfig>>(new Map());
+  const [useAggregation, setUseAggregation] = useState(false);
+  const [aggregationFunction, setAggregationFunction] = useState<AggregationFunction>('none');
+  const [aggregationInterval, setAggregationInterval] = useState(1);
+  const [aggregationTimeUnit, setAggregationTimeUnit] = useState<TimeUnit>('seconds');
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -217,6 +222,10 @@ function NewDataSetEditPageInner() {
           dataSourceIds: selectedSources,
           dataSetIds: selectedSets,
           preaggregationConfig: preaggConfig,
+          useAggregation: useAggregation,
+          aggregationFunction: aggregationFunction,
+          aggregationInterval: aggregationInterval,
+          aggregationTimeUnit: aggregationTimeUnit,
         }),
       });
 
@@ -267,6 +276,7 @@ function NewDataSetEditPageInner() {
   const hasMultipleSources = totalSelected > 1;
   // Show type selection only if no Data Sets are selected and multiple sources
   const showTypeSelection = hasMultipleSources && selectedDataSets.size === 0;
+  const showAggregationSection = totalSelected >= 1 && (totalSelected === 1 || dataSetType === 'combined');
 
   return (
     <PageContainer flex innerClassName="lg:flex-1 flex flex-col lg:min-h-0">
@@ -346,6 +356,72 @@ function NewDataSetEditPageInner() {
                     </div>
                   </label>
                 </div>
+              </div>
+            )}
+
+            {/* Use aggregation (single source or Combined Data Set) */}
+            {showAggregationSection && (
+              <div>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={useAggregation}
+                    onChange={(e) => setUseAggregation(e.target.checked)}
+                    className="h-4 w-4 rounded border-[var(--color-border)] text-[var(--color-accent)] focus:ring-[var(--color-ring)]"
+                  />
+                  <span className="text-sm font-medium text-[var(--color-foreground)]">
+                    Use aggregation
+                  </span>
+                </label>
+                {useAggregation && (
+                  <div className="mt-3 pl-6 space-y-3">
+                    <div>
+                      <label className="block text-xs font-medium text-[var(--color-foreground)] mb-1">
+                        Aggregation function
+                      </label>
+                      <select
+                        value={aggregationFunction}
+                        onChange={(e) => setAggregationFunction(e.target.value as AggregationFunction)}
+                        className="w-full max-w-xs rounded-md border border-[var(--color-border)] bg-[var(--color-input)] px-2 py-1.5 text-sm text-[var(--color-foreground)] shadow-sm focus:border-[var(--color-ring)] focus:outline-none focus:ring-[var(--color-ring)]"
+                      >
+                        <option value="none">No aggregation function</option>
+                        <option value="average">Average</option>
+                        <option value="minimum">Minimum</option>
+                        <option value="maximum">Maximum</option>
+                      </select>
+                    </div>
+                    <div className="flex gap-3">
+                      <div className="flex-1 max-w-[8rem]">
+                        <label className="block text-xs font-medium text-[var(--color-foreground)] mb-1">
+                          Interval
+                        </label>
+                        <input
+                          type="number"
+                          min="1"
+                          step="1"
+                          value={aggregationInterval}
+                          onChange={(e) => setAggregationInterval(parseInt(e.target.value) || 1)}
+                          className="w-full rounded-md border border-[var(--color-border)] bg-[var(--color-input)] px-2 py-1 text-sm text-[var(--color-foreground)] shadow-sm focus:border-[var(--color-ring)] focus:outline-none focus:ring-[var(--color-ring)]"
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <label className="block text-xs font-medium text-[var(--color-foreground)] mb-1">
+                          Time Unit
+                        </label>
+                        <select
+                          value={aggregationTimeUnit}
+                          onChange={(e) => setAggregationTimeUnit(e.target.value as TimeUnit)}
+                          className="w-full rounded-md border border-[var(--color-border)] bg-[var(--color-input)] px-2 py-1 text-sm text-[var(--color-foreground)] shadow-sm focus:border-[var(--color-ring)] focus:outline-none focus:ring-[var(--color-ring)]"
+                        >
+                          <option value="seconds">Seconds</option>
+                          <option value="minutes">Minutes</option>
+                          <option value="hours">Hours</option>
+                          <option value="days">Days</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 

@@ -13,10 +13,19 @@ const querySchema = z.object({
   dateRange: z.object({
     from: z.union([z.string().datetime(), z.string(), z.number()]).transform((val) => {
       if (typeof val === 'number') return new Date(val);
+      const s = String(val).trim();
+      // Строки без таймзоны (нет Z или ±HH:MM) трактуем как UTC
+      if (typeof val === 'string' && !/Z$|[+-]\d{2}:?\d{2}$/.test(s) && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?$/i.test(s)) {
+        return new Date(s + 'Z');
+      }
       return new Date(val);
     }),
     to: z.union([z.string().datetime(), z.string(), z.number()]).transform((val) => {
       if (typeof val === 'number') return new Date(val);
+      const s = String(val).trim();
+      if (typeof val === 'string' && !/Z$|[+-]\d{2}:?\d{2}$/.test(s) && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?$/i.test(s)) {
+        return new Date(s + 'Z');
+      }
       return new Date(val);
     }),
   }).nullable(),
@@ -24,8 +33,48 @@ const querySchema = z.object({
   cacheTTL: z.number().int().positive().optional(),
 });
 
-const maxRows = 2000;
+const maxRows = 5000;
 const timeUnits = new Map([['seconds', 1], ['minutes', 60], ['hours', 3600], ['days', 86400]]);
+
+const aggregationTypeMap = {
+  none: 'none',
+  average: 'avg',
+  minimum: 'min',
+  maximum: 'max',
+} as const;
+
+const getDataSetAggregation = (dataSet: DataSet, dateRange: { from: Date, to: Date }): SeriesDataContext['aggregation'] => {
+  if (dataSet.type === 'preaggregated') {
+    return null;
+  }
+  if (!dataSet.useAggregation) {
+    return null;
+  }
+  const type = aggregationTypeMap[dataSet.aggregationFunction ?? 'average'];
+  const rangeSeconds = (dateRange.to.getTime() - dateRange.from.getTime()) / 1000;
+  if (rangeSeconds <= maxRows) {
+        return null;
+  }
+  if (rangeSeconds / 60 <= maxRows) {
+    if (dataSet.aggregationTimeUnit === 'minutes' || dataSet.aggregationTimeUnit === 'hours' || dataSet.aggregationTimeUnit === 'days') {
+      return null;
+    }
+    return { type, resolution: 'minutes' };
+  }
+  if (rangeSeconds / 3600 <= maxRows) {
+    if (dataSet.aggregationTimeUnit === 'hours' || dataSet.aggregationTimeUnit === 'days') {
+      return null;
+    }
+    return { type, resolution: 'hours' };
+  }
+  if (rangeSeconds / 86400 <= maxRows) {
+    if (dataSet.aggregationTimeUnit === 'days') {
+      return null;
+    }
+    return { type, resolution: 'days' };
+  }
+  return null;
+}
 
 const getDataSourceId = (dataSet: DataSet, dateRange: { from: Date, to: Date }, yColumnName: string) => {
   if (dataSet.type === 'preaggregated') {
@@ -72,6 +121,14 @@ export async function POST(request: NextRequest) {
 
     // dateRange уже преобразован в Date объекты через zod transform
     const dateRange = data.dateRange;
+    const dataSet = await DataSetService.getById(data.dataSetId);
+
+    if (!dataSet) {
+      return NextResponse.json(
+        { error: 'DataSet not found' },
+        { status: 404 }
+      );
+    }
 
     if (!dateRange) {
       return NextResponse.json(
@@ -79,23 +136,14 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+
     const context: SeriesDataContext = {
       dataSetId: data.dataSetId,
       xColumnName: data.xColumnName,
       yColumnName: data.yColumnName,
       dateRange: dateRange as { from: Date; to: Date },
+      aggregation: getDataSetAggregation(dataSet, dateRange)
     };
-
-    // const dataSeries = await DataSeriesService.getById(context.seriesId);
-    
-    // Получаем DataSet по series.dataSetId
-    const dataSet = await DataSetService.getById(context.dataSetId);
-    if (!dataSet) {
-      return NextResponse.json(
-        { error: 'DataSet not found' },
-        { status: 404 }
-      );
-    }
 
     // Получаем первый DataSource из dataSet.dataSourceIds
     if (!dataSet.dataSourceIds || dataSet.dataSourceIds.length === 0) {

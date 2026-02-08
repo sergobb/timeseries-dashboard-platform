@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { DataSet, DataSetType, PreaggregationConfig } from '@/types/data-set';
+import { DataSet, DataSetType, PreaggregationConfig, AggregationFunction, TimeUnit } from '@/types/data-set';
 import { DataSource } from '@/types/data-source';
 
 interface UseDataSetEditReturn {
@@ -12,11 +12,19 @@ interface UseDataSetEditReturn {
   description: string;
   dataSetType: DataSetType;
   preaggregationConfig: Map<string, PreaggregationConfig>;
+  useAggregation: boolean;
+  aggregationFunction: AggregationFunction;
+  aggregationInterval: number;
+  aggregationTimeUnit: TimeUnit;
   loading: boolean;
   saving: boolean;
   error: string | null;
   setDescription: (value: string) => void;
   setDataSetType: (type: DataSetType) => void;
+  setUseAggregation: (value: boolean) => void;
+  setAggregationFunction: (value: AggregationFunction) => void;
+  setAggregationInterval: (value: number) => void;
+  setAggregationTimeUnit: (value: TimeUnit) => void;
   removeDataSource: (id: string) => void;
   removeDataSet: (id: string) => void;
   updatePreaggregationConfig: (dataSourceId: string, config: PreaggregationConfig) => void;
@@ -33,6 +41,10 @@ export function useDataSetEdit(dataSetId: string): UseDataSetEditReturn {
   const [description, setDescription] = useState('');
   const [dataSetType, setDataSetType] = useState<DataSetType>('combined');
   const [preaggregationConfig, setPreaggregationConfig] = useState<Map<string, PreaggregationConfig>>(new Map());
+  const [useAggregation, setUseAggregation] = useState(false);
+  const [aggregationFunction, setAggregationFunction] = useState<AggregationFunction>('none');
+  const [aggregationInterval, setAggregationInterval] = useState(1);
+  const [aggregationTimeUnit, setAggregationTimeUnit] = useState<TimeUnit>('seconds');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -81,6 +93,14 @@ export function useDataSetEdit(dataSetId: string): UseDataSetEditReturn {
             });
           });
           setPreaggregationConfig(configMap);
+        }
+        setUseAggregation(Boolean(dataSetData.useAggregation));
+        if (dataSetData.aggregationFunction) {
+          setAggregationFunction(dataSetData.aggregationFunction);
+        }
+        setAggregationInterval(dataSetData.aggregationInterval ?? 1);
+        if (dataSetData.aggregationTimeUnit) {
+          setAggregationTimeUnit(dataSetData.aggregationTimeUnit);
         }
       } else if (dataSetResponse.status === 404) {
         setError('Data set not found');
@@ -194,6 +214,10 @@ export function useDataSetEdit(dataSetId: string): UseDataSetEditReturn {
           dataSourceIds: selectedSources,
           dataSetIds: selectedSets,
           preaggregationConfig: preaggConfig,
+          useAggregation: useAggregation,
+          aggregationFunction: aggregationFunction,
+          aggregationInterval: aggregationInterval,
+          aggregationTimeUnit: aggregationTimeUnit,
         }),
       });
 
@@ -208,7 +232,7 @@ export function useDataSetEdit(dataSetId: string): UseDataSetEditReturn {
     } finally {
       setSaving(false);
     }
-  }, [dataSetId, description, selectedDataSources, selectedDataSets, dataSetType, preaggregationConfig, router]);
+  }, [dataSetId, description, selectedDataSources, selectedDataSets, dataSetType, preaggregationConfig, useAggregation, aggregationFunction, aggregationInterval, aggregationTimeUnit, router]);
 
   return {
     dataSet,
@@ -219,11 +243,19 @@ export function useDataSetEdit(dataSetId: string): UseDataSetEditReturn {
     description,
     dataSetType,
     preaggregationConfig,
+    useAggregation,
+    aggregationFunction,
+    aggregationInterval,
+    aggregationTimeUnit,
     loading,
     saving,
     error,
     setDescription,
     setDataSetType,
+    setUseAggregation,
+    setAggregationFunction,
+    setAggregationInterval,
+    setAggregationTimeUnit,
     removeDataSource,
     removeDataSet,
     updatePreaggregationConfig,

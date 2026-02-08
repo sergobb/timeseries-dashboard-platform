@@ -12,12 +12,18 @@ const preaggregationConfigSchema = z.object({
   timeUnit: z.enum(['seconds', 'minutes', 'hours', 'days']),
 });
 
+const aggregationFunctionSchema = z.enum(['none', 'average', 'minimum', 'maximum']);
+
 const createDataSetSchema = z.object({
   description: z.string().min(1, 'Description is required'),
   type: z.enum(['combined', 'preaggregated']).optional(),
   dataSourceIds: z.array(z.string()).default([]),
   dataSetIds: z.array(z.string()).default([]),
   preaggregationConfig: z.array(preaggregationConfigSchema).optional(),
+  useAggregation: z.boolean().optional(),
+  aggregationFunction: aggregationFunctionSchema.optional(),
+  aggregationInterval: z.number().int().positive().optional(),
+  aggregationTimeUnit: z.enum(['seconds', 'minutes', 'hours', 'days']).optional(),
 });
 
 export async function GET(request: NextRequest) {
@@ -89,6 +95,10 @@ export async function POST(request: NextRequest) {
       dataSourceIds: data.dataSourceIds,
       dataSetIds: data.dataSetIds,
       preaggregationConfig: data.preaggregationConfig || [],
+      useAggregation: data.useAggregation,
+      aggregationFunction: data.aggregationFunction,
+      aggregationInterval: data.aggregationInterval,
+      aggregationTimeUnit: data.aggregationTimeUnit,
       createdBy: session.user.id,
     });
 

@@ -26,11 +26,19 @@ export default function EditDataSetPage() {
     description,
     dataSetType,
     preaggregationConfig,
+    useAggregation,
+    aggregationFunction,
+    aggregationInterval,
+    aggregationTimeUnit,
     loading,
     saving,
     error,
     setDescription,
     setDataSetType,
+    setUseAggregation,
+    setAggregationFunction,
+    setAggregationInterval,
+    setAggregationTimeUnit,
     removeDataSource,
     removeDataSet,
     updatePreaggregationConfig,
@@ -64,6 +72,7 @@ export default function EditDataSetPage() {
   const selectedSetsList = dataSets.filter(ds => selectedDataSets.has(ds.id));
   const totalSelected = selectedDataSources.size + selectedDataSets.size;
   const showTypeSelection = totalSelected > 1 && selectedDataSets.size === 0;
+  const showAggregationSection = totalSelected >= 1 && (totalSelected === 1 || dataSetType === 'combined');
 
   return (
     <PageContainer className="min-h-screen" innerClassName="max-w-7xl mx-auto">
@@ -76,12 +85,21 @@ export default function EditDataSetPage() {
         selectedDataSets={selectedSetsList}
         preaggregationConfig={preaggregationConfig}
         showTypeSelection={showTypeSelection}
+        showAggregationSection={showAggregationSection}
+        useAggregation={useAggregation}
+        aggregationFunction={aggregationFunction}
+        aggregationInterval={aggregationInterval}
+        aggregationTimeUnit={aggregationTimeUnit}
         saving={saving}
         onDescriptionChange={setDescription}
         onTypeChange={setDataSetType}
         onRemoveDataSource={removeDataSource}
         onRemoveDataSet={removeDataSet}
         onPreaggregationConfigChange={updatePreaggregationConfig}
+        onUseAggregationChange={setUseAggregation}
+        onAggregationFunctionChange={setAggregationFunction}
+        onAggregationIntervalChange={setAggregationInterval}
+        onAggregationTimeUnitChange={setAggregationTimeUnit}
         onSave={save}
         onCancel={() => router.push('/data-sets')}
       />
