@@ -126,3 +126,28 @@ node scripts/backfill-series-labels.js
 ```bash
 node scripts/backfill-series-labels.js --dry-run
 ```
+
+## Export / Import metadata (connections, data sources, data sets)
+
+### Export
+
+Export collections `database_connections`, `data_sources`, `data_sets` to JSON:
+
+```bash
+node scripts/export-metadata.js [output-file]
+```
+
+If `output-file` is not specified, a file with a timestamp is created (e.g. `metadata-export-2025-02-09-123456.json`).
+
+### Import
+
+Import from a file exported by `export-metadata.js`:
+
+```bash
+node scripts/import-metadata.js <input-file> [--clear]
+```
+
+- Without `--clear`: documents are upserted by `_id` (existing documents are replaced, new ones are added).
+- With `--clear`: the collections are cleared before import, then documents are inserted.
+
+Requires `MONGODB_URI` in `.env.local` or `.env`, or in environment variables.

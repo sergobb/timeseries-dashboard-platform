@@ -222,6 +222,8 @@ The `scripts/` folder contains database utility scripts:
 - **create-user-admin.cjs** - create administrative user (automatically runs on Docker container startup)
 - **add-roles-to-user.js** - add roles to user
 - **backfill-series-labels.js** - migration: populate series labels from Y-column description
+- **export-metadata.js** - export `database_connections`, `data_sources`, `data_sets` to JSON
+- **import-metadata.js** - import metadata from JSON (created by export-metadata.js)
 
 For more details, see [scripts/README.md](scripts/README.md)
 
