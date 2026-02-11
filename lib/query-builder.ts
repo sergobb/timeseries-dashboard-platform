@@ -1,4 +1,4 @@
-import { SeriesDataContext } from '@/types/series-data';
+import { SeriesDataContext, TimeUnit } from '@/types/series-data';
 import { DatabaseType } from '@/types/database';
 
 interface ParsedQueryConfig {
@@ -8,7 +8,9 @@ interface ParsedQueryConfig {
   groupBy?: string;
   aggregation?: {
     type: 'none'| 'avg' | 'min' | 'max' ;
-    resolution: 'seconds' | 'minutes' | 'hours' | 'days';
+    resolution: TimeUnit;
+    step: number;
+    nextUnit: TimeUnit | undefined;
     groupBy?: string;
   } | null;
   valueFilters?: Array<{
@@ -34,8 +36,8 @@ export class QueryBuilder {
       if (aggFunc === 'NONE') {
         selectClause = `SELECT ${config.xAxis}, ${config.yAxis}::numeric(18,3)`;
       } else {
-        const pgResolution = config?.aggregation?.groupBy?.replace(/s$/, '');
-        selectClause = `SELECT date_trunc('${pgResolution}', ${config.xAxis}) as ${config.xAxis}, ${aggFunc}(${config.yAxis}::numeric(18,3)) as ${config.yAxis}`;
+        const aggregationColumn = this.aggColumn(config)
+        selectClause = `SELECT ${aggregationColumn} as ${config.xAxis}, ${aggFunc}(${config.yAxis}::numeric(18,3)) as ${config.yAxis}`;
       }
     } else {
       selectClause = `SELECT ${config.xAxis}, ${config.yAxis}::numeric(18,3)`;
@@ -65,8 +67,8 @@ export class QueryBuilder {
     }
 
     if (config.aggregation && config?.aggregation?.type === 'none' && dbType === 'postgresql') {
-      const pgRes = config.aggregation.resolution.replace(/s$/, '');
-      whereConditions.push(`${config.xAxis} = date_trunc('${pgRes}', ${config.xAxis})`);
+      const aggregationColumn = this.aggColumn(config)
+      whereConditions.push(`${config.xAxis} = ${aggregationColumn}`);
     }
 
     if (config.valueFilters) {
@@ -127,6 +129,8 @@ export class QueryBuilder {
       aggregation: context.aggregation ? {
         type: context.aggregation?.type,
         resolution: context.aggregation?.resolution,
+        step: context.aggregation?.step,
+        nextUnit: context.aggregation?.nextUnit,
         groupBy: context.aggregation?.resolution ?? undefined
       }:null
       // TODO: Реализовать извлечение groupBy, aggregation, valueFilters из context
@@ -154,5 +158,16 @@ export class QueryBuilder {
     }
     return String(value);
   }
-}
 
+  private static aggColumn(parsed: ParsedQueryConfig): string {
+    if (parsed.aggregation) {
+      const pgResolution = parsed?.aggregation?.resolution?.replace(/s$/, '');
+      if (parsed.aggregation?.nextUnit) {
+        const pgNextUnit = parsed?.aggregation?.nextUnit?.replace(/s$/, '');
+        return `date_trunc('${pgNextUnit}',${parsed.xAxis}) + INTERVAL '${parsed.aggregation.step} ${pgResolution}' * floor(extract(${pgResolution} FROM ${parsed.xAxis})/ (${parsed.aggregation.step}::float))`
+      }
+      return `date_trunc('${pgResolution}',${parsed.xAxis})`
+    }
+    return `${parsed.xAxis}`
+  }
+}

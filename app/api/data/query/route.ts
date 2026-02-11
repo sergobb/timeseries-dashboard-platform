@@ -5,6 +5,7 @@ import { DataSourceService } from '@/lib/services/data-source.service';
 import { SeriesDataContext } from '@/types/series-data';
 import { z } from 'zod';
 import { DataSet } from '@/types/data-set';
+import { chooseStep } from '@/lib/timeStep';
 
 const querySchema = z.object({
   dataSetId: z.string().min(1),
@@ -47,33 +48,49 @@ const getDataSetAggregation = (dataSet: DataSet, dateRange: { from: Date, to: Da
   if (dataSet.type === 'preaggregated') {
     return null;
   }
-  if (!dataSet.useAggregation) {
+  if (!dataSet.useAggregation || !dataSet.aggregationTimeUnit || !dataSet.aggregationInterval) {
     return null;
   }
   const type = aggregationTypeMap[dataSet.aggregationFunction ?? 'average'];
   const rangeSeconds = (dateRange.to.getTime() - dateRange.from.getTime()) / 1000;
-  if (rangeSeconds <= maxRows) {
-        return null;
+
+  const dataAggregation = chooseStep(
+    dateRange.from,
+    dateRange.to,
+    dataSet.aggregationTimeUnit,
+    dataSet.aggregationInterval,
+    maxRows
+  )
+
+  return {
+    type, 
+    resolution: dataAggregation.unit, 
+    step: dataAggregation.step, 
+    nextUnit: dataAggregation.nextUnit
   }
-  if (rangeSeconds / 60 <= maxRows) {
-    if (dataSet.aggregationTimeUnit === 'minutes' || dataSet.aggregationTimeUnit === 'hours' || dataSet.aggregationTimeUnit === 'days') {
-      return null;
-    }
-    return { type, resolution: 'minutes' };
-  }
-  if (rangeSeconds / 3600 <= maxRows) {
-    if (dataSet.aggregationTimeUnit === 'hours' || dataSet.aggregationTimeUnit === 'days') {
-      return null;
-    }
-    return { type, resolution: 'hours' };
-  }
-  if (rangeSeconds / 86400 <= maxRows) {
-    if (dataSet.aggregationTimeUnit === 'days') {
-      return null;
-    }
-    return { type, resolution: 'days' };
-  }
-  return null;
+
+//   if (rangeSeconds <= maxRows) {
+//         return null;
+//   }
+//   if (rangeSeconds / 60 <= maxRows) {
+//     if (dataSet.aggregationTimeUnit === 'minutes' || dataSet.aggregationTimeUnit === 'hours' || dataSet.aggregationTimeUnit === 'days') {
+//       return null;
+//     }
+//     return { type, resolution: 'minutes' };
+//   }
+//   if (rangeSeconds / 3600 <= maxRows) {
+//     if (dataSet.aggregationTimeUnit === 'hours' || dataSet.aggregationTimeUnit === 'days') {
+//       return null;
+//     }
+//     return { type, resolution: 'hours' };
+//   }
+//   if (rangeSeconds / 86400 <= maxRows) {
+//     if (dataSet.aggregationTimeUnit === 'days') {
+//       return null;
+//     }
+//     return { type, resolution: 'days' };
+//   }
+//   return null;
 }
 
 const getDataSourceId = (dataSet: DataSet, dateRange: { from: Date, to: Date }, yColumnName: string) => {
