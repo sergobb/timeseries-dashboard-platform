@@ -19,7 +19,17 @@ export const PRESET_RANGES: DateRangePreset[] = [
   { label: 'Year to Date', getRange: () => ({ from: startOfYear(new Date()), to: new Date() }) },
 ];
 
-export function getInitialDateRange(defaultDateRange?: string): { from: Date; to: Date } {
+export const CUSTOM_RANGE_LABEL = 'Custom Range';
+
+export function getInitialDateRange(
+  defaultDateRange?: string,
+  customDateRange?: { from: string; to: string } | null
+): { from: Date; to: Date } {
+  if (defaultDateRange === CUSTOM_RANGE_LABEL && customDateRange?.from && customDateRange?.to) {
+    const from = new Date(customDateRange.from);
+    const to = new Date(customDateRange.to);
+    if (!isNaN(from.getTime()) && !isNaN(to.getTime())) return { from, to };
+  }
   const preset = PRESET_RANGES.find((p) => p.label === (defaultDateRange || 'Last 7 Days'));
   const fallback = PRESET_RANGES.find((p) => p.label === 'Last 7 Days');
   return (preset || fallback)?.getRange() ?? { from: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), to: new Date() };

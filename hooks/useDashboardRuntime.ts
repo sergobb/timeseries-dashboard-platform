@@ -29,7 +29,7 @@ export function useDashboardRuntime(dashboard: Dashboard): UseDashboardRuntimeRe
   const chartIdsKey = useMemo(() => (dashboard.chartIds || []).join('|'), [dashboard.chartIds]);
 
   const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>(() =>
-    getInitialDateRange(dashboard.defaultDateRange)
+    getInitialDateRange(dashboard.defaultDateRange, dashboard.customDateRange ?? undefined)
   );
   const [charts, setCharts] = useState<Chart[]>([]);
   const [seriesByChartId, setSeriesByChartId] = useState<Record<string, DashboardChartSeriesWithData[]>>({});

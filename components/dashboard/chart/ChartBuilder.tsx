@@ -82,13 +82,13 @@ export default function ChartBuilder({ dashboardId, chartId }: ChartBuilderProps
     }
   }, [chartDataError]);
 
-  // Начальный интервал дат из настройки дашборда defaultDateRange
+  // Начальный интервал дат из настройки дашборда defaultDateRange (и customDateRange при Custom Range)
   useEffect(() => {
-    if (dashboard?.defaultDateRange && !hasSetInitialRange.current) {
+    if (dashboard && !hasSetInitialRange.current) {
       hasSetInitialRange.current = true;
-      handleRangeChange(getInitialDateRange(dashboard.defaultDateRange));
+      handleRangeChange(getInitialDateRange(dashboard.defaultDateRange, dashboard.customDateRange ?? undefined));
     }
-  }, [dashboard?.defaultDateRange, handleRangeChange]);
+  }, [dashboard?.defaultDateRange, dashboard?.customDateRange, handleRangeChange]);
 
   // Автоматически открываем новую серию при её добавлении
   useEffect(() => {

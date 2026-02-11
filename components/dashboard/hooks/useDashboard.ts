@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Dashboard, DashboardLayout } from '@/types/dashboard';
 import { DEFAULT_CHARTS_PER_ROW, normalizeDashboardLayout } from '@/lib/dashboard-layout';
+import { CUSTOM_RANGE_LABEL } from '@/lib/date-ranges';
 
 interface UseDashboardReturn {
   dashboard: Dashboard | null;
@@ -9,6 +10,7 @@ interface UseDashboardReturn {
   description: string;
   isPublic: boolean;
   defaultDateRange: string;
+  customDateRange: { from: string; to: string } | null;
   groupIds: string[];
   showDateRangePicker: boolean;
   layout: DashboardLayout;
@@ -16,6 +18,7 @@ interface UseDashboardReturn {
   setDescription: (description: string) => void;
   setIsPublic: (isPublic: boolean) => void;
   setDefaultDateRange: (range: string) => void;
+  setCustomDateRange: (range: { from: string; to: string } | null) => void;
   toggleGroupId: (groupId: string) => void;
   setShowDateRangePicker: (next: boolean) => void;
   setLayout: (layout: DashboardLayout) => void;
@@ -34,6 +37,7 @@ export function useDashboard(dashboardId?: string): UseDashboardReturn {
   const [description, setDescription] = useState('');
   const [isPublic, setIsPublic] = useState(false);
   const [defaultDateRange, setDefaultDateRange] = useState<string>('Last 7 Days');
+  const [customDateRange, setCustomDateRange] = useState<{ from: string; to: string } | null>(null);
   const [groupIds, setGroupIds] = useState<string[]>([]);
   const [showDateRangePicker, setShowDateRangePicker] = useState<boolean>(DEFAULT_SHOW_DATE_RANGE_PICKER);
   const [layout, setLayout] = useState<DashboardLayout>(DEFAULT_LAYOUT);
@@ -59,6 +63,7 @@ export function useDashboard(dashboardId?: string): UseDashboardReturn {
       setDescription(data.description || '');
       setIsPublic(data.isPublic ?? data.access === 'public');
       setDefaultDateRange(data.defaultDateRange || 'Last 7 Days');
+      setCustomDateRange(data.customDateRange ?? null);
       setGroupIds(data.groupIds || []);
       setShowDateRangePicker(data.showDateRangePicker ?? DEFAULT_SHOW_DATE_RANGE_PICKER);
       const chartCount = data.chartIds?.length ?? data.charts?.length ?? 0;
@@ -83,6 +88,7 @@ export function useDashboard(dashboardId?: string): UseDashboardReturn {
         charts: [],
         isPublic,
         defaultDateRange,
+        customDateRange: defaultDateRange === CUSTOM_RANGE_LABEL ? customDateRange ?? undefined : undefined,
         groupIds,
         showDateRangePicker,
         layout,
@@ -119,6 +125,7 @@ export function useDashboard(dashboardId?: string): UseDashboardReturn {
     description,
     isPublic,
     defaultDateRange,
+    customDateRange,
     groupIds,
     showDateRangePicker,
     layout,
@@ -126,6 +133,7 @@ export function useDashboard(dashboardId?: string): UseDashboardReturn {
     setDescription,
     setIsPublic,
     setDefaultDateRange,
+    setCustomDateRange,
     toggleGroupId,
     setShowDateRangePicker,
     setLayout,

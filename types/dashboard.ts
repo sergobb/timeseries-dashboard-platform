@@ -67,6 +67,8 @@ export interface Dashboard {
   /** @deprecated Read from old docs. New code uses isPublic. */
   access?: DashboardAccess;
   defaultDateRange?: string;
+  /** Используется когда defaultDateRange === 'Custom Range'. ISO строки. */
+  customDateRange?: { from: string; to: string };
   canEdit?: boolean;
   /**
    * Показывать ли выбор интервала на просмотре дашборда (DateTimeRangePicker/DateRangePicker).

@@ -23,6 +23,7 @@ export class DashboardService {
       groupIds: dashboard.groupIds || [],
       isPublic,
       defaultDateRange: dashboard.defaultDateRange || null,
+      customDateRange: dashboard.customDateRange ?? null,
       showDateRangePicker: dashboard.showDateRangePicker ?? DEFAULT_SHOW_DATE_RANGE_PICKER,
       layout: normalizeDashboardLayout(
         dashboard.layout,
@@ -92,6 +93,7 @@ export class DashboardService {
       groupIds: dash.groupIds || [],
       isPublic: resolveIsPublic(dash),
       defaultDateRange: dash.defaultDateRange,
+      customDateRange: (dash.customDateRange as { from: string; to: string } | undefined) ?? undefined,
       canEdit: userId
         ? dash.createdBy === userId ||
           shareAccessMap.get(dash._id.toString()) === 'edit' ||
@@ -229,6 +231,7 @@ export class DashboardService {
       groupIds: (doc.groupIds as string[] | undefined) || [],
       isPublic: resolveIsPublic(doc),
       defaultDateRange: (doc.defaultDateRange as string | undefined) ?? undefined,
+      customDateRange: (doc.customDateRange as { from: string; to: string } | undefined) ?? undefined,
       showDateRangePicker: (doc.showDateRangePicker as boolean | undefined) ?? DEFAULT_SHOW_DATE_RANGE_PICKER,
       layout: normalizeDashboardLayout(
         doc.layout as Dashboard['layout'] | undefined,

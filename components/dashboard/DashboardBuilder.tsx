@@ -32,6 +32,7 @@ export default function DashboardBuilder({ dashboardId }: DashboardBuilderProps)
     description,
     isPublic,
     defaultDateRange,
+    customDateRange,
     groupIds,
     showDateRangePicker,
     layout,
@@ -39,6 +40,7 @@ export default function DashboardBuilder({ dashboardId }: DashboardBuilderProps)
     setDescription,
     setIsPublic,
     setDefaultDateRange,
+    setCustomDateRange,
     toggleGroupId,
     setShowDateRangePicker,
     setLayout,
@@ -104,6 +106,7 @@ export default function DashboardBuilder({ dashboardId }: DashboardBuilderProps)
               description={description}
               isPublic={isPublic}
               defaultDateRange={defaultDateRange}
+              customDateRange={customDateRange}
               groups={groups}
               selectedGroupIds={groupIds}
               groupsLoading={groupsLoading}
@@ -112,6 +115,7 @@ export default function DashboardBuilder({ dashboardId }: DashboardBuilderProps)
               onDescriptionChange={setDescription}
               onIsPublicChange={setIsPublic}
               onDefaultDateRangeChange={setDefaultDateRange}
+              onCustomDateRangeChange={setCustomDateRange}
               onGroupToggle={toggleGroupId}
             />
             <DashboardLayoutSelector

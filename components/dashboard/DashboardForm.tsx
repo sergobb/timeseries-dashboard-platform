@@ -3,15 +3,17 @@ import Input from '@/components/ui/Input';
 import Textarea from '@/components/ui/Textarea';
 import Select from '@/components/ui/Select';
 import Checkbox from '@/components/ui/Checkbox';
-import { PRESET_RANGES } from '@/lib/date-ranges';
+import { PRESET_RANGES, CUSTOM_RANGE_LABEL, getInitialDateRange } from '@/lib/date-ranges';
 import { Group } from '@/types/group';
 import DashboardGroupsSelector from './DashboardGroupsSelector';
+import DateTimeRangePicker from '@/components/ui/DateTimeRangePicker';
 
 interface DashboardFormProps {
   title: string;
   description: string;
   isPublic: boolean;
   defaultDateRange: string;
+  customDateRange: { from: string; to: string } | null;
   groups: Group[];
   selectedGroupIds: string[];
   groupsLoading: boolean;
@@ -20,6 +22,7 @@ interface DashboardFormProps {
   onDescriptionChange: (description: string) => void;
   onIsPublicChange: (isPublic: boolean) => void;
   onDefaultDateRangeChange: (range: string) => void;
+  onCustomDateRangeChange: (range: { from: string; to: string } | null) => void;
   onGroupToggle: (groupId: string) => void;
 }
 
@@ -28,6 +31,7 @@ export default function DashboardForm({
   description,
   isPublic,
   defaultDateRange,
+  customDateRange,
   groups,
   selectedGroupIds,
   groupsLoading,
@@ -36,8 +40,14 @@ export default function DashboardForm({
   onDescriptionChange,
   onIsPublicChange,
   onDefaultDateRangeChange,
+  onCustomDateRangeChange,
   onGroupToggle,
 }: DashboardFormProps) {
+  const customRangeValue = defaultDateRange === CUSTOM_RANGE_LABEL
+    ? (customDateRange?.from && customDateRange?.to
+        ? { from: new Date(customDateRange.from), to: new Date(customDateRange.to) }
+        : getInitialDateRange('Last 7 Days'))
+    : null;
   return (
     <>
       <FormField label="Title" required>
@@ -87,7 +97,16 @@ export default function DashboardForm({
               {preset.label}
             </option>
           ))}
+          <option value={CUSTOM_RANGE_LABEL}>{CUSTOM_RANGE_LABEL}</option>
         </Select>
+        {defaultDateRange === CUSTOM_RANGE_LABEL && customRangeValue && (
+          <div className="mt-2">
+            <DateTimeRangePicker
+              value={customRangeValue}
+              onChange={(r) => r && onCustomDateRangeChange({ from: r.from.toISOString(), to: r.to.toISOString() })}
+            />
+          </div>
+        )}
       </FormField>
     </>
   );

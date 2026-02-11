@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import DateTimeRangePicker from '@/components/ui/DateTimeRangePicker';
 import Box from '@/components/ui/Box';
 
@@ -10,7 +10,14 @@ interface DateRangePickerProps {
 }
 
 export default function DateRangePicker({ value, onRangeChange}: DateRangePickerProps) {
-  const [range, setRange] = useState<{ from: Date; to: Date; label?: string } | null>(value ? value : null);
+  const [range, setRange] = useState<{ from: Date; to: Date; label?: string } | null>(value ?? null);
+
+  useEffect(() => {
+    if (!value) return;
+    setRange((prev) =>
+      prev?.from.getTime() === value.from.getTime() && prev?.to.getTime() === value.to.getTime() ? prev : value
+    );
+  }, [value?.from.getTime(), value?.to.getTime()]);
 
   const handleChange = (newRange: { from: Date; to: Date; label?: string } | null) => {
     setRange(newRange);

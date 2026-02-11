@@ -44,6 +44,7 @@ const dashboardSchema = z.object({
   groupIds: z.array(z.string()).optional(),
   isPublic: z.boolean().optional(),
   defaultDateRange: z.string().optional(),
+  customDateRange: z.object({ from: z.string(), to: z.string() }).optional(),
   showDateRangePicker: z.boolean().optional(),
   layout: z
     .object({
