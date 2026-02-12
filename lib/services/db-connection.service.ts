@@ -124,12 +124,18 @@ export class DatabaseConnectionService {
 
   static async delete(id: string, userId: string, options?: { ignoreOwnership?: boolean }): Promise<boolean> {
     const db = await getDatabase();
+    const dataSourcesCount = await db.collection('data_sources').countDocuments({ connectionId: id });
+    if (dataSourcesCount > 0) {
+      throw new Error(
+        `Cannot delete connection: ${dataSourcesCount} data source(s) use it. Remove or reassign them first.`
+      );
+    }
     const query: Record<string, unknown> = { _id: new ObjectId(id) };
     if (!options?.ignoreOwnership) {
       query.createdBy = userId;
     }
     const result = await db.collection('database_connections').deleteOne(query);
-    
+
     return result.deletedCount > 0;
   }
 

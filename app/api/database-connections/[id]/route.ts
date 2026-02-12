@@ -97,17 +97,16 @@ export async function DELETE(
     }
 
     const success = await DatabaseConnectionService.delete(id, session.user.id, { ignoreOwnership: true });
-    
+
     if (!success) {
       return NextResponse.json({ error: 'Not found' }, { status: 404 });
     }
-    
+
     return NextResponse.json({ success: true });
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    const message = error instanceof Error ? error.message : 'Internal server error';
+    const status = message.startsWith('Cannot delete') ? 400 : 500;
+    return NextResponse.json({ error: message }, { status });
   }
 }
 

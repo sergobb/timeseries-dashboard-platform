@@ -1,5 +1,6 @@
 import { getDatabase } from '@/lib/db/mongodb';
 import { DataSet } from '@/types/data-set';
+import { ChartService } from '@/lib/services/chart.service';
 import { ObjectId } from 'mongodb';
 
 export class DataSetService {
@@ -167,13 +168,19 @@ export class DataSetService {
   }
 
   static async delete(id: string, userId: string, options?: { ignoreOwnership?: boolean }): Promise<boolean> {
+    const dashboardIds = await ChartService.getDashboardIdsByDataSetId(id);
+    if (dashboardIds.length > 0) {
+      throw new Error(
+        `Cannot delete data set: it is used in dashboard chart(s). Remove the chart(s) first.`
+      );
+    }
     const db = await getDatabase();
     const query: Record<string, unknown> = { _id: new ObjectId(id) };
     if (!options?.ignoreOwnership) {
       query.createdBy = userId;
     }
     const result = await db.collection('data_sets').deleteOne(query);
-    
+
     return result.deletedCount > 0;
   }
 }

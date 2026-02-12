@@ -138,12 +138,18 @@ export class DataSourceService {
 
   static async delete(id: string, userId: string, options?: { ignoreOwnership?: boolean }): Promise<boolean> {
     const db = await getDatabase();
+    const dataSetsCount = await db.collection('data_sets').countDocuments({ dataSourceIds: id });
+    if (dataSetsCount > 0) {
+      throw new Error(
+        `Cannot delete data source: ${dataSetsCount} data set(s) use it. Remove or reassign them first.`
+      );
+    }
     const query: Record<string, unknown> = { _id: new ObjectId(id) };
     if (!options?.ignoreOwnership) {
       query.createdBy = userId;
     }
     const result = await db.collection('data_sources').deleteOne(query);
-    
+
     return result.deletedCount > 0;
   }
 }

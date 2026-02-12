@@ -1,6 +1,7 @@
 import { getDatabase } from '@/lib/db/mongodb';
 import { Dashboard, DashboardShare, DashboardLayout } from '@/types/dashboard';
 import { DEFAULT_CHARTS_PER_ROW, normalizeDashboardLayout } from '@/lib/dashboard-layout';
+import { ChartService } from '@/lib/services/chart.service';
 import { ObjectId } from 'mongodb';
 
 const DEFAULT_LAYOUT: DashboardLayout = { chartsPerRow: DEFAULT_CHARTS_PER_ROW };
@@ -163,9 +164,11 @@ export class DashboardService {
       createdBy: userId,
     });
 
-    // Also delete shares
-    await db.collection('dashboard_shares').deleteMany({ dashboardId: id });
-    
+    if (result.deletedCount > 0) {
+      await ChartService.deleteByDashboardId(id);
+      await db.collection('dashboard_shares').deleteMany({ dashboardId: id });
+    }
+
     return result.deletedCount > 0;
   }
 

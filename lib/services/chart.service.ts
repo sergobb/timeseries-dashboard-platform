@@ -231,8 +231,14 @@ export class ChartService {
       _id: new ObjectId(id),
       createdBy: userId,
     });
-    
+
     return result.deletedCount > 0;
+  }
+
+  static async deleteByDashboardId(dashboardId: string): Promise<number> {
+    const db = await getDatabase();
+    const result = await db.collection('charts').deleteMany({ dashboardId });
+    return result.deletedCount;
   }
 }
 

@@ -162,10 +162,9 @@ export async function DELETE(
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    const message = error instanceof Error ? error.message : 'Internal server error';
+    const status = message.startsWith('Cannot delete') ? 400 : 500;
+    return NextResponse.json({ error: message }, { status });
   }
 }
 

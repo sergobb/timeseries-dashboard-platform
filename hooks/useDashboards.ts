@@ -40,7 +40,7 @@ export function useDashboards(): UseDashboardsReturn {
   }, []);
 
   const remove = useCallback(async (dashboardId: string, title: string): Promise<boolean> => {
-    if (!showConfirm(`Are you sure you want to delete dashboard "${title}"?`)) {
+    if (!showConfirm(`Delete dashboard "${title}"? All charts on this dashboard will also be removed.`)) {
       return false;
     }
     try {
