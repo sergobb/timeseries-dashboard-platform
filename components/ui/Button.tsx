@@ -15,7 +15,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const variantClasses = {
       primary: 'bg-[var(--color-primary)] text-[var(--color-primary-foreground)] hover:opacity-90',
       secondary: 'bg-[var(--color-secondary)] text-[var(--color-secondary-foreground)] hover:bg-[var(--color-border)]',
-      danger: 'bg-red-600 text-white hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800',
+      danger: 'bg-[var(--color-error)] text-[var(--color-error-foreground)] hover:opacity-90',
     };
 
     const sizeClasses = {

@@ -34,7 +34,7 @@ export function useDashboardCharts(dashboardId?: string, chartIds?: string[]): U
           return res.json();
         })
       );
-      
+
       const chartsData = await Promise.all(chartPromises);
       setCharts(chartsData);
     } catch (err) {
@@ -60,7 +60,7 @@ export function useDashboardCharts(dashboardId?: string, chartIds?: string[]): U
 
     try {
       const updatedChartIds = chartIds.filter(id => id !== chartId);
-      
+
       const response = await fetch(`/api/dashboards/${dashboardId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },

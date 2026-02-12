@@ -1,13 +1,15 @@
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Dashboard } from '@/types/dashboard';
 import ErrorMessage from '@/components/ErrorMessage';
 import IconButton from '@/components/ui/IconButton';
-import { EyeIcon, EditIcon, DeleteIcon } from '@/components/ui/icons';
+import { EditIcon, DeleteIcon } from '@/components/ui/icons';
 import Card from '@/components/ui/Card';
 import Text from '@/components/ui/Text';
 import Box from '@/components/ui/Box';
 import Flex from '@/components/ui/Flex';
 import Input from '@/components/ui/Input';
+import EmptyState from '@/components/ui/EmptyState';
 
 interface DashboardsContentProps {
   dashboards: Dashboard[];
@@ -50,61 +52,87 @@ export default function DashboardsContent({
         />
       </Box>
 
-      {dashboards.length === 0 ? null : sortedDashboards.length === 0 ? (
-        <Box className="text-center py-12">
-          <Text variant="muted">No dashboards match the filter.</Text>
-        </Box>
+      {dashboards.length === 0 ? (
+        <EmptyState
+          title="No dashboards yet"
+          description="Create your first dashboard to start visualizing data."
+          actionLabel="New Dashboard"
+          onAction={() => router.push('/dashboards/new')}
+        />
+      ) : sortedDashboards.length === 0 ? (
+        <EmptyState
+          title="No dashboards match the filter"
+          description="Try a different search or clear the filter."
+        />
       ) : (
-      <Box className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {sortedDashboards.map((dashboard) => (
-          <Card
-            key={dashboard.id}
-            className="p-6 h-full flex flex-col hover:shadow-lg transition-shadow"
-          >
-            <Box className="mb-4 flex-1">
-              <Text className="text-xl font-semibold mb-2">
-                {dashboard.title}
-              </Text>
-              {dashboard.description && (
-                <Text variant="muted" className="mb-4">
-                  {dashboard.description}
-                </Text>
-              )}
-              <Flex gap="2" align="center" className="mb-4">
-                <Text size="sm" variant="muted">
-                  {dashboard.chartIds?.length || 0} chart{(dashboard.chartIds?.length || 0) !== 1 ? 's' : ''}
-                </Text>
-              </Flex>
-            </Box>
-            <Flex gap="2" justify="end" className="mt-auto">
-              <IconButton
-                onClick={() => router.push(`/dashboards/${dashboard.id}/view`)}
-                variant="primary"
-                icon={<EyeIcon className="w-4 h-4" />}
-                tooltip="View"
-              />
-              {canEdit(dashboard) && (
-                <>
-                  <IconButton
-                    onClick={() => router.push(`/dashboards/${dashboard.id}/edit`)}
-                    variant="success"
-                    icon={<EditIcon className="w-4 h-4" />}
-                    tooltip="Edit"
-                  />
-                </>
-              )}
-              {isOwner(dashboard) && (
-                <IconButton
-                  onClick={() => onDelete(dashboard.id, dashboard.title)}
-                  variant="danger"
-                  icon={<DeleteIcon className="w-4 h-4" />}
-                  tooltip="Delete"
-                />
-              )}
-            </Flex>
-          </Card>
-        ))}
-      </Box>
+        <Box className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {sortedDashboards.map((dashboard) => {
+            const chartCount = dashboard.chartIds?.length ?? 0;
+            const updated = dashboard.updatedAt
+              ? new Date(dashboard.updatedAt).toLocaleDateString(undefined, {
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric',
+                })
+              : null;
+            return (
+              <Card
+                key={dashboard.id}
+                variant="interactive"
+                className="p-6 h-full flex flex-col"
+              >
+                <Link
+                  href={`/dashboards/${dashboard.id}/view`}
+                  className="flex-1 flex flex-col min-w-0"
+                >
+                  <Text className="font-display text-xl font-semibold mb-2 block">
+                    {dashboard.title}
+                  </Text>
+                  {dashboard.description && (
+                    <Text variant="muted" className="mb-3 line-clamp-2">
+                      {dashboard.description}
+                    </Text>
+                  )}
+                  <Flex gap="2" align="center" className="mt-auto">
+                    <Text size="sm" variant="muted">
+                      {chartCount} chart{chartCount !== 1 ? 's' : ''}
+                    </Text>
+                    {updated && (
+                      <>
+                        <Text size="sm" variant="muted">·</Text>
+                        <Text size="sm" variant="muted">Updated {updated}</Text>
+                      </>
+                    )}
+                  </Flex>
+                </Link>
+                <Flex gap="2" justify="end" className="mt-4 pt-4 border-t border-[var(--color-border-muted)]">
+                  {canEdit(dashboard) && (
+                    <IconButton
+                      onClick={(e) => {
+                        e.preventDefault();
+                        router.push(`/dashboards/${dashboard.id}/edit`);
+                      }}
+                      variant="secondary"
+                      icon={<EditIcon className="w-4 h-4" />}
+                      tooltip="Edit"
+                    />
+                  )}
+                  {isOwner(dashboard) && (
+                    <IconButton
+                      onClick={(e) => {
+                        e.preventDefault();
+                        onDelete(dashboard.id, dashboard.title);
+                      }}
+                      variant="danger"
+                      icon={<DeleteIcon className="w-4 h-4" />}
+                      tooltip="Delete"
+                    />
+                  )}
+                </Flex>
+              </Card>
+            );
+          })}
+        </Box>
       )}
     </>
   );

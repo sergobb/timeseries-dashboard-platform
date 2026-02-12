@@ -12,9 +12,9 @@ import Tabs, { type TabsItem } from '@/components/ui/Tabs';
 import DashboardForm from './DashboardForm';
 import DashboardChartsSection from './DashboardChartsSection';
 import DashboardLayoutSelector from './DashboardLayoutSelector';
-import { useDashboard } from './hooks/useDashboard';
-import { useDashboardCharts } from './hooks/useDashboardCharts';
-import { useDashboardGroups } from './hooks/useDashboardGroups';
+import { useDashboard } from '@/hooks/useDashboard';
+import { useDashboardCharts } from '@/hooks/useDashboardCharts';
+import { useDashboardGroups } from '@/hooks/useDashboardGroups';
 
 interface DashboardBuilderProps {
   dashboardId?: string;

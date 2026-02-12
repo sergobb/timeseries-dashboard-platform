@@ -4,7 +4,7 @@ import { DataSource } from '@/types/data-source';
 import { ColumnMetadata } from '@/types/metadata';
 import { SeriesDataContext } from '@/types/series-data';
 import type { ChartType, SeriesOptions, YAxis } from '@/types/chart';
-import type { Series } from './useChartBuilder';
+import type { Series } from '@/hooks/useChartBuilder';
 
 interface SeriesData {
   dataSet: DataSet | null;
@@ -86,7 +86,6 @@ export function useChartData() {
     }
   }, []);
 
-  /** Календарные компоненты (год/месяц/день/час/мин) как есть → момент в UTC, без сдвига по поясу. */
   const dateRangeToUtcSameCalendar = useCallback((range: { from: Date; to: Date }) => {
     const toUtc = (d: Date) =>
       new Date(
@@ -140,12 +139,10 @@ export function useChartData() {
       const result = await response.json();
       const data = ((result as { data?: Array<Record<string, unknown>> }).data || []) as Array<Record<string, unknown>>;
 
-      // Преобразуем данные в формат Highcharts [timestamp, value]
       const chartData: [number, number | null][] = data.map((row) => {
         const xValue = row[series.xAxisColumn];
         const yValue = row[series.yColumnName];
 
-        // Преобразуем xValue в timestamp если это строка даты
         let timestamp: number;
         if (xValue instanceof Date) {
           timestamp = xValue.getTime();
@@ -157,7 +154,6 @@ export function useChartData() {
           timestamp = Date.parse(String(xValue));
         }
 
-        // Преобразуем yValue в число, сохраняя null значения
         let numValue: number | null;
         if (yValue === null || yValue === undefined) {
           numValue = null;
@@ -171,7 +167,6 @@ export function useChartData() {
         return [timestamp, numValue];
       });
 
-      // Сортируем данные по timestamp
       chartData.sort((a, b) => a[0] - b[0]);
 
       return chartData;
@@ -193,4 +188,3 @@ export function useChartData() {
     fetchSeriesChartData,
   };
 }
-

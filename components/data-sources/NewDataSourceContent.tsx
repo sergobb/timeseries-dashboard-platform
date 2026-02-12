@@ -245,7 +245,7 @@ export default function NewDataSourceContent({
                         <div className="flex-1">
                           <div className="font-medium text-[var(--color-foreground)]">{table}</div>
                           {isExisting && (
-                            <div className="text-xs text-green-600 dark:text-green-400 mt-1">
+                            <div className="text-xs text-[var(--color-success)] mt-1">
                               ✓ Already added as data source
                             </div>
                           )}

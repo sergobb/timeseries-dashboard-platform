@@ -16,7 +16,7 @@ import ChartOptionsAccordion from '@/components/ui/ChartOptionsAccordion';
 import AccordionElement from '@/components/ui/AccordionElement';
 import { ChartOptions, XAxisOptions, YAxis } from '@/types/chart';
 import { DataSet } from '@/types/data-set';
-import { Series } from './hooks/useChartBuilder';
+import { Series } from '@/hooks/useChartBuilder';
 
 interface ChartOptionsPanelProps {
   dashboardId: string;
@@ -75,7 +75,7 @@ export default function ChartOptionsPanel({
           <div className="space-y-4">
             <div>
               <Label htmlFor={`chart-description-${dashboardId}`} className="mb-1 text-xs">
-                Description <span className="text-red-500">*</span>
+                Description <span className="text-[var(--color-error)]">*</span>
               </Label>
               <Textarea
                 id={`chart-description-${dashboardId}`}

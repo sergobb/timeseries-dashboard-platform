@@ -40,7 +40,7 @@ export default function FormField({
     <Box className={className}>
       <Label htmlFor={fieldId} className={`mb-2 ${labelClassName}`.trim()}>
         {label}
-        {required && <span className="text-red-500"> *</span>}
+        {required && <span className="text-[var(--color-error)]"> *</span>}
       </Label>
       {fieldElement}
       {hint && !error && (

@@ -48,12 +48,16 @@ export default function LoginPage() {
   };
 
   return (
-    <PageWrapper className="flex items-center justify-center">
-      <Container maxWidth="md">
-        <Card className="w-full space-y-8 p-8 shadow-lg">
+    <PageWrapper className="flex items-center justify-center min-h-screen bg-[var(--color-surface-subtle)]">
+      <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-accent)]/5 via-transparent to-[var(--color-surface-muted)]/30 pointer-events-none" aria-hidden />
+      <Container maxWidth="md" className="relative">
+        <Card className="w-full space-y-8 p-8 shadow-lg border border-[var(--color-border-muted)]">
           <Box>
-            <Text className="text-2xl font-bold">
+            <h1 className="font-display text-2xl font-bold text-[var(--color-foreground)]">
               Sign in to your account
+            </h1>
+            <Text size="sm" variant="muted" className="mt-2">
+              Enter your credentials to access the platform.
             </Text>
           </Box>
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>

@@ -75,7 +75,7 @@ export default function ProfilePasswordForm({
           minLength={6}
           className={
             passwordsMismatch
-              ? 'border-red-400 focus:border-red-500 focus:ring-red-500'
+              ? 'border-[var(--color-error)] focus:ring-[var(--color-error)]'
               : ''
           }
         />

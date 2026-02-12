@@ -339,5 +339,3 @@ onClick={handleSomething}
 /lib/common
 ```
 
-
-

@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { getInitialDateRange } from '@/lib/date-ranges';
-import { ChartType, SeriesOptions, YAxisOptions, ChartOptions, XAxisOptions, YAxis } from '@/types/chart';
+import { ChartType, SeriesOptions, ChartOptions, XAxisOptions, YAxis } from '@/types/chart';
 import { DataSet } from '@/types/data-set';
 import { ColumnMetadata } from '@/types/metadata';
 import { DataSource } from '@/types/data-source';
@@ -129,8 +129,7 @@ export function useChartBuilder() {
   const handleRangeChange = useCallback((range: { from: Date; to: Date } | null): void => {
     if (!range) return;
     setDateRange(range);
-    
-    // Очищаем данные для всех серий при изменении диапазона дат
+
     setSeries((prevSeries) =>
       prevSeries.map((s) =>
         s.dataSetId && s.xAxisColumn && s.yColumnName ? { ...s, chartData: undefined } : s
@@ -161,4 +160,3 @@ export function useChartBuilder() {
     handleRangeChange,
   };
 }
-

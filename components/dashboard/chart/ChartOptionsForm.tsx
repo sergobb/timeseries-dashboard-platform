@@ -32,7 +32,7 @@ export default function ChartOptionsForm({
       <div className="space-y-4">
         <div>
           <Label htmlFor={`chart-description-${dashboardId}`} className="mb-1 text-xs">
-            Description <span className="text-red-500">*</span>
+            Description <span className="text-[var(--color-error)]">*</span>
           </Label>
           <Textarea
             id={`chart-description-${dashboardId}`}

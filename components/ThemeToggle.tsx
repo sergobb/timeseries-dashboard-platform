@@ -45,14 +45,14 @@ export default function ThemeToggle() {
         aria-label="Выбрать тему"
       >
         <span
-          className={`flex items-center justify-center w-6 h-6 rounded-md shrink-0 text-yellow-400 ${
+          className={`flex items-center justify-center w-6 h-6 rounded-md shrink-0 text-[var(--color-warning)] ${
             currentTheme.iconBg === 'light-blue'
               ? 'bg-[var(--theme-preview-light-blue)]'
               : currentTheme.iconBg === 'dark'
                 ? 'bg-[var(--theme-preview-dark)]'
                 : currentTheme.iconBg === 'dark-blue'
                   ? 'bg-[var(--theme-preview-dark-blue)]'
-                  : 'bg-[var(--color-muted)]'
+                  : 'bg-[var(--theme-preview-light)]'
           }`}
         >
           <currentTheme.Icon className="w-3.5 h-3.5" />
@@ -79,14 +79,14 @@ export default function ThemeToggle() {
               `}
             >
               <span
-                className={`flex items-center justify-center w-7 h-7 rounded-md shrink-0 text-yellow-400 ${
+                className={`flex items-center justify-center w-7 h-7 rounded-md shrink-0 text-[var(--color-warning)] ${
                   t.iconBg === 'light-blue'
                     ? 'bg-[var(--theme-preview-light-blue)]'
                     : t.iconBg === 'dark'
                       ? 'bg-[var(--theme-preview-dark)]'
                       : t.iconBg === 'dark-blue'
                         ? 'bg-[var(--theme-preview-dark-blue)]'
-                        : 'bg-[var(--color-muted)]'
+                        : 'bg-[var(--theme-preview-light)]'
                 }`}
               >
                 <t.Icon className="w-4 h-4" />

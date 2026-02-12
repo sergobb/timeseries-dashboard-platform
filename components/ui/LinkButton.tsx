@@ -4,7 +4,7 @@ import { ReactNode, AnchorHTMLAttributes } from 'react';
 interface LinkButtonProps extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href' | 'className'> {
   children: ReactNode;
   href: string;
-  variant?: 'primary' | 'secondary';
+  variant?: 'primary' | 'secondary' | 'danger';
   size?: 'sm' | 'md' | 'lg';
   className?: string;
 }
@@ -24,6 +24,7 @@ export default function LinkButton({
     primary: 'bg-[var(--color-primary)] text-[var(--color-primary-foreground)] hover:opacity-90',
     secondary:
       'border border-[var(--color-border)] text-[var(--color-foreground)] hover:bg-[var(--color-surface-muted)]',
+    danger: 'bg-[var(--color-error)] text-[var(--color-error-foreground)] hover:opacity-90',
   };
 
   const sizeClasses = {

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { DataSource } from '@/types/data-source';
 import { getLocalStorage, setLocalStorage } from '@/lib/localStorage';
 import { showAlert, showConfirm } from '@/lib/ui';
@@ -12,11 +13,13 @@ interface UseDataSourcesReturn {
   filteredDataSources: DataSource[];
   load: () => Promise<void>;
   remove: (dataSourceId: string, tableName: string) => Promise<boolean>;
+  onEdit: (dataSourceId: string) => void;
 }
 
 const STORAGE_KEY = 'data-sources-state';
 
 export function useDataSources(): UseDataSourcesReturn {
+  const router = useRouter();
   const [dataSources, setDataSources] = useState<DataSource[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -91,6 +94,8 @@ export function useDataSources(): UseDataSourcesReturn {
     }
   }, [filterText, restoring]);
 
+  const onEdit = useCallback((dataSourceId: string) => router.push(`/data-sources/${dataSourceId}/edit`), [router]);
+
   return {
     dataSources,
     loading,
@@ -100,5 +105,6 @@ export function useDataSources(): UseDataSourcesReturn {
     filteredDataSources,
     load,
     remove,
+    onEdit,
   };
 }

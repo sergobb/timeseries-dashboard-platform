@@ -60,7 +60,7 @@ export default function DataSetEditForm({
       <div className="flex flex-col gap-6 flex-1 overflow-y-auto lg:min-h-0 mb-6">
         <div>
           <label className="block text-sm font-medium text-[var(--color-foreground)] mb-2">
-            Description <span className="text-red-500">*</span>
+            Description <span className="text-[var(--color-error)]">*</span>
           </label>
           <Textarea
             value={description}
@@ -214,7 +214,7 @@ export default function DataSetEditForm({
                       </div>
                       <button
                         onClick={() => onRemoveDataSource(dataSource.id)}
-                        className="ml-3 text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+                        className="ml-3 text-[var(--color-error)] hover:opacity-80"
                         title="Remove data source"
                       >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -287,7 +287,7 @@ export default function DataSetEditForm({
                   </div>
                   <button
                     onClick={() => onRemoveDataSet(dataSet.id)}
-                    className="ml-3 text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+                    className="ml-3 text-[var(--color-error)] hover:opacity-80"
                     title="Remove data set"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

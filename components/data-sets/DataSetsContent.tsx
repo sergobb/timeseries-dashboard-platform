@@ -7,7 +7,7 @@ import Input from '@/components/ui/Input';
 import Text from '@/components/ui/Text';
 import Box from '@/components/ui/Box';
 import Flex from '@/components/ui/Flex';
-import EmptyDataSets from './EmptyDataSets';
+import EmptyState from '@/components/ui/EmptyState';
 import DataSetCard from './DataSetCard';
 import DataSetGrid from './DataSetGrid';
 
@@ -44,19 +44,23 @@ export default function DataSetsContent({
       </Box>
 
       {dataSets.length === 0 ? (
-        <EmptyDataSets />
+        <EmptyState
+          title="No data sets yet"
+          description="Create your first data set from data sources."
+          actionLabel="New Data Set"
+          onAction={() => router.push('/data-sets/new')}
+        />
       ) : filteredDataSets.length === 0 ? (
-        <Box className="text-center py-12">
-          <Text variant="muted">
-            No data sets match the filter.
-          </Text>
-        </Box>
+        <EmptyState
+          title="No data sets match the filter"
+          description="Try a different search or clear the filter."
+        />
       ) : (
         <DataSetGrid>
-          {filteredDataSets.map((dataSet) => (
+            {filteredDataSets.map((dataSet) => (
             <DataSetCard key={dataSet.id}>
               {dataSet.description && (
-                <Text variant="muted" className="mb-4">
+                <Text variant="muted" className="mb-4 block">
                   {dataSet.description}
                 </Text>
               )}

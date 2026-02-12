@@ -4,9 +4,10 @@ import { use } from 'react';
 import { useRouter } from 'next/navigation';
 import { useDatabaseConnection } from '@/hooks/useDatabaseConnection';
 import { useRequireAuthRedirect } from '@/hooks/useRequireAuthRedirect';
-import PageWrapper from '@/components/ui/PageWrapper';
-import Container from '@/components/ui/Container';
+import PageContainer from '@/components/PageContainer';
+import PageHeader from '@/components/ui/PageHeader';
 import PageTitle from '@/components/ui/PageTitle';
+import Container from '@/components/ui/Container';
 import InfoMessage from '@/components/ui/InfoMessage';
 import DatabaseConnectionForm from '@/components/database-connections/DatabaseConnectionForm';
 import ErrorMessage from '@/components/ErrorMessage';
@@ -38,28 +39,28 @@ export default function EditConnectionPage({
 
   if (status === 'loading' || loadingData) {
     return (
-      <PageWrapper>
+      <PageContainer>
         <Container maxWidth="2xl">
           <InfoMessage message="Loading..." size="base" />
         </Container>
-      </PageWrapper>
+      </PageContainer>
     );
   }
 
   if (!canViewConnections) {
     return (
-      <PageWrapper>
+      <PageContainer>
         <Container maxWidth="2xl">
           <ErrorMessage message="Недостаточно прав. Требуется роль: db_admin." className="mb-4" />
         </Container>
-      </PageWrapper>
+      </PageContainer>
     );
   }
 
   return (
-    <PageWrapper>
+    <PageContainer>
+      <PageHeader title={<PageTitle>Edit Database Connection</PageTitle>} />
       <Container maxWidth="2xl">
-        <PageTitle className="mb-8">Edit Database Connection</PageTitle>
         <DatabaseConnectionForm
           formData={formData}
           error={error}
@@ -70,7 +71,7 @@ export default function EditConnectionPage({
           onCancel={handleCancel}
         />
       </Container>
-    </PageWrapper>
+    </PageContainer>
   );
 }
 

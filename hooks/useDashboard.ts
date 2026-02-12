@@ -42,7 +42,7 @@ export function useDashboard(dashboardId?: string): UseDashboardReturn {
   const [showDateRangePicker, setShowDateRangePicker] = useState<boolean>(DEFAULT_SHOW_DATE_RANGE_PICKER);
   const [layout, setLayout] = useState<DashboardLayout>(DEFAULT_LAYOUT);
   const [dashboard, setDashboard] = useState<Dashboard | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(!!dashboardId);
   const [error, setError] = useState('');
   const toggleGroupId = useCallback((groupId: string) => {
     setGroupIds((prev) =>
@@ -51,8 +51,12 @@ export function useDashboard(dashboardId?: string): UseDashboardReturn {
   }, []);
 
   const loadDashboard = useCallback(async () => {
-    if (!dashboardId) return;
+    if (!dashboardId) {
+      setLoading(false);
+      return;
+    }
 
+    setLoading(true);
     try {
       const res = await fetch(`/api/dashboards/${dashboardId}`, {
         credentials: 'include',
@@ -70,6 +74,8 @@ export function useDashboard(dashboardId?: string): UseDashboardReturn {
       setLayout(normalizeDashboardLayout(data.layout, chartCount));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load dashboard');
+    } finally {
+      setLoading(false);
     }
   }, [dashboardId]);
 

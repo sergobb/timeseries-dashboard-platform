@@ -26,8 +26,8 @@ export default function Text({
   const variantClasses = {
     default: 'text-[var(--color-foreground)]',
     muted: 'text-[var(--color-muted-foreground)]',
-    error: 'text-red-600 dark:text-red-400',
-    warning: 'text-yellow-600 dark:text-yellow-400',
+    error: 'text-[var(--color-error)]',
+    warning: 'text-[var(--color-warning)]',
   };
 
   const classes = `${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]} ${className}`.trim();

@@ -10,7 +10,7 @@ import Button from '@/components/ui/Button';
 import Tabs, { TabsItem } from '@/components/ui/Tabs';
 import AccordionElement from '@/components/ui/AccordionElement';
 import SeriesOptionsComponent from '@/components/dashboard/chart/SeriesOptions';
-import { Series } from './hooks/useChartBuilder';
+import { Series } from '@/hooks/useChartBuilder';
 import { ChartType, YAxis } from '@/types/chart';
 import { DataSet } from '@/types/data-set';
 

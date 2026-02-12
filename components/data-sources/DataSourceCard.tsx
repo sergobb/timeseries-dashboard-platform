@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import Card from '@/components/ui/Card';
 
 interface DataSourceCardProps {
   children: ReactNode;
@@ -6,13 +7,10 @@ interface DataSourceCardProps {
 }
 
 export default function DataSourceCard({ children, className = '' }: DataSourceCardProps) {
-  const baseClasses = 'p-6 bg-[var(--color-surface)] text-[var(--color-foreground)] rounded-lg shadow hover:shadow-lg transition-shadow';
-  const classes = `${baseClasses} ${className}`.trim();
-
   return (
-    <div className={classes}>
+    <Card variant="interactive" className={`p-6 ${className}`.trim()}>
       {children}
-    </div>
+    </Card>
   );
 }
 

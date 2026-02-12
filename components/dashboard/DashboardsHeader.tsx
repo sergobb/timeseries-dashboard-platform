@@ -1,7 +1,6 @@
 import { useSession } from 'next-auth/react';
 import LinkButton from '@/components/ui/LinkButton';
 import PageTitle from '@/components/ui/PageTitle';
-import Button from '@/components/ui/Button';
 import PageHeader from '@/components/ui/PageHeader';
 
 export default function DashboardsHeader() {
@@ -10,12 +9,13 @@ export default function DashboardsHeader() {
   return (
     <PageHeader
       title={<PageTitle>Dashboards</PageTitle>}
+      description="Create and manage your analytics dashboards."
       action={
-        session?.user && (
-          <LinkButton href="/dashboards/new">
-            <Button>New Dashboard</Button>
+        session?.user ? (
+          <LinkButton href="/dashboards/new" variant="primary">
+            New Dashboard
           </LinkButton>
-        )
+        ) : undefined
       }
     />
   );

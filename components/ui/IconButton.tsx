@@ -14,9 +14,9 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
     const variantClasses = {
       primary: 'text-[var(--color-accent)] hover:text-[var(--color-accent)] hover:bg-[var(--color-surface-muted)]',
       secondary: 'text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] hover:bg-[var(--color-surface-muted)]',
-      success: 'text-green-600 hover:text-green-900 hover:bg-green-50 dark:text-green-400 dark:hover:text-green-300 dark:hover:bg-green-900/20',
-      danger: 'text-red-600 hover:text-red-900 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/20',
-      warning: 'text-yellow-600 hover:text-yellow-900 hover:bg-yellow-50 dark:text-yellow-400 dark:hover:text-yellow-300 dark:hover:bg-yellow-900/20',
+      success: 'text-[var(--color-success)] hover:bg-[var(--color-success)]/10',
+      danger: 'text-[var(--color-error)] hover:bg-[var(--color-error)]/10',
+      warning: 'text-[var(--color-warning)] hover:bg-[var(--color-warning)]/10',
     };
 
     const classes = `${baseClasses} ${variantClasses[variant]} ${className}`.trim();

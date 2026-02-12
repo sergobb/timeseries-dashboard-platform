@@ -91,11 +91,11 @@ export function buildHighchartsOptions(
   const options: HighchartsOptions = {
     colors: colors.chartColors,
     chart: {
-      backgroundColor: chartOptions.backgroundColor || (isDark ? colors.backgroundColor : 'transparent'),
+      backgroundColor: chartOptions.backgroundColor ?? colors.backgroundColor,
       height: chartOptions.height ?? 400,
       spacingLeft: chartOptions.spaceLeft ?? 0,
       spacingRight: chartOptions.spaceRight ?? 0,
-      plotBackgroundColor: chartOptions.plotBackgroundColor || (isDark ? colors.backgroundColor : 'transparent'),
+      plotBackgroundColor: chartOptions.plotBackgroundColor ?? colors.backgroundColor,
       plotBorderWidth: chartOptions.plotBorderWidth || 0,
       plotBorderColor: chartOptions.plotBorderColor || colors.borderColor,
     },
@@ -377,10 +377,50 @@ export function buildHighchartsOptions(
   return options;
 }
 
-export function getThemeColors(isDark: boolean): ThemeColors {
+/** Chart palettes per theme — single source of truth so Preview and Dashboard view match */
+const CHART_COLORS_BY_THEME: Record<string, string[]> = {
+  light: [
+    'oklch(0.45 0.2 265)',
+    'oklch(0.55 0.18 162)',
+    'oklch(0.72 0.19 75)',
+    'oklch(0.55 0.25 300)',
+    'oklch(0.55 0.22 25)',
+  ],
+  'light-blue': [
+    'oklch(0.5 0.2 265)',
+    'oklch(0.52 0.16 162)',
+    'oklch(0.68 0.18 75)',
+    'oklch(0.58 0.24 300)',
+    'oklch(0.52 0.2 25)',
+  ],
+  dark: ['#60a5fa', '#34d399', '#fbbf24', '#a78bfa', '#f87171'],
+  'dark-blue': [
+    'oklch(0.488 0.243 264.376)',
+    'oklch(0.696 0.17 162.48)',
+    'oklch(0.769 0.188 70.08)',
+    'oklch(0.627 0.265 303.9)',
+    'oklch(0.645 0.246 16.439)',
+  ],
+};
+
+export type ThemeName = 'light' | 'dark' | 'light-blue' | 'dark-blue';
+
+export function getThemeColors(themeOrIsDark: ThemeName | boolean): ThemeColors {
+  const theme: ThemeName | null =
+    typeof themeOrIsDark === 'string' ? themeOrIsDark : null;
+  const isDark =
+    theme !== null
+      ? theme === 'dark' || theme === 'dark-blue'
+      : themeOrIsDark === true;
+
   const defaultChartColors = isDark
     ? ['#60a5fa', '#34d399', '#fbbf24', '#a78bfa', '#f87171']
     : ['#2563eb', '#059669', '#d97706', '#7c3aed', '#dc2626'];
+
+  const chartColors =
+    theme && CHART_COLORS_BY_THEME[theme]
+      ? CHART_COLORS_BY_THEME[theme]
+      : defaultChartColors;
 
   if (typeof window === 'undefined') {
     return isDark
@@ -392,7 +432,7 @@ export function getThemeColors(isDark: boolean): ThemeColors {
           gridLineColor: '#3f3f46',
           lineColor: '#52525b',
           borderColor: '#52525b',
-          chartColors: defaultChartColors,
+          chartColors,
         }
       : {
           backgroundColor: '#ffffff',
@@ -402,7 +442,7 @@ export function getThemeColors(isDark: boolean): ThemeColors {
           gridLineColor: '#e4e4e7',
           lineColor: '#ccd6eb',
           borderColor: '#cccccc',
-          chartColors: defaultChartColors,
+          chartColors,
         };
   }
 
@@ -410,9 +450,12 @@ export function getThemeColors(isDark: boolean): ThemeColors {
   const getVar = (name: string, fallback: string) =>
     styles.getPropertyValue(name).trim() || fallback;
 
-  const chartColors = [1, 2, 3, 4, 5]
-    .map((i) => getVar(`--chart-${i}`, defaultChartColors[i - 1]))
-    .filter(Boolean);
+  const chartColorsFromDom =
+    theme && CHART_COLORS_BY_THEME[theme]
+      ? CHART_COLORS_BY_THEME[theme]
+      : [1, 2, 3, 4, 5]
+          .map((i) => getVar(`--chart-${i}`, defaultChartColors[i - 1]))
+          .filter(Boolean);
 
   return {
     backgroundColor: getVar('--surface', isDark ? '#18181b' : '#ffffff'),
@@ -422,7 +465,8 @@ export function getThemeColors(isDark: boolean): ThemeColors {
     gridLineColor: getVar('--border', isDark ? '#3f3f46' : '#e4e4e7'),
     lineColor: getVar('--border-muted', isDark ? '#52525b' : '#ccd6eb'),
     borderColor: getVar('--border', isDark ? '#52525b' : '#cccccc'),
-    chartColors: chartColors.length ? chartColors : defaultChartColors,
+    chartColors:
+      chartColorsFromDom.length > 0 ? chartColorsFromDom : defaultChartColors,
   };
 }
 

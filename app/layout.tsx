@@ -1,7 +1,26 @@
 import type { Metadata } from "next";
+import { Outfit, DM_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import ClientLayout from "@/components/ClientLayout";
 import { ThemeProvider, THEME_STORAGE_KEY } from "@/components/providers/ThemeProvider";
+
+const fontDisplay = Outfit({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const fontSans = DM_Sans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+const fontMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Timeseries Dashboard Platform",
@@ -38,7 +57,7 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className="antialiased h-full">
+      <body className={`${fontDisplay.variable} ${fontSans.variable} ${fontMono.variable} antialiased h-full font-sans`}>
         <ThemeProvider>
           <ClientLayout>
             {children}

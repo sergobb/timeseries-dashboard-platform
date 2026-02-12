@@ -3,14 +3,14 @@
 import { useParams, useRouter } from 'next/navigation';
 import { useRequireAuthRedirect } from '@/hooks/useRequireAuthRedirect';
 import ErrorMessage from '@/components/ErrorMessage';
+import PageContainer from '@/components/PageContainer';
+import PageHeader from '@/components/ui/PageHeader';
 import PageTitle from '@/components/ui/PageTitle';
 import InfoMessage from '@/components/ui/InfoMessage';
 import Text from '@/components/ui/Text';
 import Card from '@/components/ui/Card';
 import Container from '@/components/ui/Container';
 import LinkButton from '@/components/ui/LinkButton';
-import Box from '@/components/ui/Box';
-import PageWrapper from '@/components/ui/PageWrapper';
 import { useDataSourceEdit } from '@/hooks/useDataSourceEdit';
 import DataSourceEditForm from '@/components/data-sources/DataSourceEditForm';
 
@@ -43,59 +43,53 @@ export default function EditDataSourcePage() {
 
   if (status === 'loading' || loading) {
     return (
-      <PageWrapper>
+      <PageContainer>
         <Container maxWidth="4xl">
           <InfoMessage message="Loading..." size="base" />
         </Container>
-      </PageWrapper>
+      </PageContainer>
     );
   }
 
   if (!canViewMetadata) {
     return (
-      <PageWrapper>
+      <PageContainer>
         <Container maxWidth="4xl">
           <ErrorMessage message="Недостаточно прав. Требуется роль: metadata_editor." className="mb-4" />
-          <LinkButton
-            href="/"
-            variant="secondary"
-            className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 border-none hover:bg-transparent"
-          >
+          <LinkButton href="/" variant="secondary" className="mt-4">
             ← На главную
           </LinkButton>
         </Container>
-      </PageWrapper>
+      </PageContainer>
     );
   }
 
   if (!dataSource) {
     return (
-      <PageWrapper>
+      <PageContainer>
         <Container maxWidth="4xl">
-          <Card className="p-4 bg-red-50 dark:bg-red-900/20">
+          <Card className="p-4 border-[var(--color-error)]">
             <Text variant="error">Data source not found</Text>
           </Card>
-          <LinkButton
-            href="/data-sources"
-            variant="secondary"
-            className="mt-4 text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 border-none hover:bg-transparent"
-          >
+          <LinkButton href="/data-sources" variant="secondary" className="mt-4">
             ← Back to Data Sources
           </LinkButton>
         </Container>
-      </PageWrapper>
+      </PageContainer>
     );
   }
 
   return (
-    <PageWrapper>
+    <PageContainer>
+      <PageHeader
+        title={<PageTitle>Edit Data Source</PageTitle>}
+        description={
+          dataSource.schemaName
+            ? `${dataSource.schemaName}.${dataSource.tableName}`
+            : dataSource.tableName
+        }
+      />
       <Container maxWidth="4xl">
-        <Box className="mb-6">
-          <PageTitle className="mt-4">Edit Data Source</PageTitle>
-          <Text variant="muted" className="mt-2">
-            {dataSource.schemaName ? `${dataSource.schemaName}.` : ''}{dataSource.tableName}
-          </Text>
-        </Box>
         {error && !error.includes('Не найдено совпадений') && <ErrorMessage message={error} className="mb-4" />}
         <DataSourceEditForm
           description={description}
@@ -112,7 +106,7 @@ export default function EditDataSourcePage() {
           onCancel={() => router.push('/data-sources')}
         />
       </Container>
-    </PageWrapper>
+    </PageContainer>
   );
 }
 

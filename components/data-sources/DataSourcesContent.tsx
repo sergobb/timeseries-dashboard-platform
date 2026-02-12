@@ -1,3 +1,4 @@
+import { useRouter } from 'next/navigation';
 import { DataSource } from '@/types/data-source';
 import ErrorMessage from '@/components/ErrorMessage';
 import IconButton from '@/components/ui/IconButton';
@@ -6,6 +7,7 @@ import Input from '@/components/ui/Input';
 import Text from '@/components/ui/Text';
 import Box from '@/components/ui/Box';
 import Flex from '@/components/ui/Flex';
+import EmptyState from '@/components/ui/EmptyState';
 import DataSourceCard from './DataSourceCard';
 import DataSourceGrid from './DataSourceGrid';
 
@@ -28,6 +30,7 @@ export default function DataSourcesContent({
   onEdit,
   onDelete,
 }: DataSourcesContentProps) {
+  const router = useRouter();
   return (
     <div className="flex flex-col flex-1 min-h-0">
       {error && <ErrorMessage message={error} className="mb-4" />}
@@ -43,22 +46,22 @@ export default function DataSourcesContent({
 
       <div className="flex-1 overflow-y-auto min-h-0">
         {dataSources.length === 0 ? (
-          <Box className="text-center py-12">
-            <Text variant="muted" className="mb-4">
-              No data sources found. Create your first data source to get started.
-            </Text>
-          </Box>
+          <EmptyState
+            title="No data sources yet"
+            description="Create your first data source from a database connection."
+            actionLabel="New Data Source"
+            onAction={() => router.push('/data-sources/new')}
+          />
         ) : filteredDataSources.length === 0 ? (
-          <Box className="text-center py-12">
-            <Text variant="muted">
-              No data sources match the filter.
-            </Text>
-          </Box>
+          <EmptyState
+            title="No data sources match the filter"
+            description="Try a different search or clear the filter."
+          />
         ) : (
           <DataSourceGrid>
             {filteredDataSources.map((dataSource) => (
               <DataSourceCard key={dataSource.id}>
-                <Text className="text-xl font-semibold mb-2">
+                <Text className="font-display text-xl font-semibold mb-2 block">
                   {dataSource.schemaName ? `${dataSource.schemaName}.` : ''}{dataSource.tableName}
                 </Text>
                 {dataSource.description && (

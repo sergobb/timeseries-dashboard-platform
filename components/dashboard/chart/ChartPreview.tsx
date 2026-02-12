@@ -4,11 +4,10 @@ import { useMemo, useEffect, useState } from 'react';
 import HighchartsReact from 'highcharts-react-official';
 import Highcharts from 'highcharts';
 import Box from '@/components/ui/Box';
-import Card from '@/components/ui/Card';
 import Text from '@/components/ui/Text';
 import DateRangePicker from '@/components/dashboard/DateRangePicker';
 import { buildHighchartsOptions, getThemeColors } from '@/lib/highcharts-utils';
-import { Series } from './hooks/useChartBuilder';
+import { Series } from '@/hooks/useChartBuilder';
 import { YAxis, ChartOptions, XAxisOptions } from '@/types/chart';
 
 interface ChartPreviewProps {
@@ -33,11 +32,15 @@ export default function ChartPreview({
   isDark,
   theme,
 }: ChartPreviewProps) {
-  const [themeColors, setThemeColors] = useState(() => getThemeColors(isDark));
+  const [themeColors, setThemeColors] = useState(() =>
+    getThemeColors(theme as 'light' | 'dark' | 'light-blue' | 'dark-blue')
+  );
 
   useEffect(() => {
     const id = requestAnimationFrame(() => {
-      setThemeColors(getThemeColors(isDark));
+      setThemeColors(
+        getThemeColors(theme as 'light' | 'dark' | 'light-blue' | 'dark-blue')
+      );
     });
     return () => cancelAnimationFrame(id);
   }, [theme, isDark]);
@@ -50,19 +53,23 @@ export default function ChartPreview({
   }, [series, yAxes, chartOptions, xAxisOptions, colors, isDark, dateRange]);
 
   return (
-    <Card className="p-6">
-      <Text size="lg" className="mb-4 font-semibold">
-        Chart Preview
-      </Text>
-      <DateRangePicker value={dateRange} onRangeChange={onRangeChange} />
-      <Box className="w-full rounded p-4">
-        <HighchartsReact
-          highcharts={Highcharts}
-          options={highchartsOptions}
-          containerProps={{ style: { width: '100%' } }}
-        />
-      </Box>
-    </Card>
+    <div className="flex flex-col h-full">
+      <div className="border-b border-[var(--color-border-muted)] px-4 py-3">
+        <Text size="sm" className="font-display font-semibold text-[var(--color-foreground)]">
+          Chart Preview
+        </Text>
+      </div>
+      <div className="p-4 space-y-4 flex-1 min-h-0">
+        <DateRangePicker value={dateRange} onRangeChange={onRangeChange} />
+        <Box className="w-full rounded-lg bg-[var(--color-surface-subtle)] border border-[var(--color-border-muted)] p-4 min-h-[280px]">
+          <HighchartsReact
+            highcharts={Highcharts}
+            options={highchartsOptions}
+            containerProps={{ style: { width: '100%' } }}
+          />
+        </Box>
+      </div>
+    </div>
   );
 }
 

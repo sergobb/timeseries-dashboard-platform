@@ -22,11 +22,11 @@ interface DashboardViewProps {
 export default function DashboardView({ dashboard, showDateRangeOverride = true }: DashboardViewProps) {
   const { theme, resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
-  const [themeColors, setThemeColors] = useState(() => getThemeColors(isDark));
+  const [themeColors, setThemeColors] = useState(() => getThemeColors(theme));
 
   useEffect(() => {
     const id = requestAnimationFrame(() => {
-      setThemeColors(getThemeColors(isDark));
+      setThemeColors(getThemeColors(theme));
     });
     return () => cancelAnimationFrame(id);
   }, [theme, isDark]);
@@ -48,7 +48,7 @@ export default function DashboardView({ dashboard, showDateRangeOverride = true 
   if (error) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-red-600 dark:text-red-400">Error: {error}</div>
+        <div className="text-[var(--color-error)]">Error: {error}</div>
       </div>
     );
   }

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { DatabaseConnection } from '@/types/database';
 import { showAlert, showConfirm } from '@/lib/ui';
 
@@ -11,9 +12,11 @@ interface UseDatabaseConnectionsReturn {
   test: (id: string) => Promise<void>;
   toggleActive: (id: string, currentActive: boolean) => Promise<void>;
   remove: (id: string, name: string) => Promise<boolean>;
+  onEdit: (id: string) => void;
 }
 
 export function useDatabaseConnections(): UseDatabaseConnectionsReturn {
+  const router = useRouter();
   const [connections, setConnections] = useState<DatabaseConnection[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -98,6 +101,8 @@ export function useDatabaseConnections(): UseDatabaseConnectionsReturn {
     load();
   }, [load]);
 
+  const onEdit = useCallback((id: string) => router.push(`/database-connections/${id}/edit`), [router]);
+
   return {
     connections,
     loading,
@@ -107,5 +112,6 @@ export function useDatabaseConnections(): UseDatabaseConnectionsReturn {
     test,
     toggleActive,
     remove,
+    onEdit,
   };
 }
