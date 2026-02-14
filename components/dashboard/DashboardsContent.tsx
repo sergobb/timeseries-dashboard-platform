@@ -12,6 +12,7 @@ import Flex from '@/components/ui/Flex';
 import Input from '@/components/ui/Input';
 import EmptyState from '@/components/ui/EmptyState';
 import TagFilter from '@/components/common/TagFilter';
+import Badge from '@/components/ui/Badge';
 
 interface DashboardsContentProps {
   dashboards: Dashboard[];
@@ -108,6 +109,17 @@ export default function DashboardsContent({
                   <Text className="font-display text-xl font-semibold mb-2 block">
                     {dashboard.title}
                   </Text>
+                  {dashboard.tagIds && dashboard.tagIds.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mb-3">
+                      {tags
+                        .filter((t) => dashboard.tagIds?.includes(t.id))
+                        .map((t) => (
+                          <Badge key={t.id} variant="info">
+                            {t.name}
+                          </Badge>
+                        ))}
+                    </div>
+                  )}
                   {dashboard.description && (
                     <Text variant="muted" className="mb-3 line-clamp-2">
                       {dashboard.description}

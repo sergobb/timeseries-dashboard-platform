@@ -12,6 +12,7 @@ import EmptyState from '@/components/ui/EmptyState';
 import DataSourceCard from './DataSourceCard';
 import DataSourceGrid from './DataSourceGrid';
 import TagFilter from '@/components/common/TagFilter';
+import Badge from '@/components/ui/Badge';
 
 interface DataSourcesContentProps {
   dataSources: DataSource[];
@@ -84,6 +85,17 @@ export default function DataSourcesContent({
                 <Text className="font-display text-xl font-semibold mb-2 block">
                   {dataSource.schemaName ? `${dataSource.schemaName}.` : ''}{dataSource.tableName}
                 </Text>
+                {dataSource.tagIds && dataSource.tagIds.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mb-3">
+                    {tags
+                      .filter((t) => dataSource.tagIds?.includes(t.id))
+                      .map((t) => (
+                        <Badge key={t.id} variant="info">
+                          {t.name}
+                        </Badge>
+                      ))}
+                  </div>
+                )}
                 {dataSource.description && (
                   <Text variant="muted" className="mb-4 whitespace-pre-wrap">
                     {dataSource.description}

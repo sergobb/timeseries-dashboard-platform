@@ -12,6 +12,7 @@ import EmptyState from '@/components/ui/EmptyState';
 import DataSetCard from './DataSetCard';
 import DataSetGrid from './DataSetGrid';
 import TagFilter from '@/components/common/TagFilter';
+import Badge from '@/components/ui/Badge';
 
 interface DataSetsContentProps {
   dataSets: DataSet[];
@@ -79,6 +80,17 @@ export default function DataSetsContent({
         <DataSetGrid>
             {filteredDataSets.map((dataSet) => (
             <DataSetCard key={dataSet.id}>
+              {dataSet.tagIds && dataSet.tagIds.length > 0 && (
+                <div className="flex flex-wrap gap-1 mb-3">
+                  {tags
+                    .filter((t) => dataSet.tagIds?.includes(t.id))
+                    .map((t) => (
+                      <Badge key={t.id} variant="info">
+                        {t.name}
+                      </Badge>
+                    ))}
+                </div>
+              )}
               {dataSet.description && (
                 <Text variant="muted" className="mb-4 block whitespace-pre-wrap">
                   {dataSet.description}

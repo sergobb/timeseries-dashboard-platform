@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Import database_connections, data_sources, data_sets from JSON file (from export-metadata.js).
+ * Import database_connections, data_sources, data_sets, tags from JSON file (from export-metadata.js).
  * Usage: node scripts/import-metadata.js <input-file> [--clear]
  * --clear: drop existing collections before import (default: merge/upsert by _id)
  * Requires MONGODB_URI in .env.local or env.
@@ -10,7 +10,7 @@ const fs = require('fs');
 const path = require('path');
 const { MongoClient, ObjectId } = require('mongodb');
 
-const COLLECTIONS = ['database_connections', 'data_sources', 'data_sets'];
+const COLLECTIONS = ['database_connections', 'data_sources', 'data_sets', 'tags'];
 
 function loadEnvLocal() {
   if (process.env.MONGODB_URI) return;
@@ -35,6 +35,7 @@ const ID_FIELDS = {
   database_connections: ['_id'],
   data_sources: ['_id', 'databaseConnectionId'],
   data_sets: ['_id', 'dataSourceIds'],
+  tags: ['_id'],
 };
 
 function fromSerializable(doc, collName) {

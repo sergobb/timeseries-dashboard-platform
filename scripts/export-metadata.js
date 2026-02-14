@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Export database_connections, data_sources, data_sets from MongoDB to JSON file.
+ * Export database_connections, data_sources, data_sets, tags from MongoDB to JSON file.
  * Usage: node scripts/export-metadata.js [output-file]
  * Default output: metadata-export-YYYY-MM-DD-HHmmss.json
  * Requires MONGODB_URI in .env.local or env.
@@ -10,7 +10,7 @@ const fs = require('fs');
 const path = require('path');
 const { MongoClient, ObjectId } = require('mongodb');
 
-const COLLECTIONS = ['database_connections', 'data_sources', 'data_sets'];
+const COLLECTIONS = ['database_connections', 'data_sources', 'data_sets', 'tags'];
 
 function loadEnvLocal() {
   if (process.env.MONGODB_URI) return;
