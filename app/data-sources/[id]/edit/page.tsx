@@ -12,6 +12,7 @@ import Card from '@/components/ui/Card';
 import Container from '@/components/ui/Container';
 import LinkButton from '@/components/ui/LinkButton';
 import { useDataSourceEdit } from '@/hooks/useDataSourceEdit';
+import { useTags } from '@/hooks/useTags';
 import DataSourceEditForm from '@/components/data-sources/DataSourceEditForm';
 
 export default function EditDataSourcePage() {
@@ -25,17 +26,22 @@ export default function EditDataSourcePage() {
     dataSource,
     description,
     columns,
+    tagIds,
     loading,
     saving,
     uploading,
     error,
     fileInputRef,
     setDescription,
+    addTag,
+    removeTag,
     toggleColumn,
     updateColumnDescription,
+    deactivateColumnsWithEmptyDescription,
     uploadFile,
     save,
   } = useDataSourceEdit(dataSourceId);
+  const { tags, loading: tagsLoading, createTag } = useTags();
 
   if (status === 'unauthenticated') {
     return null;
@@ -98,9 +104,16 @@ export default function EditDataSourcePage() {
           saving={saving}
           fileInputRef={fileInputRef}
           error={error}
+          tags={tags}
+          tagsLoading={tagsLoading}
+          selectedTagIds={tagIds}
+          onAddTag={addTag}
+          onRemoveTag={removeTag}
+          onCreateTag={createTag}
           onDescriptionChange={setDescription}
           onColumnToggle={toggleColumn}
           onColumnDescriptionChange={updateColumnDescription}
+          onDeactivateColumnsWithEmptyDescription={deactivateColumnsWithEmptyDescription}
           onFileUpload={uploadFile}
           onSave={save}
           onCancel={() => router.push('/data-sources')}

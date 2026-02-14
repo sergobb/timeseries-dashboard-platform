@@ -12,6 +12,7 @@ interface UseDashboardReturn {
   defaultDateRange: string;
   customDateRange: { from: string; to: string } | null;
   groupIds: string[];
+  tagIds: string[];
   showDateRangePicker: boolean;
   layout: DashboardLayout;
   setTitle: (title: string) => void;
@@ -20,6 +21,8 @@ interface UseDashboardReturn {
   setDefaultDateRange: (range: string) => void;
   setCustomDateRange: (range: { from: string; to: string } | null) => void;
   toggleGroupId: (groupId: string) => void;
+  addTag: (tagId: string) => void;
+  removeTag: (tagId: string) => void;
   setShowDateRangePicker: (next: boolean) => void;
   setLayout: (layout: DashboardLayout) => void;
   saveDashboard: () => Promise<void>;
@@ -39,6 +42,7 @@ export function useDashboard(dashboardId?: string): UseDashboardReturn {
   const [defaultDateRange, setDefaultDateRange] = useState<string>('Last 7 Days');
   const [customDateRange, setCustomDateRange] = useState<{ from: string; to: string } | null>(null);
   const [groupIds, setGroupIds] = useState<string[]>([]);
+  const [tagIds, setTagIds] = useState<string[]>([]);
   const [showDateRangePicker, setShowDateRangePicker] = useState<boolean>(DEFAULT_SHOW_DATE_RANGE_PICKER);
   const [layout, setLayout] = useState<DashboardLayout>(DEFAULT_LAYOUT);
   const [dashboard, setDashboard] = useState<Dashboard | null>(null);
@@ -48,6 +52,14 @@ export function useDashboard(dashboardId?: string): UseDashboardReturn {
     setGroupIds((prev) =>
       prev.includes(groupId) ? prev.filter((id) => id !== groupId) : [...prev, groupId]
     );
+  }, []);
+
+  const addTag = useCallback((tagId: string) => {
+    setTagIds((prev) => (prev.includes(tagId) ? prev : [...prev, tagId]));
+  }, []);
+
+  const removeTag = useCallback((tagId: string) => {
+    setTagIds((prev) => prev.filter((id) => id !== tagId));
   }, []);
 
   const loadDashboard = useCallback(async () => {
@@ -69,6 +81,7 @@ export function useDashboard(dashboardId?: string): UseDashboardReturn {
       setDefaultDateRange(data.defaultDateRange || 'Last 7 Days');
       setCustomDateRange(data.customDateRange ?? null);
       setGroupIds(data.groupIds || []);
+      setTagIds(data.tagIds || []);
       setShowDateRangePicker(data.showDateRangePicker ?? DEFAULT_SHOW_DATE_RANGE_PICKER);
       const chartCount = data.chartIds?.length ?? data.charts?.length ?? 0;
       setLayout(normalizeDashboardLayout(data.layout, chartCount));
@@ -96,6 +109,7 @@ export function useDashboard(dashboardId?: string): UseDashboardReturn {
         defaultDateRange,
         customDateRange: defaultDateRange === CUSTOM_RANGE_LABEL ? customDateRange ?? undefined : undefined,
         groupIds,
+        tagIds,
         showDateRangePicker,
         layout,
       };
@@ -133,6 +147,7 @@ export function useDashboard(dashboardId?: string): UseDashboardReturn {
     defaultDateRange,
     customDateRange,
     groupIds,
+    tagIds,
     showDateRangePicker,
     layout,
     setTitle,
@@ -141,6 +156,8 @@ export function useDashboard(dashboardId?: string): UseDashboardReturn {
     setDefaultDateRange,
     setCustomDateRange,
     toggleGroupId,
+    addTag,
+    removeTag,
     setShowDateRangePicker,
     setLayout,
     saveDashboard,

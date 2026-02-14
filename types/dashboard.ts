@@ -69,6 +69,7 @@ export interface Dashboard {
   defaultDateRange?: string;
   /** Используется когда defaultDateRange === 'Custom Range'. ISO строки. */
   customDateRange?: { from: string; to: string };
+  tagIds?: string[];
   canEdit?: boolean;
   /**
    * Показывать ли выбор интервала на просмотре дашборда (DateTimeRangePicker/DateRangePicker).

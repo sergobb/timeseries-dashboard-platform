@@ -22,7 +22,7 @@ export default function DataSetCreationSelectedSets({ sets, onRemove }: DataSetC
             className="flex items-start justify-between p-3 rounded-md border border-[var(--color-border)] bg-[var(--color-surface-muted)]"
           >
             <div className="flex-1">
-              <div className="font-medium text-[var(--color-foreground)]">
+              <div className="font-medium text-[var(--color-foreground)] whitespace-pre-wrap">
                 {dataSet.description || 'Data Set (no description)'}
               </div>
             </div>

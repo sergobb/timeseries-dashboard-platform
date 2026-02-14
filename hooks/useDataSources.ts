@@ -10,6 +10,8 @@ interface UseDataSourcesReturn {
   error: string | null;
   filterText: string;
   setFilterText: (text: string) => void;
+  filterTagIds: string[];
+  toggleFilterTag: (tagId: string) => void;
   filteredDataSources: DataSource[];
   load: () => Promise<void>;
   remove: (dataSourceId: string, tableName: string) => Promise<boolean>;
@@ -24,7 +26,14 @@ export function useDataSources(): UseDataSourcesReturn {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filterText, setFilterText] = useState('');
+  const [filterTagIds, setFilterTagIds] = useState<string[]>([]);
   const [restoring, setRestoring] = useState(true);
+
+  const toggleFilterTag = useCallback((tagId: string) => {
+    setFilterTagIds((prev) =>
+      prev.includes(tagId) ? prev.filter((id) => id !== tagId) : [...prev, tagId]
+    );
+  }, []);
 
   const load = useCallback(async () => {
     try {
@@ -67,6 +76,11 @@ export function useDataSources(): UseDataSourcesReturn {
   }, [load]);
 
   const filteredDataSources = dataSources.filter((dataSource) => {
+    if (filterTagIds.length > 0) {
+      const itemTagIds = dataSource.tagIds || [];
+      const hasAllTags = filterTagIds.every((id) => itemTagIds.includes(id));
+      if (!hasAllTags) return false;
+    }
     if (!filterText.trim()) return true;
     const searchText = filterText.toLowerCase();
     const schemaName = (dataSource.schemaName || '').toLowerCase();
@@ -102,6 +116,8 @@ export function useDataSources(): UseDataSourcesReturn {
     error,
     filterText,
     setFilterText,
+    filterTagIds,
+    toggleFilterTag,
     filteredDataSources,
     load,
     remove,

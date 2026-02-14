@@ -1,6 +1,7 @@
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Dashboard } from '@/types/dashboard';
+import { Tag } from '@/types/tag';
 import ErrorMessage from '@/components/ErrorMessage';
 import IconButton from '@/components/ui/IconButton';
 import { EditIcon, DeleteIcon } from '@/components/ui/icons';
@@ -10,11 +11,16 @@ import Box from '@/components/ui/Box';
 import Flex from '@/components/ui/Flex';
 import Input from '@/components/ui/Input';
 import EmptyState from '@/components/ui/EmptyState';
+import TagFilter from '@/components/common/TagFilter';
 
 interface DashboardsContentProps {
   dashboards: Dashboard[];
   filteredDashboards: Dashboard[];
   filterText: string;
+  tags: Tag[];
+  tagsLoading: boolean;
+  filterTagIds: string[];
+  onFilterTagToggle: (tagId: string) => void;
   error: string | null;
   onFilterChange: (text: string) => void;
   onDelete: (dashboardId: string, title: string) => void;
@@ -25,6 +31,10 @@ export default function DashboardsContent({
   dashboards,
   filteredDashboards,
   filterText,
+  tags,
+  tagsLoading,
+  filterTagIds,
+  onFilterTagToggle,
   error,
   onFilterChange,
   onDelete,
@@ -43,7 +53,7 @@ export default function DashboardsContent({
     <>
       {error && <ErrorMessage message={error} className="mb-4" />}
 
-      <Box className="mb-6">
+      <Box className="mb-4">
         <Input
           type="text"
           placeholder="Filter by description..."
@@ -51,6 +61,16 @@ export default function DashboardsContent({
           onChange={(e) => onFilterChange(e.target.value)}
         />
       </Box>
+      {tags.length > 0 && (
+        <Box className="mb-4">
+          <TagFilter
+            tags={tags}
+            loading={tagsLoading}
+            selectedTagIds={filterTagIds}
+            onToggleTag={onFilterTagToggle}
+          />
+        </Box>
+      )}
 
       {dashboards.length === 0 ? (
         <EmptyState

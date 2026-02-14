@@ -1,4 +1,5 @@
 import { ColumnMetadata } from '@/types/metadata';
+import { Tag } from '@/types/tag';
 import Label from '@/components/ui/Label';
 import Textarea from '@/components/ui/Textarea';
 import Checkbox from '@/components/ui/Checkbox';
@@ -12,6 +13,7 @@ import Flex from '@/components/ui/Flex';
 import Scrollable from '@/components/ui/Scrollable';
 import ColumnCard from '@/components/ui/ColumnCard';
 import Divider from '@/components/ui/Divider';
+import TagSelector from '@/components/common/TagSelector';
 
 interface DataSourceEditFormProps {
   description: string;
@@ -23,7 +25,14 @@ interface DataSourceEditFormProps {
   onDescriptionChange: (value: string) => void;
   onColumnToggle: (index: number) => void;
   onColumnDescriptionChange: (index: number, description: string) => void;
+  onDeactivateColumnsWithEmptyDescription: () => void;
   onFileUpload: (file: File) => Promise<void>;
+  tags: Tag[];
+  tagsLoading: boolean;
+  selectedTagIds: string[];
+  onAddTag: (tagId: string) => void;
+  onRemoveTag: (tagId: string) => void;
+  onCreateTag: (name: string) => Promise<Tag | null>;
   onSave: () => void;
   onCancel: () => void;
 }
@@ -38,12 +47,20 @@ export default function DataSourceEditForm({
   onDescriptionChange,
   onColumnToggle,
   onColumnDescriptionChange,
+  onDeactivateColumnsWithEmptyDescription,
   onFileUpload,
+  tags,
+  tagsLoading,
+  selectedTagIds,
+  onAddTag,
+  onRemoveTag,
+  onCreateTag,
   onSave,
   onCancel,
 }: DataSourceEditFormProps) {
   const activeColumnsCount = columns.filter(col => col.active !== false).length;
   const inactiveColumnsCount = columns.length - activeColumnsCount;
+  const emptyDescriptionCount = columns.filter(col => !(col.description || '').trim()).length;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -52,6 +69,16 @@ export default function DataSourceEditForm({
 
   return (
     <Card className="p-6 space-y-6">
+      <Box>
+        <TagSelector
+          tags={tags}
+          loading={tagsLoading}
+          selectedTagIds={selectedTagIds}
+          onAddTag={onAddTag}
+          onRemoveTag={onRemoveTag}
+          onCreateTag={onCreateTag}
+        />
+      </Box>
       <Box>
         <Label className="mb-2">Description</Label>
         <Textarea
@@ -75,6 +102,22 @@ export default function DataSourceEditForm({
             disabled={uploading}
           />
         </Flex>
+        {emptyDescriptionCount > 0 && (
+          <Flex align="center" gap="2" className="mb-4">
+            <Checkbox
+              id="deactivate-empty-desc"
+              onChange={(e) => {
+                const checked = 'checked' in e.target && e.target.checked;
+                if (checked) {
+                  onDeactivateColumnsWithEmptyDescription();
+                }
+              }}
+            />
+            <Label htmlFor="deactivate-empty-desc" className="cursor-pointer">
+              Деактивировать колонки с пустым описанием ({emptyDescriptionCount})
+            </Label>
+          </Flex>
+        )}
         {error && !error.includes('Не найдено совпадений') && (
           <Text variant="error" size="sm" className="mb-4">
             {error}

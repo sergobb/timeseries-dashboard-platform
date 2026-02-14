@@ -15,6 +15,7 @@ export class DataSourceService {
       schemaName: dataSource.schemaName || null,
       description: dataSource.description || null,
       columns: dataSource.columns,
+      tagIds: dataSource.tagIds || [],
       createdAt: new Date(),
       updatedAt: new Date(),
       createdBy: dataSource.createdBy,
@@ -34,13 +35,14 @@ export class DataSourceService {
     const query = connectionId ? { connectionId } : {};
     const dataSources = await db.collection('data_sources').find(query).toArray();
     
-    return dataSources.map(ds => ({
+    return dataSources.map((ds) => ({
       id: ds._id.toString(),
       connectionId: ds.connectionId,
       tableName: ds.tableName,
       schemaName: ds.schemaName,
       description: ds.description,
       columns: ds.columns,
+      tagIds: ds.tagIds || [],
       createdAt: ds.createdAt,
       updatedAt: ds.updatedAt,
       createdBy: ds.createdBy,
@@ -60,6 +62,7 @@ export class DataSourceService {
       schemaName: ds.schemaName,
       description: ds.description,
       columns: ds.columns,
+      tagIds: ds.tagIds || [],
       createdAt: ds.createdAt,
       updatedAt: ds.updatedAt,
       createdBy: ds.createdBy,
@@ -91,6 +94,7 @@ export class DataSourceService {
       schemaName: ds.schemaName,
       description: ds.description,
       columns: ds.columns,
+      tagIds: ds.tagIds || [],
       createdAt: ds.createdAt,
       updatedAt: ds.updatedAt,
       createdBy: ds.createdBy,
@@ -130,6 +134,7 @@ export class DataSourceService {
       schemaName: result.schemaName,
       description: result.description,
       columns: result.columns,
+      tagIds: result.tagIds || [],
       createdAt: result.createdAt,
       updatedAt: result.updatedAt,
       createdBy: result.createdBy,

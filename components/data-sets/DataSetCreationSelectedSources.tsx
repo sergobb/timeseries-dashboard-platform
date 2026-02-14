@@ -42,7 +42,7 @@ export default function DataSetCreationSelectedSources({
                 <div className="flex-1">
                   <div className="font-medium text-[var(--color-foreground)]">{displayName}</div>
                   {dataSource.description && (
-                    <div className="text-sm text-[var(--color-muted-foreground)] mt-1">
+                    <div className="text-sm text-[var(--color-muted-foreground)] mt-1 whitespace-pre-wrap">
                       {dataSource.description}
                     </div>
                   )}

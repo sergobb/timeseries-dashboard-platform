@@ -15,6 +15,7 @@ import DashboardLayoutSelector from './DashboardLayoutSelector';
 import { useDashboard } from '@/hooks/useDashboard';
 import { useDashboardCharts } from '@/hooks/useDashboardCharts';
 import { useDashboardGroups } from '@/hooks/useDashboardGroups';
+import { useTags } from '@/hooks/useTags';
 
 interface DashboardBuilderProps {
   dashboardId?: string;
@@ -42,6 +43,9 @@ export default function DashboardBuilder({ dashboardId }: DashboardBuilderProps)
     setDefaultDateRange,
     setCustomDateRange,
     toggleGroupId,
+    addTag,
+    removeTag,
+    tagIds,
     setShowDateRangePicker,
     setLayout,
     saveDashboard,
@@ -49,6 +53,8 @@ export default function DashboardBuilder({ dashboardId }: DashboardBuilderProps)
     loading,
     error: dashboardError,
   } = useDashboard(dashboardId);
+
+  const { tags, loading: tagsLoading, createTag } = useTags();
 
   const {
     charts,
@@ -111,12 +117,18 @@ export default function DashboardBuilder({ dashboardId }: DashboardBuilderProps)
               selectedGroupIds={groupIds}
               groupsLoading={groupsLoading}
               groupsError={groupsError}
+              tags={tags}
+              tagsLoading={tagsLoading}
+              selectedTagIds={tagIds}
               onTitleChange={setTitle}
               onDescriptionChange={setDescription}
               onIsPublicChange={setIsPublic}
               onDefaultDateRangeChange={setDefaultDateRange}
               onCustomDateRangeChange={setCustomDateRange}
               onGroupToggle={toggleGroupId}
+              onAddTag={addTag}
+              onRemoveTag={removeTag}
+              onCreateTag={createTag}
             />
             <DashboardLayoutSelector
               chartsPerRow={layout.chartsPerRow}
@@ -150,7 +162,7 @@ export default function DashboardBuilder({ dashboardId }: DashboardBuilderProps)
       },
     ];
   }, [
-    isPublic,
+    addTag,
     chartCount,
     charts,
     dashboardId,
@@ -160,6 +172,7 @@ export default function DashboardBuilder({ dashboardId }: DashboardBuilderProps)
     groups,
     groupsError,
     groupsLoading,
+    isPublic,
     handleRemoveChart,
     layout,
     handleChartsPerRowChange,
@@ -170,6 +183,11 @@ export default function DashboardBuilder({ dashboardId }: DashboardBuilderProps)
     setShowDateRangePicker,
     setTitle,
     showDateRangePicker,
+    tags,
+    tagsLoading,
+    tagIds,
+    createTag,
+    removeTag,
     title,
     toggleGroupId,
   ]);

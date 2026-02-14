@@ -27,6 +27,7 @@ export interface DataSet {
   aggregationInterval?: number;
   /** Единица времени для интервала агрегации (актуально при useAggregation). */
   aggregationTimeUnit?: TimeUnit;
+  tagIds?: string[];
   createdAt: Date;
   updatedAt: Date;
   createdBy: string; // user id

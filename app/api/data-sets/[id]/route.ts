@@ -24,6 +24,7 @@ const updateDataSetSchema = z.object({
   aggregationFunction: aggregationFunctionSchema.optional(),
   aggregationInterval: z.number().int().positive().optional(),
   aggregationTimeUnit: z.enum(['seconds', 'minutes', 'hours', 'days']).optional(),
+  tagIds: z.array(z.string()).optional(),
 });
 
 export async function GET(
@@ -116,6 +117,7 @@ export async function PUT(
         aggregationFunction: data.aggregationFunction,
         aggregationInterval: data.aggregationInterval,
         aggregationTimeUnit: data.aggregationTimeUnit,
+        ...(data.tagIds !== undefined && { tagIds: data.tagIds }),
       },
       session.user.id,
       { ignoreOwnership: true }

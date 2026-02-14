@@ -1,5 +1,6 @@
 import { useRouter } from 'next/navigation';
 import { DataSet } from '@/types/data-set';
+import { Tag } from '@/types/tag';
 import ErrorMessage from '@/components/ErrorMessage';
 import IconButton from '@/components/ui/IconButton';
 import { EditIcon, DeleteIcon } from '@/components/ui/icons';
@@ -10,11 +11,16 @@ import Flex from '@/components/ui/Flex';
 import EmptyState from '@/components/ui/EmptyState';
 import DataSetCard from './DataSetCard';
 import DataSetGrid from './DataSetGrid';
+import TagFilter from '@/components/common/TagFilter';
 
 interface DataSetsContentProps {
   dataSets: DataSet[];
   filteredDataSets: DataSet[];
   filterText: string;
+  tags: Tag[];
+  tagsLoading: boolean;
+  filterTagIds: string[];
+  onFilterTagToggle: (tagId: string) => void;
   error: string | null;
   onFilterChange: (text: string) => void;
   onDelete: (dataSetId: string, description?: string) => void;
@@ -24,6 +30,10 @@ export default function DataSetsContent({
   dataSets,
   filteredDataSets,
   filterText,
+  tags,
+  tagsLoading,
+  filterTagIds,
+  onFilterTagToggle,
   error,
   onFilterChange,
   onDelete,
@@ -34,7 +44,7 @@ export default function DataSetsContent({
     <>
       {error && <ErrorMessage message={error} className="mb-4" />}
 
-      <Box className="mb-6">
+      <Box className="mb-4">
         <Input
           type="text"
           placeholder="Filter by description..."
@@ -42,6 +52,16 @@ export default function DataSetsContent({
           onChange={(e) => onFilterChange(e.target.value)}
         />
       </Box>
+      {tags.length > 0 && (
+        <Box className="mb-4">
+          <TagFilter
+            tags={tags}
+            loading={tagsLoading}
+            selectedTagIds={filterTagIds}
+            onToggleTag={onFilterTagToggle}
+          />
+        </Box>
+      )}
 
       {dataSets.length === 0 ? (
         <EmptyState
@@ -60,7 +80,7 @@ export default function DataSetsContent({
             {filteredDataSets.map((dataSet) => (
             <DataSetCard key={dataSet.id}>
               {dataSet.description && (
-                <Text variant="muted" className="mb-4 block">
+                <Text variant="muted" className="mb-4 block whitespace-pre-wrap">
                   {dataSet.description}
                 </Text>
               )}

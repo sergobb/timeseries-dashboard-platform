@@ -29,6 +29,9 @@ export interface UseDataSetCreationReturn {
   updatePreaggregation: (dataSourceId: string, updates: { interval?: number; timeUnit?: TimeUnit }) => void;
   removeDataSource: (id: string) => void;
   removeDataSet: (id: string) => void;
+  tagIds: string[];
+  addTag: (tagId: string) => void;
+  removeTag: (tagId: string) => void;
   createDataSet: () => Promise<void>;
   selectedSourcesList: DataSource[];
   selectedSetsList: DataSet[];
@@ -45,6 +48,7 @@ export function useDataSetCreation(options?: { enabled?: boolean }): UseDataSetC
   const [dataSets, setDataSets] = useState<DataSet[]>([]);
   const [selectedDataSources, setSelectedDataSources] = useState<Set<string>>(new Set());
   const [selectedDataSets, setSelectedDataSets] = useState<Set<string>>(new Set());
+  const [tagIds, setTagIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [description, setDescription] = useState('');
@@ -124,6 +128,14 @@ export function useDataSetCreation(options?: { enabled?: boolean }): UseDataSetC
     });
   }, []);
 
+  const addTag = useCallback((tagId: string) => {
+    setTagIds((prev) => (prev.includes(tagId) ? prev : [...prev, tagId]));
+  }, []);
+
+  const removeTag = useCallback((tagId: string) => {
+    setTagIds((prev) => prev.filter((id) => id !== tagId));
+  }, []);
+
   const removeDataSet = useCallback((dataSetId: string) => {
     setSelectedDataSets((prev) => {
       const next = new Set(prev);
@@ -190,6 +202,7 @@ export function useDataSetCreation(options?: { enabled?: boolean }): UseDataSetC
           aggregationFunction: aggregationFunction,
           aggregationInterval: aggregationInterval,
           aggregationTimeUnit: aggregationTimeUnit,
+          tagIds: tagIds,
         }),
       });
 
@@ -207,6 +220,7 @@ export function useDataSetCreation(options?: { enabled?: boolean }): UseDataSetC
     description,
     selectedDataSources,
     selectedDataSets,
+    tagIds,
     dataSetType,
     preaggregationConfig,
     useAggregation,
@@ -247,6 +261,9 @@ export function useDataSetCreation(options?: { enabled?: boolean }): UseDataSetC
     updatePreaggregation,
     removeDataSource,
     removeDataSet,
+    tagIds,
+    addTag,
+    removeTag,
     createDataSet,
     selectedSourcesList,
     selectedSetsList,

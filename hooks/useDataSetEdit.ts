@@ -9,6 +9,7 @@ interface UseDataSetEditReturn {
   dataSets: DataSet[];
   selectedDataSources: Set<string>;
   selectedDataSets: Set<string>;
+  tagIds: string[];
   description: string;
   dataSetType: DataSetType;
   preaggregationConfig: Map<string, PreaggregationConfig>;
@@ -28,6 +29,8 @@ interface UseDataSetEditReturn {
   removeDataSource: (id: string) => void;
   removeDataSet: (id: string) => void;
   updatePreaggregationConfig: (dataSourceId: string, config: PreaggregationConfig) => void;
+  addTag: (tagId: string) => void;
+  removeTag: (tagId: string) => void;
   save: () => Promise<void>;
 }
 
@@ -38,6 +41,7 @@ export function useDataSetEdit(dataSetId: string): UseDataSetEditReturn {
   const [dataSets, setDataSets] = useState<DataSet[]>([]);
   const [selectedDataSources, setSelectedDataSources] = useState<Set<string>>(new Set());
   const [selectedDataSets, setSelectedDataSets] = useState<Set<string>>(new Set());
+  const [tagIds, setTagIds] = useState<string[]>([]);
   const [description, setDescription] = useState('');
   const [dataSetType, setDataSetType] = useState<DataSetType>('combined');
   const [preaggregationConfig, setPreaggregationConfig] = useState<Map<string, PreaggregationConfig>>(new Map());
@@ -67,6 +71,7 @@ export function useDataSetEdit(dataSetId: string): UseDataSetEditReturn {
         const dataSetData = await dataSetResponse.json();
         setDataSet(dataSetData);
         setDescription(dataSetData.description || '');
+        setTagIds(dataSetData.tagIds || []);
         setDataSetType(dataSetData.type || 'combined');
         const dataSourceIds = Array.isArray(dataSetData.dataSourceIds)
           ? dataSetData.dataSourceIds.filter((id: unknown): id is string => typeof id === 'string')
@@ -158,6 +163,14 @@ export function useDataSetEdit(dataSetId: string): UseDataSetEditReturn {
     });
   }, []);
 
+  const addTag = useCallback((tagId: string) => {
+    setTagIds((prev) => (prev.includes(tagId) ? prev : [...prev, tagId]));
+  }, []);
+
+  const removeTag = useCallback((tagId: string) => {
+    setTagIds((prev) => prev.filter((id) => id !== tagId));
+  }, []);
+
   const removeDataSet = useCallback((id: string) => {
     setSelectedDataSets(prev => {
       const newSet = new Set(prev);
@@ -218,6 +231,7 @@ export function useDataSetEdit(dataSetId: string): UseDataSetEditReturn {
           aggregationFunction: aggregationFunction,
           aggregationInterval: aggregationInterval,
           aggregationTimeUnit: aggregationTimeUnit,
+          tagIds,
         }),
       });
 
@@ -232,7 +246,7 @@ export function useDataSetEdit(dataSetId: string): UseDataSetEditReturn {
     } finally {
       setSaving(false);
     }
-  }, [dataSetId, description, selectedDataSources, selectedDataSets, dataSetType, preaggregationConfig, useAggregation, aggregationFunction, aggregationInterval, aggregationTimeUnit, router]);
+  }, [dataSetId, description, selectedDataSources, selectedDataSets, tagIds, dataSetType, preaggregationConfig, useAggregation, aggregationFunction, aggregationInterval, aggregationTimeUnit, router]);
 
   return {
     dataSet,
@@ -240,6 +254,7 @@ export function useDataSetEdit(dataSetId: string): UseDataSetEditReturn {
     dataSets,
     selectedDataSources,
     selectedDataSets,
+    tagIds,
     description,
     dataSetType,
     preaggregationConfig,
@@ -259,6 +274,8 @@ export function useDataSetEdit(dataSetId: string): UseDataSetEditReturn {
     removeDataSource,
     removeDataSet,
     updatePreaggregationConfig,
+    addTag,
+    removeTag,
     save,
   };
 }

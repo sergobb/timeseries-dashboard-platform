@@ -19,6 +19,7 @@ const columnMetadataSchema = z.object({
 const updateDataSourceSchema = z.object({
   description: z.string().optional(),
   columns: z.array(columnMetadataSchema).optional(),
+  tagIds: z.array(z.string()).optional(),
 });
 
 export async function GET(

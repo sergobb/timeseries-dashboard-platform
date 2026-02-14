@@ -9,6 +9,7 @@ import PageTitle from '@/components/ui/PageTitle';
 import Button from '@/components/ui/Button';
 import InfoMessage from '@/components/ui/InfoMessage';
 import { useDataSetEdit } from '@/hooks/useDataSetEdit';
+import { useTags } from '@/hooks/useTags';
 import DataSetEditForm from '@/components/data-sets/DataSetEditForm';
 
 export default function EditDataSetPage() {
@@ -23,6 +24,7 @@ export default function EditDataSetPage() {
     dataSets,
     selectedDataSources,
     selectedDataSets,
+    tagIds,
     description,
     dataSetType,
     preaggregationConfig,
@@ -42,8 +44,11 @@ export default function EditDataSetPage() {
     removeDataSource,
     removeDataSet,
     updatePreaggregationConfig,
+    addTag,
+    removeTag,
     save,
   } = useDataSetEdit(dataSetId);
+  const { tags, loading: tagsLoading, createTag } = useTags();
 
   if (status === 'unauthenticated') {
     return null;
@@ -80,6 +85,12 @@ export default function EditDataSetPage() {
         {error && <ErrorMessage message={error} className="mb-4" />}
       <DataSetEditForm
         description={description}
+        tags={tags}
+        tagsLoading={tagsLoading}
+        selectedTagIds={tagIds}
+        onAddTag={addTag}
+        onRemoveTag={removeTag}
+        onCreateTag={createTag}
         dataSetType={dataSetType}
         selectedDataSources={selectedSourcesList}
         selectedDataSets={selectedSetsList}

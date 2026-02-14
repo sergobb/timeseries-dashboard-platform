@@ -19,6 +19,7 @@ export class DataSetService {
       aggregationFunction: dataSet.aggregationFunction ?? 'none',
       aggregationInterval: dataSet.aggregationInterval ?? 1,
       aggregationTimeUnit: dataSet.aggregationTimeUnit ?? 'seconds',
+      tagIds: dataSet.tagIds || [],
       createdAt: new Date(),
       updatedAt: new Date(),
       createdBy: dataSet.createdBy,
@@ -38,7 +39,7 @@ export class DataSetService {
     const query = userId ? { createdBy: userId } : {};
     const dataSets = await db.collection('data_sets').find(query).toArray();
     
-    return dataSets.map(ds => ({
+    return dataSets.map((ds) => ({
       id: ds._id.toString(),
       description: ds.description,
       type: ds.type,
@@ -49,6 +50,7 @@ export class DataSetService {
       aggregationFunction: ds.aggregationFunction ?? 'none',
       aggregationInterval: ds.aggregationInterval ?? 1,
       aggregationTimeUnit: ds.aggregationTimeUnit ?? 'seconds',
+      tagIds: ds.tagIds || [],
       createdAt: ds.createdAt,
       updatedAt: ds.updatedAt,
       createdBy: ds.createdBy,
@@ -84,6 +86,7 @@ export class DataSetService {
         aggregationFunction: ds.aggregationFunction ?? 'none',
         aggregationInterval: ds.aggregationInterval ?? 1,
         aggregationTimeUnit: ds.aggregationTimeUnit ?? 'seconds',
+        tagIds: ds.tagIds || [],
         createdAt: ds.createdAt,
         updatedAt: ds.updatedAt,
         createdBy: ds.createdBy,
@@ -114,6 +117,7 @@ export class DataSetService {
         aggregationFunction: ds.aggregationFunction ?? 'none',
         aggregationInterval: ds.aggregationInterval ?? 1,
         aggregationTimeUnit: ds.aggregationTimeUnit ?? 'seconds',
+        tagIds: ds.tagIds || [],
         createdAt: ds.createdAt,
         updatedAt: ds.updatedAt,
         createdBy: ds.createdBy,
@@ -161,6 +165,7 @@ export class DataSetService {
       aggregationFunction: result.aggregationFunction ?? 'none',
       aggregationInterval: result.aggregationInterval ?? 1,
       aggregationTimeUnit: result.aggregationTimeUnit ?? 'seconds',
+      tagIds: result.tagIds || [],
       createdAt: result.createdAt,
       updatedAt: result.updatedAt,
       createdBy: result.createdBy,

@@ -1,5 +1,6 @@
 import FormField from '@/components/ui/FormField';
 import Input from '@/components/ui/Input';
+import { Tag } from '@/types/tag';
 import Textarea from '@/components/ui/Textarea';
 import Select from '@/components/ui/Select';
 import Checkbox from '@/components/ui/Checkbox';
@@ -7,6 +8,7 @@ import { PRESET_RANGES, CUSTOM_RANGE_LABEL, getInitialDateRange } from '@/lib/da
 import { Group } from '@/types/group';
 import DashboardGroupsSelector from './DashboardGroupsSelector';
 import DateTimeRangePicker from '@/components/ui/DateTimeRangePicker';
+import TagSelector from '@/components/common/TagSelector';
 
 interface DashboardFormProps {
   title: string;
@@ -24,6 +26,12 @@ interface DashboardFormProps {
   onDefaultDateRangeChange: (range: string) => void;
   onCustomDateRangeChange: (range: { from: string; to: string } | null) => void;
   onGroupToggle: (groupId: string) => void;
+  tags: Tag[];
+  tagsLoading: boolean;
+  selectedTagIds: string[];
+  onAddTag: (tagId: string) => void;
+  onRemoveTag: (tagId: string) => void;
+  onCreateTag: (name: string) => Promise<Tag | null>;
 }
 
 export default function DashboardForm({
@@ -42,6 +50,12 @@ export default function DashboardForm({
   onDefaultDateRangeChange,
   onCustomDateRangeChange,
   onGroupToggle,
+  tags,
+  tagsLoading,
+  selectedTagIds,
+  onAddTag,
+  onRemoveTag,
+  onCreateTag,
 }: DashboardFormProps) {
   const customRangeValue = defaultDateRange === CUSTOM_RANGE_LABEL
     ? (customDateRange?.from && customDateRange?.to
@@ -76,6 +90,15 @@ export default function DashboardForm({
           <span>Public — anyone can view</span>
         </label>
       </FormField>
+
+      <TagSelector
+        tags={tags}
+        loading={tagsLoading}
+        selectedTagIds={selectedTagIds}
+        onAddTag={onAddTag}
+        onRemoveTag={onRemoveTag}
+        onCreateTag={onCreateTag}
+      />
 
       <FormField label="Shared with groups">
         <DashboardGroupsSelector

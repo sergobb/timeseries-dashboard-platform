@@ -46,9 +46,10 @@ export default function SeriesForm({
 
   const timestampColumns = (series.seriesData?.columns || []).filter(
     (col) =>
-      col.dataType?.toLowerCase().includes('timestamp') ||
-      col.dataType?.toLowerCase().includes('date') ||
-      col.dataType?.toLowerCase().includes('time')
+      col.active !== false &&
+      (col.dataType?.toLowerCase().includes('timestamp') ||
+        col.dataType?.toLowerCase().includes('date') ||
+        col.dataType?.toLowerCase().includes('time'))
   );
 
   const tabItems = useMemo<readonly TabsItem[]>(() => {
@@ -144,7 +145,11 @@ export default function SeriesForm({
                   options={[
                     { value: '', label: 'Select column...' },
                     ...series.seriesData.columns
-                      .filter((col) => col.columnName !== series.xAxisColumn)
+                      .filter(
+                        (col) =>
+                          col.columnName !== series.xAxisColumn &&
+                          col.active !== false
+                      )
                       .map((col) => {
                         const description = col.description || col.columnName;
                         return {

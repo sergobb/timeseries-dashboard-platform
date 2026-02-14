@@ -9,6 +9,8 @@ interface UseDashboardsReturn {
   error: string | null;
   filterText: string;
   setFilterText: (text: string) => void;
+  filterTagIds: string[];
+  toggleFilterTag: (tagId: string) => void;
   filteredDashboards: Dashboard[];
   load: () => Promise<void>;
   remove: (dashboardId: string, title: string) => Promise<boolean>;
@@ -21,7 +23,14 @@ export function useDashboards(): UseDashboardsReturn {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filterText, setFilterText] = useState('');
+  const [filterTagIds, setFilterTagIds] = useState<string[]>([]);
   const [restoring, setRestoring] = useState(true);
+
+  const toggleFilterTag = useCallback((tagId: string) => {
+    setFilterTagIds((prev) =>
+      prev.includes(tagId) ? prev.filter((id) => id !== tagId) : [...prev, tagId]
+    );
+  }, []);
 
   const load = useCallback(async () => {
     try {
@@ -64,6 +73,11 @@ export function useDashboards(): UseDashboardsReturn {
   }, [load]);
 
   const filteredDashboards = dashboards.filter((dashboard) => {
+    if (filterTagIds.length > 0) {
+      const itemTagIds = dashboard.tagIds || [];
+      const hasAllTags = filterTagIds.every((id) => itemTagIds.includes(id));
+      if (!hasAllTags) return false;
+    }
     if (!filterText.trim()) return true;
     const searchText = filterText.toLowerCase();
     const description = (dashboard.description || '').toLowerCase();
@@ -92,6 +106,8 @@ export function useDashboards(): UseDashboardsReturn {
     error,
     filterText,
     setFilterText,
+    filterTagIds,
+    toggleFilterTag,
     filteredDashboards,
     load,
     remove,

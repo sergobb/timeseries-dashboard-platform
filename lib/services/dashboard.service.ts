@@ -22,6 +22,7 @@ export class DashboardService {
       charts: dashboard.charts,
       chartIds: dashboard.chartIds || [],
       groupIds: dashboard.groupIds || [],
+      tagIds: dashboard.tagIds || [],
       isPublic,
       defaultDateRange: dashboard.defaultDateRange || null,
       customDateRange: dashboard.customDateRange ?? null,
@@ -85,13 +86,14 @@ export class DashboardService {
 
     const dashboards = await db.collection('dashboards').find(query).toArray();
     
-    return dashboards.map(dash => ({
+    return dashboards.map((dash) => ({
       id: dash._id.toString(),
       title: dash.title,
       description: dash.description,
       charts: dash.charts,
       chartIds: dash.chartIds || [],
       groupIds: dash.groupIds || [],
+      tagIds: dash.tagIds || [],
       isPublic: resolveIsPublic(dash),
       defaultDateRange: dash.defaultDateRange,
       customDateRange: (dash.customDateRange as { from: string; to: string } | undefined) ?? undefined,
@@ -232,6 +234,7 @@ export class DashboardService {
       charts: (doc.charts as Dashboard['charts']) || [],
       chartIds: (doc.chartIds as string[] | undefined) || [],
       groupIds: (doc.groupIds as string[] | undefined) || [],
+      tagIds: (doc.tagIds as string[] | undefined) || [],
       isPublic: resolveIsPublic(doc),
       defaultDateRange: (doc.defaultDateRange as string | undefined) ?? undefined,
       customDateRange: (doc.customDateRange as { from: string; to: string } | undefined) ?? undefined,

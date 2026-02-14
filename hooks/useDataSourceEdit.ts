@@ -8,14 +8,18 @@ interface UseDataSourceEditReturn {
   dataSource: DataSource | null;
   description: string;
   columns: ColumnMetadata[];
+  tagIds: string[];
   loading: boolean;
   saving: boolean;
   uploading: boolean;
   error: string | null;
   fileInputRef: React.RefObject<HTMLInputElement | null>;
   setDescription: (value: string) => void;
+  addTag: (tagId: string) => void;
+  removeTag: (tagId: string) => void;
   toggleColumn: (index: number) => void;
   updateColumnDescription: (index: number, description: string) => void;
+  deactivateColumnsWithEmptyDescription: () => void;
   uploadFile: (file: File) => Promise<void>;
   save: () => Promise<void>;
 }
@@ -26,6 +30,7 @@ export function useDataSourceEdit(dataSourceId: string): UseDataSourceEditReturn
   const [dataSource, setDataSource] = useState<DataSource | null>(null);
   const [description, setDescription] = useState('');
   const [columns, setColumns] = useState<ColumnMetadata[]>([]);
+  const [tagIds, setTagIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -41,6 +46,7 @@ export function useDataSourceEdit(dataSourceId: string): UseDataSourceEditReturn
       const data = await response.json();
       setDataSource(data);
       setDescription(data.description || '');
+      setTagIds(data.tagIds || []);
       setColumns(data.columns.map((col: ColumnMetadata) => ({
         ...col,
         active: col.active !== undefined ? col.active : true,
@@ -55,6 +61,14 @@ export function useDataSourceEdit(dataSourceId: string): UseDataSourceEditReturn
   useEffect(() => {
     load();
   }, [load]);
+
+  const addTag = useCallback((tagId: string) => {
+    setTagIds((prev) => (prev.includes(tagId) ? prev : [...prev, tagId]));
+  }, []);
+
+  const removeTag = useCallback((tagId: string) => {
+    setTagIds((prev) => prev.filter((id) => id !== tagId));
+  }, []);
 
   const toggleColumn = useCallback((index: number) => {
     setColumns(prev => {
@@ -76,6 +90,16 @@ export function useDataSourceEdit(dataSourceId: string): UseDataSourceEditReturn
       };
       return newColumns;
     });
+  }, []);
+
+  const deactivateColumnsWithEmptyDescription = useCallback(() => {
+    setColumns(prev => prev.map(col => {
+      const isEmpty = !(col.description || '').trim();
+      if (isEmpty && col.active !== false) {
+        return { ...col, active: false };
+      }
+      return col;
+    }));
   }, []);
 
   const parseCSV = (text: string): Record<string, string>[] => {
@@ -235,6 +259,7 @@ export function useDataSourceEdit(dataSourceId: string): UseDataSourceEditReturn
         body: JSON.stringify({
           description,
           columns,
+          tagIds,
         }),
       });
 
@@ -249,20 +274,24 @@ export function useDataSourceEdit(dataSourceId: string): UseDataSourceEditReturn
     } finally {
       setSaving(false);
     }
-  }, [dataSourceId, description, columns, router]);
+  }, [dataSourceId, description, columns, tagIds, router]);
 
   return {
     dataSource,
     description,
     columns,
+    tagIds,
     loading,
     saving,
     uploading,
     error,
     fileInputRef,
     setDescription,
+    addTag,
+    removeTag,
     toggleColumn,
     updateColumnDescription,
+    deactivateColumnsWithEmptyDescription,
     uploadFile,
     save,
   };

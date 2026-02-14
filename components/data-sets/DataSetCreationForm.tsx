@@ -1,6 +1,7 @@
 'use client';
 
 import type { DataSetType, TimeUnit, AggregationFunction } from '@/types/data-set';
+import type { Tag } from '@/types/tag';
 import type { DataSource } from '@/types/data-source';
 import type { DataSet } from '@/types/data-set';
 import ErrorMessage from '@/components/ErrorMessage';
@@ -10,6 +11,7 @@ import Textarea from '@/components/ui/Textarea';
 import Button from '@/components/ui/Button';
 import DataSetCreationSelectedSources from './DataSetCreationSelectedSources';
 import DataSetCreationSelectedSets from './DataSetCreationSelectedSets';
+import TagSelector from '@/components/common/TagSelector';
 
 interface DataSetCreationFormProps {
   description: string;
@@ -33,6 +35,12 @@ interface DataSetCreationFormProps {
   onAggregationFunctionChange: (value: AggregationFunction) => void;
   onAggregationIntervalChange: (value: number) => void;
   onAggregationTimeUnitChange: (value: TimeUnit) => void;
+  tags: Tag[];
+  tagsLoading: boolean;
+  selectedTagIds: string[];
+  onAddTag: (tagId: string) => void;
+  onRemoveTag: (tagId: string) => void;
+  onCreateTag: (name: string) => Promise<Tag | null>;
   onRemoveDataSource: (id: string) => void;
   onRemoveDataSet: (id: string) => void;
   onPreaggChange: (dataSourceId: string, updates: { interval?: number; timeUnit?: TimeUnit }) => void;
@@ -62,6 +70,12 @@ export default function DataSetCreationForm({
   onAggregationFunctionChange,
   onAggregationIntervalChange,
   onAggregationTimeUnitChange,
+  tags,
+  tagsLoading,
+  selectedTagIds,
+  onAddTag,
+  onRemoveTag,
+  onCreateTag,
   onRemoveDataSource,
   onRemoveDataSet,
   onPreaggChange,
@@ -72,6 +86,16 @@ export default function DataSetCreationForm({
     <PageContainer flex innerClassName="lg:flex-1 flex flex-col lg:min-h-0">
       <PageTitle className="mb-6">Create Data Set</PageTitle>
       {error && <ErrorMessage message={error} className="mb-4" />}
+      <div className="mb-4">
+        <TagSelector
+          tags={tags}
+          loading={tagsLoading}
+          selectedTagIds={selectedTagIds}
+          onAddTag={onAddTag}
+          onRemoveTag={onRemoveTag}
+          onCreateTag={onCreateTag}
+        />
+      </div>
       {totalSelected === 0 && (
         <div className="mb-4 rounded-md border border-[var(--color-warning)] bg-[var(--color-surface)] p-4 text-[var(--color-warning)]">
           No sources selected. Please go back and select data sources or data sets.

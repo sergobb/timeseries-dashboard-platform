@@ -1,5 +1,6 @@
 import { useRouter } from 'next/navigation';
 import { DataSource } from '@/types/data-source';
+import { Tag } from '@/types/tag';
 import ErrorMessage from '@/components/ErrorMessage';
 import IconButton from '@/components/ui/IconButton';
 import { EditIcon, DeleteIcon } from '@/components/ui/icons';
@@ -10,11 +11,16 @@ import Flex from '@/components/ui/Flex';
 import EmptyState from '@/components/ui/EmptyState';
 import DataSourceCard from './DataSourceCard';
 import DataSourceGrid from './DataSourceGrid';
+import TagFilter from '@/components/common/TagFilter';
 
 interface DataSourcesContentProps {
   dataSources: DataSource[];
   filteredDataSources: DataSource[];
   filterText: string;
+  tags: Tag[];
+  tagsLoading: boolean;
+  filterTagIds: string[];
+  onFilterTagToggle: (tagId: string) => void;
   error: string | null;
   onFilterChange: (text: string) => void;
   onEdit: (dataSourceId: string) => void;
@@ -25,6 +31,10 @@ export default function DataSourcesContent({
   dataSources,
   filteredDataSources,
   filterText,
+  tags,
+  tagsLoading,
+  filterTagIds,
+  onFilterTagToggle,
   error,
   onFilterChange,
   onEdit,
@@ -35,7 +45,7 @@ export default function DataSourcesContent({
     <div className="flex flex-col flex-1 min-h-0">
       {error && <ErrorMessage message={error} className="mb-4" />}
 
-      <Box className="mb-6">
+      <Box className="mb-4">
         <Input
           type="text"
           placeholder="Filter by schema, table name, or description..."
@@ -43,6 +53,16 @@ export default function DataSourcesContent({
           onChange={(e) => onFilterChange(e.target.value)}
         />
       </Box>
+      {tags.length > 0 && (
+        <Box className="mb-4">
+          <TagFilter
+            tags={tags}
+            loading={tagsLoading}
+            selectedTagIds={filterTagIds}
+            onToggleTag={onFilterTagToggle}
+          />
+        </Box>
+      )}
 
       <div className="flex-1 overflow-y-auto min-h-0">
         {dataSources.length === 0 ? (
@@ -65,7 +85,7 @@ export default function DataSourcesContent({
                   {dataSource.schemaName ? `${dataSource.schemaName}.` : ''}{dataSource.tableName}
                 </Text>
                 {dataSource.description && (
-                  <Text variant="muted" className="mb-4">
+                  <Text variant="muted" className="mb-4 whitespace-pre-wrap">
                     {dataSource.description}
                   </Text>
                 )}

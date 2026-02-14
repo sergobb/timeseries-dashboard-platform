@@ -1,8 +1,10 @@
 import { DataSetType, PreaggregationConfig, AggregationFunction, TimeUnit } from '@/types/data-set';
 import { DataSource } from '@/types/data-source';
 import { DataSet } from '@/types/data-set';
+import { Tag } from '@/types/tag';
 import Textarea from '@/components/ui/Textarea';
 import Button from '@/components/ui/Button';
+import TagSelector from '@/components/common/TagSelector';
 
 interface DataSetEditFormProps {
   description: string;
@@ -26,6 +28,12 @@ interface DataSetEditFormProps {
   onAggregationFunctionChange: (value: AggregationFunction) => void;
   onAggregationIntervalChange: (value: number) => void;
   onAggregationTimeUnitChange: (value: TimeUnit) => void;
+  tags: Tag[];
+  tagsLoading: boolean;
+  selectedTagIds: string[];
+  onAddTag: (tagId: string) => void;
+  onRemoveTag: (tagId: string) => void;
+  onCreateTag: (name: string) => Promise<Tag | null>;
   onSave: () => void;
   onCancel: () => void;
 }
@@ -52,12 +60,28 @@ export default function DataSetEditForm({
   onAggregationFunctionChange,
   onAggregationIntervalChange,
   onAggregationTimeUnitChange,
+  tags,
+  tagsLoading,
+  selectedTagIds,
+  onAddTag,
+  onRemoveTag,
+  onCreateTag,
   onSave,
   onCancel,
 }: DataSetEditFormProps) {
   return (
     <div className="bg-[var(--color-surface)] text-[var(--color-foreground)] rounded-lg shadow p-6 flex flex-col lg:min-h-0 max-h-[768px] lg:max-h-none flex-1">
       <div className="flex flex-col gap-6 flex-1 overflow-y-auto lg:min-h-0 mb-6">
+        <div>
+          <TagSelector
+            tags={tags}
+            loading={tagsLoading}
+            selectedTagIds={selectedTagIds}
+            onAddTag={onAddTag}
+            onRemoveTag={onRemoveTag}
+            onCreateTag={onCreateTag}
+          />
+        </div>
         <div>
           <label className="block text-sm font-medium text-[var(--color-foreground)] mb-2">
             Description <span className="text-[var(--color-error)]">*</span>
@@ -207,7 +231,7 @@ export default function DataSetEditForm({
                           {displayName}
                         </div>
                         {dataSource.description && (
-                          <div className="text-sm text-[var(--color-muted-foreground)] mt-1">
+                          <div className="text-sm text-[var(--color-muted-foreground)] mt-1 whitespace-pre-wrap">
                             {dataSource.description}
                           </div>
                         )}
@@ -281,7 +305,7 @@ export default function DataSetEditForm({
                   className="flex items-start justify-between p-3 rounded-md border border-[var(--color-border)] bg-[var(--color-surface-muted)]"
                 >
                   <div className="flex-1">
-                    <div className="font-medium text-[var(--color-foreground)]">
+                    <div className="font-medium text-[var(--color-foreground)] whitespace-pre-wrap">
                       {dataSet.description || 'Data Set (no description)'}
                     </div>
                   </div>

@@ -2,6 +2,7 @@
 
 import { useRequireAuthRedirect } from '@/hooks/useRequireAuthRedirect';
 import { useDataSets } from '@/hooks/useDataSets';
+import { useTags } from '@/hooks/useTags';
 import PageContainer from '@/components/PageContainer';
 import ErrorMessage from '@/components/ErrorMessage';
 import InfoMessage from '@/components/ui/InfoMessage';
@@ -18,9 +19,12 @@ export default function DataSetsPage() {
     error,
     filterText,
     setFilterText,
+    filterTagIds,
+    toggleFilterTag,
     filteredDataSets,
     remove,
   } = useDataSets();
+  const { tags, loading: tagsLoading } = useTags();
 
   if (status === 'loading' || loading) {
     return (
@@ -49,6 +53,10 @@ export default function DataSetsPage() {
         dataSets={dataSets}
         filteredDataSets={filteredDataSets}
         filterText={filterText}
+        tags={tags}
+        tagsLoading={tagsLoading}
+        filterTagIds={filterTagIds}
+        onFilterTagToggle={toggleFilterTag}
         error={error}
         onFilterChange={setFilterText}
         onDelete={remove}

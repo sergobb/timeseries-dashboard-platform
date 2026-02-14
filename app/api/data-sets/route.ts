@@ -24,6 +24,7 @@ const createDataSetSchema = z.object({
   aggregationFunction: aggregationFunctionSchema.optional(),
   aggregationInterval: z.number().int().positive().optional(),
   aggregationTimeUnit: z.enum(['seconds', 'minutes', 'hours', 'days']).optional(),
+  tagIds: z.array(z.string()).optional(),
 });
 
 export async function GET(request: NextRequest) {
@@ -99,6 +100,7 @@ export async function POST(request: NextRequest) {
       aggregationFunction: data.aggregationFunction,
       aggregationInterval: data.aggregationInterval,
       aggregationTimeUnit: data.aggregationTimeUnit,
+      tagIds: data.tagIds || [],
       createdBy: session.user.id,
     });
 

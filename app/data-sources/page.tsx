@@ -1,6 +1,7 @@
 'use client';
 
 import { useDataSources } from '@/hooks/useDataSources';
+import { useTags } from '@/hooks/useTags';
 import PageContainer from '@/components/PageContainer';
 import AuthGuard from '@/components/common/AuthGuard';
 import DataSourcesHeader from '@/components/data-sources/DataSourcesHeader';
@@ -13,10 +14,13 @@ export default function DataSourcesPage() {
     error,
     filterText,
     setFilterText,
+    filterTagIds,
+    toggleFilterTag,
     filteredDataSources,
     remove,
     onEdit,
   } = useDataSources();
+  const { tags, loading: tagsLoading } = useTags();
 
   return (
     <AuthGuard requiredRole="metadata_editor" loading={loading}>
@@ -26,6 +30,10 @@ export default function DataSourcesPage() {
           dataSources={dataSources}
           filteredDataSources={filteredDataSources}
           filterText={filterText}
+          tags={tags}
+          tagsLoading={tagsLoading}
+          filterTagIds={filterTagIds}
+          onFilterTagToggle={toggleFilterTag}
           error={error}
           onFilterChange={setFilterText}
           onEdit={onEdit}

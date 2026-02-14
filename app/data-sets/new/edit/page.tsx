@@ -9,6 +9,7 @@ import InfoMessage from '@/components/ui/InfoMessage';
 import Button from '@/components/ui/Button';
 import { useRequireAuthRedirect } from '@/hooks/useRequireAuthRedirect';
 import { useDataSetCreation } from '@/hooks/useDataSetCreation';
+import { useTags } from '@/hooks/useTags';
 import DataSetCreationForm from '@/components/data-sets/DataSetCreationForm';
 
 export default function NewDataSetEditPage() {
@@ -33,6 +34,7 @@ function NewDataSetEditPageInner() {
   const { status: authStatus } = useRequireAuthRedirect();
   const canLoad = status === 'authenticated' && canViewMetadata;
   const creation = useDataSetCreation({ enabled: canLoad });
+  const { tags, loading: tagsLoading, createTag } = useTags();
 
   if (authStatus === 'unauthenticated') return null;
   if (authStatus === 'loading' || status === 'loading') {
@@ -63,6 +65,12 @@ function NewDataSetEditPageInner() {
   return (
     <DataSetCreationForm
       description={creation.description}
+      tags={tags}
+      tagsLoading={tagsLoading}
+      selectedTagIds={creation.tagIds}
+      onAddTag={creation.addTag}
+      onRemoveTag={creation.removeTag}
+      onCreateTag={createTag}
       error={creation.error}
       totalSelected={creation.totalSelected}
       dataSetType={creation.dataSetType}
