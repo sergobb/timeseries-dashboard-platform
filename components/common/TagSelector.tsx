@@ -144,18 +144,20 @@ export default function TagSelector({
               <Popover.Content
                 align="end"
                 sideOffset={4}
-                className="z-50 max-h-48 min-w-[10rem] overflow-y-auto rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] shadow-lg p-1"
+                className="z-50 max-h-48 w-[min(45rem,90vw)] min-w-[min(100%,20rem)] overflow-y-auto rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] shadow-lg p-2"
               >
-                {availableTags.map((t) => (
-                  <button
-                    key={t.id}
-                    type="button"
-                    onClick={() => onAddTag(t.id)}
-                    className="w-full text-left px-3 py-2 text-sm rounded hover:bg-[var(--color-surface-muted)]"
-                  >
-                    {t.name}
-                  </button>
-                ))}
+                <div className="flex flex-wrap gap-1.5 max-w-full" style={{ maxWidth: 'min(40rem, 100%)' }}>
+                  {availableTags.map((t) => (
+                    <button
+                      key={t.id}
+                      type="button"
+                      onClick={() => onAddTag(t.id)}
+                      className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-[var(--color-muted)] text-[var(--color-foreground)] hover:bg-[var(--color-surface-muted)] border border-transparent hover:border-[var(--color-border)] whitespace-nowrap shrink-0"
+                    >
+                      {t.name}
+                    </button>
+                  ))}
+                </div>
               </Popover.Content>
             </Popover.Portal>
           </Popover.Root>
