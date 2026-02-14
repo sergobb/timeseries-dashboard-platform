@@ -1,7 +1,25 @@
 import { getDatabase } from '@/lib/db/mongodb';
-import { DataSet } from '@/types/data-set';
+import { DataSet, TimeUnit } from '@/types/data-set';
 import { ChartService } from '@/lib/services/chart.service';
 import { ObjectId } from 'mongodb';
+
+/** Нормализует ID из MongoDB (ObjectId/string) в строки для совместимости с импортом метаданных. */
+function toIdStrings(arr: unknown[] | undefined | null): string[] {
+  if (!Array.isArray(arr)) return [];
+  return arr.map((x) => (x != null && typeof x === 'object' && 'toString' in x ? (x as { toString(): string }).toString() : String(x)));
+}
+
+function normalizePreaggregationConfig(config: unknown[] | undefined | null): DataSet['preaggregationConfig'] {
+  if (!Array.isArray(config)) return [];
+  return config.map((p: unknown) => {
+    const item = p as Record<string, unknown>;
+    return {
+      dataSourceId: toIdStrings([item?.dataSourceId]).find(Boolean) ?? '',
+      interval: (item?.interval as number) ?? 1,
+      timeUnit: ((item?.timeUnit as string) ?? 'seconds') as TimeUnit,
+    };
+  });
+}
 
 export class DataSetService {
   static async create(
@@ -43,14 +61,14 @@ export class DataSetService {
       id: ds._id.toString(),
       description: ds.description,
       type: ds.type,
-      dataSourceIds: ds.dataSourceIds || [],
-      dataSetIds: ds.dataSetIds || [],
-      preaggregationConfig: ds.preaggregationConfig || [],
+      dataSourceIds: toIdStrings(ds.dataSourceIds),
+      dataSetIds: toIdStrings(ds.dataSetIds),
+      preaggregationConfig: normalizePreaggregationConfig(ds.preaggregationConfig),
       useAggregation: ds.useAggregation ?? false,
       aggregationFunction: ds.aggregationFunction ?? 'none',
       aggregationInterval: ds.aggregationInterval ?? 1,
       aggregationTimeUnit: ds.aggregationTimeUnit ?? 'seconds',
-      tagIds: ds.tagIds || [],
+      tagIds: toIdStrings(ds.tagIds),
       createdAt: ds.createdAt,
       updatedAt: ds.updatedAt,
       createdBy: ds.createdBy,
@@ -79,14 +97,14 @@ export class DataSetService {
         id: ds._id.toString(),
         description: ds.description,
         type: ds.type,
-        dataSourceIds: ds.dataSourceIds || [],
-        dataSetIds: ds.dataSetIds || [],
-        preaggregationConfig: ds.preaggregationConfig || [],
+        dataSourceIds: toIdStrings(ds.dataSourceIds),
+        dataSetIds: toIdStrings(ds.dataSetIds),
+        preaggregationConfig: normalizePreaggregationConfig(ds.preaggregationConfig),
         useAggregation: ds.useAggregation ?? false,
         aggregationFunction: ds.aggregationFunction ?? 'none',
         aggregationInterval: ds.aggregationInterval ?? 1,
         aggregationTimeUnit: ds.aggregationTimeUnit ?? 'seconds',
-        tagIds: ds.tagIds || [],
+        tagIds: toIdStrings(ds.tagIds),
         createdAt: ds.createdAt,
         updatedAt: ds.updatedAt,
         createdBy: ds.createdBy,
@@ -110,14 +128,14 @@ export class DataSetService {
         id: ds._id.toString(),
         description: ds.description,
         type: ds.type,
-        dataSourceIds: ds.dataSourceIds || [],
-        dataSetIds: ds.dataSetIds || [],
-        preaggregationConfig: ds.preaggregationConfig || [],
+        dataSourceIds: toIdStrings(ds.dataSourceIds),
+        dataSetIds: toIdStrings(ds.dataSetIds),
+        preaggregationConfig: normalizePreaggregationConfig(ds.preaggregationConfig),
         useAggregation: ds.useAggregation ?? false,
         aggregationFunction: ds.aggregationFunction ?? 'none',
         aggregationInterval: ds.aggregationInterval ?? 1,
         aggregationTimeUnit: ds.aggregationTimeUnit ?? 'seconds',
-        tagIds: ds.tagIds || [],
+        tagIds: toIdStrings(ds.tagIds),
         createdAt: ds.createdAt,
         updatedAt: ds.updatedAt,
         createdBy: ds.createdBy,
@@ -158,14 +176,14 @@ export class DataSetService {
       id: result._id.toString(),
       description: result.description,
       type: result.type,
-      dataSourceIds: result.dataSourceIds || [],
-      dataSetIds: result.dataSetIds || [],
-      preaggregationConfig: result.preaggregationConfig || [],
+      dataSourceIds: toIdStrings(result.dataSourceIds),
+      dataSetIds: toIdStrings(result.dataSetIds),
+      preaggregationConfig: normalizePreaggregationConfig(result.preaggregationConfig),
       useAggregation: result.useAggregation ?? false,
       aggregationFunction: result.aggregationFunction ?? 'none',
       aggregationInterval: result.aggregationInterval ?? 1,
       aggregationTimeUnit: result.aggregationTimeUnit ?? 'seconds',
-      tagIds: result.tagIds || [],
+      tagIds: toIdStrings(result.tagIds),
       createdAt: result.createdAt,
       updatedAt: result.updatedAt,
       createdBy: result.createdBy,
