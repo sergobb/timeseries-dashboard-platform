@@ -1,0 +1,3425 @@
+{
+  "exportedAt": "2026-02-14T16:11:02.268Z",
+  "collections": {
+    "database_connections": [
+      {
+        "_id": "697909804fff37e1e81b40f9",
+        "name": "postgres.sinp.msu.ru",
+        "type": "postgresql",
+        "host": "host.docker.internal",
+        "port": 5432,
+        "database": "smdc",
+        "username": "selector",
+        "password": "U2FsdGVkX1/DeZaP5AR2hbzMRB/QYGqTnGHTHPyQVV8=",
+        "active": true,
+        "createdAt": "2026-01-27T18:52:48.460Z",
+        "updatedAt": "2026-01-27T18:53:24.164Z",
+        "createdBy": "697908d34fff37e1e81b40f8"
+      }
+    ],
+    "data_sources": [
+      {
+        "_id": "697909c84fff37e1e81b40fa",
+        "connectionId": "697909804fff37e1e81b40f9",
+        "tableName": "index_dst",
+        "schemaName": "index",
+        "description": "Geomagnetic Dst Variation Index ",
+        "columns": [
+          {
+            "columnName": "dt",
+            "dataType": "timestamp without time zone",
+            "description": "UT",
+            "active": true
+          },
+          {
+            "columnName": "dst",
+            "dataType": "integer",
+            "description": "Dst",
+            "active": true
+          }
+        ],
+        "createdAt": "2026-01-27T18:54:00.342Z",
+        "updatedAt": "2026-02-14T15:06:39.972Z",
+        "createdBy": "697908d34fff37e1e81b40f8",
+        "tagIds": [
+          "69908df679ecf2e510c9677a",
+          "69908cc979ecf2e510c96776",
+          "69908f7c79ecf2e510c96782"
+        ]
+      },
+      {
+        "_id": "697909c84fff37e1e81b40fb",
+        "connectionId": "697909804fff37e1e81b40f9",
+        "tableName": "index_kp",
+        "schemaName": "index",
+        "description": "Geomagnetic Kp Index",
+        "columns": [
+          {
+            "columnName": "dt",
+            "dataType": "timestamp without time zone",
+            "description": "UT",
+            "active": true
+          },
+          {
+            "columnName": "kp",
+            "dataType": "integer",
+            "description": "Kp",
+            "active": true
+          },
+          {
+            "columnName": "sign",
+            "dataType": "integer",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "kpfull",
+            "dataType": "double precision",
+            "description": "",
+            "active": true
+          }
+        ],
+        "createdAt": "2026-01-27T18:54:00.427Z",
+        "updatedAt": "2026-02-14T15:06:48.626Z",
+        "createdBy": "697908d34fff37e1e81b40f8",
+        "tagIds": [
+          "69908df679ecf2e510c9677a",
+          "69908e1079ecf2e510c9677b",
+          "69908f7c79ecf2e510c96782"
+        ]
+      },
+      {
+        "_id": "69790d484fff37e1e81b4100",
+        "connectionId": "697909804fff37e1e81b40f9",
+        "tableName": "meteor_m24_coord_1s",
+        "schemaName": "coord",
+        "description": "Meteor M2.4 Orbit in 1 second resolution",
+        "columns": [
+          {
+            "columnName": "dt",
+            "dataType": "timestamp without time zone",
+            "description": "UT",
+            "active": true
+          },
+          {
+            "columnName": "xgeo",
+            "dataType": "real",
+            "description": "X (GEO) [km]",
+            "active": true
+          },
+          {
+            "columnName": "ygeo",
+            "dataType": "real",
+            "description": "Y (GEO) [km]",
+            "active": true
+          },
+          {
+            "columnName": "zgeo",
+            "dataType": "real",
+            "description": "Z (GEO) [km]",
+            "active": true
+          },
+          {
+            "columnName": "latgeo",
+            "dataType": "real",
+            "description": "Geodetic latitude [degrees]",
+            "active": true
+          },
+          {
+            "columnName": "longeo",
+            "dataType": "real",
+            "description": "Geodetic longitude [degrees]",
+            "active": true
+          },
+          {
+            "columnName": "altgeo",
+            "dataType": "real",
+            "description": "Altitude [km]",
+            "active": true
+          },
+          {
+            "columnName": "bxigrf",
+            "dataType": "real",
+            "description": "IGRF B<sub>x</sub> (GEO) [nT]",
+            "active": true
+          },
+          {
+            "columnName": "byigrf",
+            "dataType": "real",
+            "description": "IGRF B<sub>y</sub> (GEO) [nT]",
+            "active": true
+          },
+          {
+            "columnName": "bzigrf",
+            "dataType": "real",
+            "description": "IGRF B<sub>z</sub> (GEO) [nT]",
+            "active": true
+          },
+          {
+            "columnName": "bmodigrf",
+            "dataType": "real",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "r",
+            "dataType": "real",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "latdm",
+            "dataType": "real",
+            "description": "Magnetic latitude [degrees]",
+            "active": true
+          },
+          {
+            "columnName": "londm",
+            "dataType": "real",
+            "description": "Magnetic longitude [degrees]",
+            "active": true
+          },
+          {
+            "columnName": "xgsm",
+            "dataType": "real",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "ygsm",
+            "dataType": "real",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "zgsm",
+            "dataType": "real",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "mlt",
+            "dataType": "real",
+            "description": "Magnetic Local Time [hours]",
+            "active": true
+          },
+          {
+            "columnName": "shad",
+            "dataType": "real",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "l",
+            "dataType": "real",
+            "description": "L-shell [Re]",
+            "active": true
+          },
+          {
+            "columnName": "b",
+            "dataType": "real",
+            "description": "|B<sub>IGRF</sub>| [Gauss]",
+            "active": true
+          }
+        ],
+        "createdAt": "2026-01-27T19:08:56.318Z",
+        "updatedAt": "2026-02-14T15:01:35.636Z",
+        "createdBy": "697908d34fff37e1e81b40f8",
+        "tagIds": [
+          "69908e3379ecf2e510c9677c",
+          "69908e3879ecf2e510c9677d",
+          "69908cfc79ecf2e510c96778",
+          "69908e4879ecf2e510c9677e"
+        ]
+      },
+      {
+        "_id": "69790d484fff37e1e81b4101",
+        "connectionId": "697909804fff37e1e81b40f9",
+        "tableName": "meteor_m24_coord_1m",
+        "schemaName": "coord",
+        "description": "Meteor M2.4 Orbit in 1 minute resolution",
+        "columns": [
+          {
+            "columnName": "dt",
+            "dataType": "timestamp without time zone",
+            "description": "UT",
+            "active": true
+          },
+          {
+            "columnName": "xgeo",
+            "dataType": "real",
+            "description": "X (GEO) [km]",
+            "active": true
+          },
+          {
+            "columnName": "ygeo",
+            "dataType": "real",
+            "description": "Y (GEO) [km]",
+            "active": true
+          },
+          {
+            "columnName": "zgeo",
+            "dataType": "real",
+            "description": "Z (GEO) [km]",
+            "active": true
+          },
+          {
+            "columnName": "latgeo",
+            "dataType": "real",
+            "description": "Geodetic latitude [degrees]",
+            "active": true
+          },
+          {
+            "columnName": "longeo",
+            "dataType": "real",
+            "description": "Geodetic longitude [degrees]",
+            "active": true
+          },
+          {
+            "columnName": "altgeo",
+            "dataType": "real",
+            "description": "Altitude [km]",
+            "active": true
+          },
+          {
+            "columnName": "bxigrf",
+            "dataType": "real",
+            "description": "IGRF B<sub>x</sub> (GEO) [nT]",
+            "active": true
+          },
+          {
+            "columnName": "byigrf",
+            "dataType": "real",
+            "description": "IGRF B<sub>y</sub> (GEO) [nT]",
+            "active": true
+          },
+          {
+            "columnName": "bzigrf",
+            "dataType": "real",
+            "description": "IGRF B<sub>z</sub> (GEO) [nT]",
+            "active": true
+          },
+          {
+            "columnName": "bmodigrf",
+            "dataType": "real",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "r",
+            "dataType": "real",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "latdm",
+            "dataType": "real",
+            "description": "Magnetic latitude [degrees]",
+            "active": true
+          },
+          {
+            "columnName": "londm",
+            "dataType": "real",
+            "description": "Magnetic longitude [degrees]",
+            "active": true
+          },
+          {
+            "columnName": "xgsm",
+            "dataType": "real",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "ygsm",
+            "dataType": "real",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "zgsm",
+            "dataType": "real",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "mlt",
+            "dataType": "real",
+            "description": "Magnetic Local Time [hours]",
+            "active": true
+          },
+          {
+            "columnName": "shad",
+            "dataType": "real",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "l",
+            "dataType": "real",
+            "description": "L-shell [Re]",
+            "active": true
+          },
+          {
+            "columnName": "b",
+            "dataType": "real",
+            "description": "|B<sub>IGRF</sub>| [Gauss]",
+            "active": true
+          }
+        ],
+        "createdAt": "2026-01-27T19:08:56.390Z",
+        "updatedAt": "2026-02-14T15:02:00.079Z",
+        "createdBy": "697908d34fff37e1e81b40f8",
+        "tagIds": [
+          "69908cdf79ecf2e510c96777",
+          "69908e3879ecf2e510c9677d",
+          "69908e3379ecf2e510c9677c",
+          "69908e4879ecf2e510c9677e"
+        ]
+      },
+      {
+        "_id": "69790d484fff37e1e81b4102",
+        "connectionId": "697909804fff37e1e81b40f9",
+        "tableName": "meteor_m24_coord_1h",
+        "schemaName": "coord",
+        "description": "Meteor M2.4 Orbit in 1 hour resolution",
+        "columns": [
+          {
+            "columnName": "dt",
+            "dataType": "timestamp without time zone",
+            "description": "UT",
+            "active": true
+          },
+          {
+            "columnName": "xgeo",
+            "dataType": "real",
+            "description": "X (GEO) [km]",
+            "active": true
+          },
+          {
+            "columnName": "ygeo",
+            "dataType": "real",
+            "description": "Y (GEO) [km]",
+            "active": true
+          },
+          {
+            "columnName": "zgeo",
+            "dataType": "real",
+            "description": "Z (GEO) [km]",
+            "active": true
+          },
+          {
+            "columnName": "latgeo",
+            "dataType": "real",
+            "description": "Geodetic latitude [degrees]",
+            "active": true
+          },
+          {
+            "columnName": "longeo",
+            "dataType": "real",
+            "description": "Geodetic longitude [degrees]",
+            "active": true
+          },
+          {
+            "columnName": "altgeo",
+            "dataType": "real",
+            "description": "Altitude [km]",
+            "active": true
+          },
+          {
+            "columnName": "bxigrf",
+            "dataType": "real",
+            "description": "IGRF B<sub>x</sub> (GEO) [nT]",
+            "active": true
+          },
+          {
+            "columnName": "byigrf",
+            "dataType": "real",
+            "description": "IGRF B<sub>y</sub> (GEO) [nT]",
+            "active": true
+          },
+          {
+            "columnName": "bzigrf",
+            "dataType": "real",
+            "description": "IGRF B<sub>z</sub> (GEO) [nT]",
+            "active": true
+          },
+          {
+            "columnName": "bmodigrf",
+            "dataType": "real",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "r",
+            "dataType": "real",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "latdm",
+            "dataType": "real",
+            "description": "Magnetic latitude [degrees]",
+            "active": true
+          },
+          {
+            "columnName": "londm",
+            "dataType": "real",
+            "description": "Magnetic longitude [degrees]",
+            "active": true
+          },
+          {
+            "columnName": "xgsm",
+            "dataType": "real",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "ygsm",
+            "dataType": "real",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "zgsm",
+            "dataType": "real",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "mlt",
+            "dataType": "real",
+            "description": "Magnetic Local Time [hours]",
+            "active": true
+          },
+          {
+            "columnName": "shad",
+            "dataType": "real",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "l",
+            "dataType": "real",
+            "description": "L-shell [Re]",
+            "active": true
+          },
+          {
+            "columnName": "b",
+            "dataType": "real",
+            "description": "|B<sub>IGRF</sub>| [Gauss]",
+            "active": true
+          }
+        ],
+        "createdAt": "2026-01-27T19:08:56.460Z",
+        "updatedAt": "2026-02-14T15:02:19.799Z",
+        "createdBy": "697908d34fff37e1e81b40f8",
+        "tagIds": [
+          "69908cc979ecf2e510c96776",
+          "69908e3879ecf2e510c9677d",
+          "69908e3379ecf2e510c9677c",
+          "69908e4879ecf2e510c9677e"
+        ]
+      },
+      {
+        "_id": "69790d484fff37e1e81b4103",
+        "connectionId": "697909804fff37e1e81b40f9",
+        "tableName": "meteor_m24_coord_10s",
+        "schemaName": "coord",
+        "description": "Meteor M2.4 Orbit in 10 second resolution",
+        "columns": [
+          {
+            "columnName": "dt",
+            "dataType": "timestamp without time zone",
+            "description": "UT",
+            "active": true
+          },
+          {
+            "columnName": "xgeo",
+            "dataType": "real",
+            "description": "X (GEO) [km]",
+            "active": true
+          },
+          {
+            "columnName": "ygeo",
+            "dataType": "real",
+            "description": "Y (GEO) [km]",
+            "active": true
+          },
+          {
+            "columnName": "zgeo",
+            "dataType": "real",
+            "description": "Z (GEO) [km]",
+            "active": true
+          },
+          {
+            "columnName": "latgeo",
+            "dataType": "real",
+            "description": "Geodetic latitude [degrees]",
+            "active": true
+          },
+          {
+            "columnName": "longeo",
+            "dataType": "real",
+            "description": "Geodetic longitude [degrees]",
+            "active": true
+          },
+          {
+            "columnName": "altgeo",
+            "dataType": "real",
+            "description": "Altitude [km]",
+            "active": true
+          },
+          {
+            "columnName": "bxigrf",
+            "dataType": "real",
+            "description": "IGRF B<sub>x</sub> (GEO) [nT]",
+            "active": true
+          },
+          {
+            "columnName": "byigrf",
+            "dataType": "real",
+            "description": "IGRF B<sub>y</sub> (GEO) [nT]",
+            "active": true
+          },
+          {
+            "columnName": "bzigrf",
+            "dataType": "real",
+            "description": "IGRF B<sub>z</sub> (GEO) [nT]",
+            "active": true
+          },
+          {
+            "columnName": "bmodigrf",
+            "dataType": "real",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "r",
+            "dataType": "real",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "latdm",
+            "dataType": "real",
+            "description": "Magnetic latitude [degrees]",
+            "active": true
+          },
+          {
+            "columnName": "londm",
+            "dataType": "real",
+            "description": "Magnetic longitude [degrees]",
+            "active": true
+          },
+          {
+            "columnName": "xgsm",
+            "dataType": "real",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "ygsm",
+            "dataType": "real",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "zgsm",
+            "dataType": "real",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "mlt",
+            "dataType": "real",
+            "description": "Magnetic Local Time [hours]",
+            "active": true
+          },
+          {
+            "columnName": "shad",
+            "dataType": "real",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "l",
+            "dataType": "real",
+            "description": "L-shell [Re]",
+            "active": true
+          },
+          {
+            "columnName": "b",
+            "dataType": "real",
+            "description": "|B<sub>IGRF</sub>| [Gauss]",
+            "active": true
+          }
+        ],
+        "createdAt": "2026-01-27T19:08:56.528Z",
+        "updatedAt": "2026-02-14T15:02:47.709Z",
+        "createdBy": "697908d34fff37e1e81b40f8",
+        "tagIds": [
+          "69908cfc79ecf2e510c96778",
+          "69908e3879ecf2e510c9677d",
+          "69908e3379ecf2e510c9677c",
+          "69908e4879ecf2e510c9677e"
+        ]
+      },
+      {
+        "_id": "69790d484fff37e1e81b4104",
+        "connectionId": "697909804fff37e1e81b40f9",
+        "tableName": "meteor_m24_coord_10m",
+        "schemaName": "coord",
+        "description": "Meteor M2.4 Orbit in 10 minute resolution",
+        "columns": [
+          {
+            "columnName": "dt",
+            "dataType": "timestamp without time zone",
+            "description": "UT",
+            "active": true
+          },
+          {
+            "columnName": "xgeo",
+            "dataType": "real",
+            "description": "X (GEO) [km]",
+            "active": true
+          },
+          {
+            "columnName": "ygeo",
+            "dataType": "real",
+            "description": "Y (GEO) [km]",
+            "active": true
+          },
+          {
+            "columnName": "zgeo",
+            "dataType": "real",
+            "description": "Z (GEO) [km]",
+            "active": true
+          },
+          {
+            "columnName": "latgeo",
+            "dataType": "real",
+            "description": "Geodetic latitude [degrees]",
+            "active": true
+          },
+          {
+            "columnName": "longeo",
+            "dataType": "real",
+            "description": "Geodetic longitude [degrees]",
+            "active": true
+          },
+          {
+            "columnName": "altgeo",
+            "dataType": "real",
+            "description": "Altitude [km]",
+            "active": true
+          },
+          {
+            "columnName": "bxigrf",
+            "dataType": "real",
+            "description": "IGRF B<sub>x</sub> (GEO) [nT]",
+            "active": true
+          },
+          {
+            "columnName": "byigrf",
+            "dataType": "real",
+            "description": "IGRF B<sub>y</sub> (GEO) [nT]",
+            "active": true
+          },
+          {
+            "columnName": "bzigrf",
+            "dataType": "real",
+            "description": "IGRF B<sub>z</sub> (GEO) [nT]",
+            "active": true
+          },
+          {
+            "columnName": "bmodigrf",
+            "dataType": "real",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "r",
+            "dataType": "real",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "latdm",
+            "dataType": "real",
+            "description": "Magnetic latitude [degrees]",
+            "active": true
+          },
+          {
+            "columnName": "londm",
+            "dataType": "real",
+            "description": "Magnetic longitude [degrees]",
+            "active": true
+          },
+          {
+            "columnName": "xgsm",
+            "dataType": "real",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "ygsm",
+            "dataType": "real",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "zgsm",
+            "dataType": "real",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "mlt",
+            "dataType": "real",
+            "description": "Magnetic Local Time [hours]",
+            "active": true
+          },
+          {
+            "columnName": "shad",
+            "dataType": "real",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "l",
+            "dataType": "real",
+            "description": "L-shell [Re]",
+            "active": true
+          },
+          {
+            "columnName": "b",
+            "dataType": "real",
+            "description": "|B<sub>IGRF</sub>| [Gauss]",
+            "active": true
+          }
+        ],
+        "createdAt": "2026-01-27T19:08:56.600Z",
+        "updatedAt": "2026-02-14T15:03:19.798Z",
+        "createdBy": "697908d34fff37e1e81b40f8",
+        "tagIds": [
+          "69908951220c29a3fe30b951",
+          "69908e3879ecf2e510c9677d",
+          "69908e3379ecf2e510c9677c",
+          "69908e4879ecf2e510c9677e"
+        ]
+      },
+      {
+        "_id": "697b9b62fb870d0678cd0fc3",
+        "connectionId": "697909804fff37e1e81b40f9",
+        "tableName": "ace_mag_10m",
+        "schemaName": "ace",
+        "description": "ACE Magnetic Field Data, 10 minute average",
+        "columns": [
+          {
+            "columnName": "dt",
+            "dataType": "timestamp without time zone",
+            "description": "UT",
+            "active": true
+          },
+          {
+            "columnName": "status",
+            "dataType": "integer",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "b_x",
+            "dataType": "double precision",
+            "description": "GSM B<sub>x</sub>",
+            "active": true
+          },
+          {
+            "columnName": "b_y",
+            "dataType": "double precision",
+            "description": "GSM B<sub>y</sub>",
+            "active": true
+          },
+          {
+            "columnName": "b_z",
+            "dataType": "double precision",
+            "description": "GSM B<sub>z</sub>",
+            "active": true
+          },
+          {
+            "columnName": "b_t",
+            "dataType": "double precision",
+            "description": "GSM B<sub>t</sub>",
+            "active": true
+          },
+          {
+            "columnName": "lat",
+            "dataType": "double precision",
+            "description": "GSM Latitude, +/- 90.0\"",
+            "active": true
+          },
+          {
+            "columnName": "long",
+            "dataType": "double precision",
+            "description": "GSM Longitude, 0 - 360.0",
+            "active": true
+          }
+        ],
+        "createdAt": "2026-01-29T17:39:46.686Z",
+        "updatedAt": "2026-02-14T15:04:43.377Z",
+        "createdBy": "697908d34fff37e1e81b40f8",
+        "tagIds": [
+          "69908eec79ecf2e510c9677f",
+          "69908efc79ecf2e510c96780",
+          "69908951220c29a3fe30b951"
+        ]
+      },
+      {
+        "_id": "697b9b62fb870d0678cd0fc4",
+        "connectionId": "697909804fff37e1e81b40f9",
+        "tableName": "ace_mag_1h",
+        "schemaName": "ace",
+        "description": "ACE Magnetic Field Data, 1 hour average",
+        "columns": [
+          {
+            "columnName": "dt",
+            "dataType": "timestamp without time zone",
+            "description": "UT",
+            "active": true
+          },
+          {
+            "columnName": "status",
+            "dataType": "integer",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "b_x",
+            "dataType": "double precision",
+            "description": "GSM B<sub>x</sub>",
+            "active": true
+          },
+          {
+            "columnName": "b_y",
+            "dataType": "double precision",
+            "description": "GSM B<sub>y</sub>",
+            "active": true
+          },
+          {
+            "columnName": "b_z",
+            "dataType": "double precision",
+            "description": "GSM B<sub>z</sub>",
+            "active": true
+          },
+          {
+            "columnName": "b_t",
+            "dataType": "double precision",
+            "description": "GSM B<sub>t</sub>",
+            "active": true
+          },
+          {
+            "columnName": "lat",
+            "dataType": "double precision",
+            "description": "GSM Latitude, +/- 90.0\"",
+            "active": true
+          },
+          {
+            "columnName": "long",
+            "dataType": "double precision",
+            "description": "GSM Longitude, 0 - 360.0",
+            "active": true
+          }
+        ],
+        "createdAt": "2026-01-29T17:39:46.762Z",
+        "updatedAt": "2026-02-14T15:04:56.545Z",
+        "createdBy": "697908d34fff37e1e81b40f8",
+        "tagIds": [
+          "69908eec79ecf2e510c9677f",
+          "69908efc79ecf2e510c96780",
+          "69908cc979ecf2e510c96776"
+        ]
+      },
+      {
+        "_id": "697b9b62fb870d0678cd0fc5",
+        "connectionId": "697909804fff37e1e81b40f9",
+        "tableName": "ace_mag_1m",
+        "schemaName": "ace",
+        "description": "ACE Magnetic Field Data, 1 minute original",
+        "columns": [
+          {
+            "columnName": "dt",
+            "dataType": "timestamp without time zone",
+            "description": "UT",
+            "active": true
+          },
+          {
+            "columnName": "status",
+            "dataType": "integer",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "b_x",
+            "dataType": "double precision",
+            "description": "GSM B<sub>x</sub>",
+            "active": true
+          },
+          {
+            "columnName": "b_y",
+            "dataType": "double precision",
+            "description": "GSM B<sub>y</sub>",
+            "active": true
+          },
+          {
+            "columnName": "b_z",
+            "dataType": "double precision",
+            "description": "GSM B<sub>z</sub>",
+            "active": true
+          },
+          {
+            "columnName": "b_t",
+            "dataType": "double precision",
+            "description": "GSM B<sub>t</sub>",
+            "active": true
+          },
+          {
+            "columnName": "lat",
+            "dataType": "double precision",
+            "description": "GSM Latitude, +/- 90.0\"",
+            "active": true
+          },
+          {
+            "columnName": "long",
+            "dataType": "double precision",
+            "description": "GSM Longitude, 0 - 360.0",
+            "active": true
+          }
+        ],
+        "createdAt": "2026-01-29T17:39:46.835Z",
+        "updatedAt": "2026-02-14T15:05:15.845Z",
+        "createdBy": "697908d34fff37e1e81b40f8",
+        "tagIds": [
+          "69908cdf79ecf2e510c96777",
+          "69908eec79ecf2e510c9677f",
+          "69908efc79ecf2e510c96780"
+        ]
+      },
+      {
+        "_id": "697b9b62fb870d0678cd0fc6",
+        "connectionId": "697909804fff37e1e81b40f9",
+        "tableName": "ace_swepam_l1_10m",
+        "schemaName": "ace",
+        "description": "ACE SWEPAM Data, 10 minute average",
+        "columns": [
+          {
+            "columnName": "dt",
+            "dataType": "timestamp without time zone",
+            "description": "UT",
+            "active": true
+          },
+          {
+            "columnName": "status",
+            "dataType": "integer",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "density",
+            "dataType": "double precision",
+            "description": "Proton density",
+            "active": true
+          },
+          {
+            "columnName": "speed",
+            "dataType": "double precision",
+            "description": "Bulk speed",
+            "active": true
+          },
+          {
+            "columnName": "temperature",
+            "dataType": "double precision",
+            "description": "Ion temperature",
+            "active": true
+          }
+        ],
+        "createdAt": "2026-01-29T17:39:46.905Z",
+        "updatedAt": "2026-02-14T15:05:47.193Z",
+        "createdBy": "697908d34fff37e1e81b40f8",
+        "tagIds": [
+          "69908951220c29a3fe30b951",
+          "69908eec79ecf2e510c9677f",
+          "69908f4579ecf2e510c96781"
+        ]
+      },
+      {
+        "_id": "697b9b62fb870d0678cd0fc7",
+        "connectionId": "697909804fff37e1e81b40f9",
+        "tableName": "ace_swepam_l1_1h",
+        "schemaName": "ace",
+        "description": "ACE SWEPAM Data, 1 hour average",
+        "columns": [
+          {
+            "columnName": "dt",
+            "dataType": "timestamp without time zone",
+            "description": "UT",
+            "active": true
+          },
+          {
+            "columnName": "status",
+            "dataType": "integer",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "density",
+            "dataType": "double precision",
+            "description": "Proton density",
+            "active": true
+          },
+          {
+            "columnName": "speed",
+            "dataType": "double precision",
+            "description": "Bulk speed",
+            "active": true
+          },
+          {
+            "columnName": "temperature",
+            "dataType": "double precision",
+            "description": "Ion temperature",
+            "active": true
+          }
+        ],
+        "createdAt": "2026-01-29T17:39:46.978Z",
+        "updatedAt": "2026-02-14T15:06:01.494Z",
+        "createdBy": "697908d34fff37e1e81b40f8",
+        "tagIds": [
+          "69908cc979ecf2e510c96776",
+          "69908eec79ecf2e510c9677f",
+          "69908f4579ecf2e510c96781"
+        ]
+      },
+      {
+        "_id": "697b9b63fb870d0678cd0fc8",
+        "connectionId": "697909804fff37e1e81b40f9",
+        "tableName": "ace_swepam_l1_1m",
+        "schemaName": "ace",
+        "description": "ACE SWEPAM Data, 1 minute original",
+        "columns": [
+          {
+            "columnName": "dt",
+            "dataType": "timestamp without time zone",
+            "description": "UT",
+            "active": true
+          },
+          {
+            "columnName": "status",
+            "dataType": "integer",
+            "description": "",
+            "active": true
+          },
+          {
+            "columnName": "density",
+            "dataType": "double precision",
+            "description": "Proton density",
+            "active": true
+          },
+          {
+            "columnName": "speed",
+            "dataType": "double precision",
+            "description": "Bulk speed",
+            "active": true
+          },
+          {
+            "columnName": "temperature",
+            "dataType": "double precision",
+            "description": "Ion temperature",
+            "active": true
+          }
+        ],
+        "createdAt": "2026-01-29T17:39:47.054Z",
+        "updatedAt": "2026-02-14T15:06:16.966Z",
+        "createdBy": "697908d34fff37e1e81b40f8",
+        "tagIds": [
+          "69908cdf79ecf2e510c96777",
+          "69908eec79ecf2e510c9677f",
+          "69908f4579ecf2e510c96781"
+        ]
+      },
+      {
+        "_id": "69905e01eab40b451877128f",
+        "connectionId": "697909804fff37e1e81b40f9",
+        "tableName": "arctica_m1_skif_hrz_flux_10m",
+        "schemaName": "arctica",
+        "description": "Arctica M1 SKIF/SER HRZ \nParticle Flux\n10 minutes resolution",
+        "columns": [
+          {
+            "columnName": "dt",
+            "dataType": "timestamp without time zone",
+            "description": "UT",
+            "active": true
+          },
+          {
+            "columnName": "mip1",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 50 keV, Protons with energies > 800 keV",
+            "active": true
+          },
+          {
+            "columnName": "mip2",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 1.7 MeV, Protons with energies > 50 MeV",
+            "active": true
+          },
+          {
+            "columnName": "mip3",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 1.7 MeV, Protons with energies > 50 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e1",
+            "dataType": "double precision",
+            "description": "Electrons with energies 150 - 350 keV",
+            "active": true
+          },
+          {
+            "columnName": "e2",
+            "dataType": "double precision",
+            "description": "Electrons with energies 0.35 - 1 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e3",
+            "dataType": "double precision",
+            "description": "Electrons with energies 1 - 2 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e4",
+            "dataType": "double precision",
+            "description": "Electrons with energies 2 - 4 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e5",
+            "dataType": "double precision",
+            "description": "Electrons with energies 4 - 10 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e6",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 2 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p7",
+            "dataType": "double precision",
+            "description": "Protons with energies 2 - 4 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p8",
+            "dataType": "double precision",
+            "description": "Protons with energies 4 - 9 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p9",
+            "dataType": "double precision",
+            "description": "Protons with energies 9 - 17 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p10",
+            "dataType": "double precision",
+            "description": "Protons with energies 17 - 30 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p11",
+            "dataType": "double precision",
+            "description": "Protons with energies 30 - 60 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p12",
+            "dataType": "double precision",
+            "description": "Protons with energies 60-100 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p13",
+            "dataType": "double precision",
+            "description": "Protons with energies 100-160 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p14",
+            "dataType": "double precision",
+            "description": "Protons with energies > 160 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p15",
+            "dataType": "double precision",
+            "description": "Protons with energies 1.5 - 4 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p16",
+            "dataType": "double precision",
+            "description": "Protons with energies > 30 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p17",
+            "dataType": "double precision",
+            "description": "Protons with energies > 50 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p18",
+            "dataType": "double precision",
+            "description": "Protons with energies > 100 MeV",
+            "active": true
+          }
+        ],
+        "createdAt": "2026-02-14T11:35:29.803Z",
+        "updatedAt": "2026-02-14T14:40:54.604Z",
+        "createdBy": "697908d34fff37e1e81b40f8",
+        "tagIds": [
+          "6990892a220c29a3fe30b950",
+          "69908951220c29a3fe30b951",
+          "6990895d220c29a3fe30b952",
+          "6990896a220c29a3fe30b953",
+          "6990896f220c29a3fe30b954"
+        ]
+      },
+      {
+        "_id": "69905e01eab40b4518771290",
+        "connectionId": "697909804fff37e1e81b40f9",
+        "tableName": "arctica_m1_skif_hrz_flux_10s",
+        "schemaName": "arctica",
+        "description": "Arctica M1 SKIF/SER HRZ \nParticle Flux\n10 second resolution",
+        "columns": [
+          {
+            "columnName": "dt",
+            "dataType": "timestamp without time zone",
+            "description": "UT",
+            "active": true
+          },
+          {
+            "columnName": "mip1",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 50 keV, Protons with energies > 800 keV",
+            "active": true
+          },
+          {
+            "columnName": "mip2",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 1.7 MeV, Protons with energies > 50 MeV",
+            "active": true
+          },
+          {
+            "columnName": "mip3",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 1.7 MeV, Protons with energies > 50 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e1",
+            "dataType": "double precision",
+            "description": "Electrons with energies 150 - 350 keV",
+            "active": true
+          },
+          {
+            "columnName": "e2",
+            "dataType": "double precision",
+            "description": "Electrons with energies 0.35 - 1 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e3",
+            "dataType": "double precision",
+            "description": "Electrons with energies 1 - 2 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e4",
+            "dataType": "double precision",
+            "description": "Electrons with energies 2 - 4 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e5",
+            "dataType": "double precision",
+            "description": "Electrons with energies 4 - 10 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e6",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 2 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p7",
+            "dataType": "double precision",
+            "description": "Protons with energies 2 - 4 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p8",
+            "dataType": "double precision",
+            "description": "Protons with energies 4 - 9 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p9",
+            "dataType": "double precision",
+            "description": "Protons with energies 9 - 17 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p10",
+            "dataType": "double precision",
+            "description": "Protons with energies 17 - 30 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p11",
+            "dataType": "double precision",
+            "description": "Protons with energies 30 - 60 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p12",
+            "dataType": "double precision",
+            "description": "Protons with energies 60-100 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p13",
+            "dataType": "double precision",
+            "description": "Protons with energies 100-160 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p14",
+            "dataType": "double precision",
+            "description": "Protons with energies > 160 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p15",
+            "dataType": "double precision",
+            "description": "Protons with energies 1.5 - 4 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p16",
+            "dataType": "double precision",
+            "description": "Protons with energies > 30 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p17",
+            "dataType": "double precision",
+            "description": "Protons with energies > 50 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p18",
+            "dataType": "double precision",
+            "description": "Protons with energies > 100 MeV",
+            "active": true
+          }
+        ],
+        "createdAt": "2026-02-14T11:35:29.892Z",
+        "updatedAt": "2026-02-14T14:41:40.659Z",
+        "createdBy": "697908d34fff37e1e81b40f8",
+        "tagIds": [
+          "6990892a220c29a3fe30b950",
+          "6990895d220c29a3fe30b952",
+          "6990898a220c29a3fe30b955",
+          "6990896a220c29a3fe30b953",
+          "6990896f220c29a3fe30b954"
+        ]
+      },
+      {
+        "_id": "69905e01eab40b4518771291",
+        "connectionId": "697909804fff37e1e81b40f9",
+        "tableName": "arctica_m1_skif_hrz_flux_1h",
+        "schemaName": "arctica",
+        "description": "Arctica M1 SKIF/SER HRZ \nParticle Flux\n1 hour resolution",
+        "columns": [
+          {
+            "columnName": "dt",
+            "dataType": "timestamp without time zone",
+            "description": "UT",
+            "active": true
+          },
+          {
+            "columnName": "mip1",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 50 keV, Protons with energies > 800 keV",
+            "active": true
+          },
+          {
+            "columnName": "mip2",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 1.7 MeV, Protons with energies > 50 MeV",
+            "active": true
+          },
+          {
+            "columnName": "mip3",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 1.7 MeV, Protons with energies > 50 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e1",
+            "dataType": "double precision",
+            "description": "Electrons with energies 150 - 350 keV",
+            "active": true
+          },
+          {
+            "columnName": "e2",
+            "dataType": "double precision",
+            "description": "Electrons with energies 0.35 - 1 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e3",
+            "dataType": "double precision",
+            "description": "Electrons with energies 1 - 2 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e4",
+            "dataType": "double precision",
+            "description": "Electrons with energies 2 - 4 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e5",
+            "dataType": "double precision",
+            "description": "Electrons with energies 4 - 10 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e6",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 2 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p7",
+            "dataType": "double precision",
+            "description": "Protons with energies 2 - 4 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p8",
+            "dataType": "double precision",
+            "description": "Protons with energies 4 - 9 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p9",
+            "dataType": "double precision",
+            "description": "Protons with energies 9 - 17 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p10",
+            "dataType": "double precision",
+            "description": "Protons with energies 17 - 30 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p11",
+            "dataType": "double precision",
+            "description": "Protons with energies 30 - 60 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p12",
+            "dataType": "double precision",
+            "description": "Protons with energies 60-100 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p13",
+            "dataType": "double precision",
+            "description": "Protons with energies 100-160 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p14",
+            "dataType": "double precision",
+            "description": "Protons with energies > 160 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p15",
+            "dataType": "double precision",
+            "description": "Protons with energies 1.5 - 4 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p16",
+            "dataType": "double precision",
+            "description": "Protons with energies > 30 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p17",
+            "dataType": "double precision",
+            "description": "Protons with energies > 50 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p18",
+            "dataType": "double precision",
+            "description": "Protons with energies > 100 MeV",
+            "active": true
+          }
+        ],
+        "createdAt": "2026-02-14T11:35:29.974Z",
+        "updatedAt": "2026-02-14T14:55:07.605Z",
+        "createdBy": "697908d34fff37e1e81b40f8",
+        "tagIds": [
+          "6990895d220c29a3fe30b952",
+          "6990896f220c29a3fe30b954",
+          "6990892a220c29a3fe30b950",
+          "6990896a220c29a3fe30b953",
+          "69908cc979ecf2e510c96776"
+        ]
+      },
+      {
+        "_id": "69905e02eab40b4518771292",
+        "connectionId": "697909804fff37e1e81b40f9",
+        "tableName": "arctica_m1_skif_hrz_flux_1m",
+        "schemaName": "arctica",
+        "description": "Arctica M1 SKIF/SER HRZ \nParticle Flux\n1 minutes resolution",
+        "columns": [
+          {
+            "columnName": "dt",
+            "dataType": "timestamp without time zone",
+            "description": "UT",
+            "active": true
+          },
+          {
+            "columnName": "mip1",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 50 keV, Protons with energies > 800 keV",
+            "active": true
+          },
+          {
+            "columnName": "mip2",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 1.7 MeV, Protons with energies > 50 MeV",
+            "active": true
+          },
+          {
+            "columnName": "mip3",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 1.7 MeV, Protons with energies > 50 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e1",
+            "dataType": "double precision",
+            "description": "Electrons with energies 150 - 350 keV",
+            "active": true
+          },
+          {
+            "columnName": "e2",
+            "dataType": "double precision",
+            "description": "Electrons with energies 0.35 - 1 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e3",
+            "dataType": "double precision",
+            "description": "Electrons with energies 1 - 2 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e4",
+            "dataType": "double precision",
+            "description": "Electrons with energies 2 - 4 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e5",
+            "dataType": "double precision",
+            "description": "Electrons with energies 4 - 10 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e6",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 2 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p7",
+            "dataType": "double precision",
+            "description": "Protons with energies 2 - 4 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p8",
+            "dataType": "double precision",
+            "description": "Protons with energies 4 - 9 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p9",
+            "dataType": "double precision",
+            "description": "Protons with energies 9 - 17 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p10",
+            "dataType": "double precision",
+            "description": "Protons with energies 17 - 30 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p11",
+            "dataType": "double precision",
+            "description": "Protons with energies 30 - 60 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p12",
+            "dataType": "double precision",
+            "description": "Protons with energies 60-100 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p13",
+            "dataType": "double precision",
+            "description": "Protons with energies 100-160 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p14",
+            "dataType": "double precision",
+            "description": "Protons with energies > 160 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p15",
+            "dataType": "double precision",
+            "description": "Protons with energies 1.5 - 4 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p16",
+            "dataType": "double precision",
+            "description": "Protons with energies > 30 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p17",
+            "dataType": "double precision",
+            "description": "Protons with energies > 50 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p18",
+            "dataType": "double precision",
+            "description": "Protons with energies > 100 MeV",
+            "active": true
+          }
+        ],
+        "createdAt": "2026-02-14T11:35:30.055Z",
+        "updatedAt": "2026-02-14T14:55:36.733Z",
+        "createdBy": "697908d34fff37e1e81b40f8",
+        "tagIds": [
+          "6990895d220c29a3fe30b952",
+          "6990896f220c29a3fe30b954",
+          "6990892a220c29a3fe30b950",
+          "6990896a220c29a3fe30b953",
+          "69908cdf79ecf2e510c96777"
+        ]
+      },
+      {
+        "_id": "69905e02eab40b4518771293",
+        "connectionId": "697909804fff37e1e81b40f9",
+        "tableName": "arctica_m1_skif_hrz_flux_1s",
+        "schemaName": "arctica",
+        "description": "Arctica M1 SKIF/SER HRZ \nParticle Flux\n1 second resolution",
+        "columns": [
+          {
+            "columnName": "dt",
+            "dataType": "timestamp without time zone",
+            "description": "UT",
+            "active": true
+          },
+          {
+            "columnName": "mip1",
+            "dataType": "numeric",
+            "description": "Electrons with energies > 50 keV, Protons with energies > 800 keV",
+            "active": true
+          },
+          {
+            "columnName": "mip2",
+            "dataType": "numeric",
+            "description": "Electrons with energies > 1.7 MeV, Protons with energies > 50 MeV",
+            "active": true
+          },
+          {
+            "columnName": "mip3",
+            "dataType": "numeric",
+            "description": "Electrons with energies > 1.7 MeV, Protons with energies > 50 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e1",
+            "dataType": "numeric",
+            "description": "Electrons with energies 150 - 350 keV",
+            "active": true
+          },
+          {
+            "columnName": "e2",
+            "dataType": "numeric",
+            "description": "Electrons with energies 0.35 - 1 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e3",
+            "dataType": "numeric",
+            "description": "Electrons with energies 1 - 2 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e4",
+            "dataType": "numeric",
+            "description": "Electrons with energies 2 - 4 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e5",
+            "dataType": "numeric",
+            "description": "Electrons with energies 4 - 10 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e6",
+            "dataType": "numeric",
+            "description": "Electrons with energies > 2 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p7",
+            "dataType": "numeric",
+            "description": "Protons with energies 2 - 4 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p8",
+            "dataType": "numeric",
+            "description": "Protons with energies 4 - 9 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p9",
+            "dataType": "numeric",
+            "description": "Protons with energies 9 - 17 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p10",
+            "dataType": "numeric",
+            "description": "Protons with energies 17 - 30 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p11",
+            "dataType": "numeric",
+            "description": "Protons with energies 30 - 60 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p12",
+            "dataType": "numeric",
+            "description": "Protons with energies 60-100 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p13",
+            "dataType": "numeric",
+            "description": "Protons with energies 100-160 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p14",
+            "dataType": "numeric",
+            "description": "Protons with energies > 160 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p15",
+            "dataType": "numeric",
+            "description": "Protons with energies 1.5 - 4 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p16",
+            "dataType": "numeric",
+            "description": "Protons with energies > 30 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p17",
+            "dataType": "numeric",
+            "description": "Protons with energies > 50 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p18",
+            "dataType": "numeric",
+            "description": "Protons with energies > 100 MeV",
+            "active": true
+          }
+        ],
+        "createdAt": "2026-02-14T11:35:30.134Z",
+        "updatedAt": "2026-02-14T14:55:58.385Z",
+        "createdBy": "697908d34fff37e1e81b40f8",
+        "tagIds": [
+          "6990895d220c29a3fe30b952",
+          "6990896f220c29a3fe30b954",
+          "6990892a220c29a3fe30b950",
+          "6990896a220c29a3fe30b953",
+          "69908cfc79ecf2e510c96778"
+        ]
+      },
+      {
+        "_id": "69907c7da1d081112e65f821",
+        "connectionId": "697909804fff37e1e81b40f9",
+        "tableName": "arctica_m1_skif_hrz_10m",
+        "schemaName": "arctica",
+        "description": "Arctica M1 SKIF/SER HRZ \nParticle Count Rate\n10 minute resolution",
+        "columns": [
+          {
+            "columnName": "dt",
+            "dataType": "timestamp without time zone",
+            "description": "UT",
+            "active": true
+          },
+          {
+            "columnName": "framen",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "willinfo",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "instrcod",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "semicompl",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "dtsec",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "voltincr",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "spestart",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "spenum",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "mip3",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 1.7 MeV, Protons with energies > 50 MeV",
+            "active": true
+          },
+          {
+            "columnName": "mip1",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 50 keV, Protons with energies > 800 keV",
+            "active": true
+          },
+          {
+            "columnName": "mip2",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 1.7 MeV, Protons with energies > 50 MeV",
+            "active": true
+          },
+          {
+            "columnName": "sgmtdp",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "e1",
+            "dataType": "double precision",
+            "description": "Electrons with energies 150 - 350 keV",
+            "active": true
+          },
+          {
+            "columnName": "e2",
+            "dataType": "double precision",
+            "description": "Electrons with energies 0.35 - 1 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e3",
+            "dataType": "double precision",
+            "description": "Electrons with energies 1 - 2 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e4",
+            "dataType": "double precision",
+            "description": "Electrons with energies 2 - 4 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e5",
+            "dataType": "double precision",
+            "description": "Electrons with energies 4 - 10 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e6",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 2 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p7",
+            "dataType": "double precision",
+            "description": "Protons with energies 2 - 4 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p8",
+            "dataType": "double precision",
+            "description": "Protons with energies 4 - 9 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p9",
+            "dataType": "double precision",
+            "description": "Protons with energies 9 - 17 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p10",
+            "dataType": "double precision",
+            "description": "Protons with energies 17 - 30 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p11",
+            "dataType": "double precision",
+            "description": "Protons with energies 30 - 60 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p12",
+            "dataType": "double precision",
+            "description": "Protons with energies 60-100 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p13",
+            "dataType": "double precision",
+            "description": "Protons with energies 100-160 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p14",
+            "dataType": "double precision",
+            "description": "Protons with energies > 160 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p15",
+            "dataType": "double precision",
+            "description": "Protons with energies 1.5 - 4 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p16",
+            "dataType": "double precision",
+            "description": "Protons with energies > 30 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p17",
+            "dataType": "double precision",
+            "description": "Protons with energies > 50 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p18",
+            "dataType": "double precision",
+            "description": "Protons with energies > 100 MeV",
+            "active": true
+          },
+          {
+            "columnName": "sgmtdv",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "sgmtde",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "parity",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "doneinfo",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          }
+        ],
+        "createdAt": "2026-02-14T13:45:33.784Z",
+        "updatedAt": "2026-02-14T14:57:14.130Z",
+        "createdBy": "697908d34fff37e1e81b40f8",
+        "tagIds": [
+          "69908951220c29a3fe30b951",
+          "6990895d220c29a3fe30b952",
+          "6990896f220c29a3fe30b954",
+          "69908d3e79ecf2e510c96779",
+          "6990896a220c29a3fe30b953"
+        ]
+      },
+      {
+        "_id": "69907c7da1d081112e65f822",
+        "connectionId": "697909804fff37e1e81b40f9",
+        "tableName": "arctica_m1_skif_hrz_10s",
+        "schemaName": "arctica",
+        "description": "Arctica M1 SKIF/SER HRZ \nParticle Count Rate\n10 second resolution",
+        "columns": [
+          {
+            "columnName": "dt",
+            "dataType": "timestamp without time zone",
+            "description": "UT",
+            "active": true
+          },
+          {
+            "columnName": "framen",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "willinfo",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "instrcod",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "semicompl",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "dtsec",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "voltincr",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "spestart",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "spenum",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "mip3",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 1.7 MeV, Protons with energies > 50 MeV",
+            "active": true
+          },
+          {
+            "columnName": "mip1",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 50 keV, Protons with energies > 800 keV",
+            "active": true
+          },
+          {
+            "columnName": "mip2",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 1.7 MeV, Protons with energies > 50 MeV",
+            "active": true
+          },
+          {
+            "columnName": "sgmtdp",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "e1",
+            "dataType": "double precision",
+            "description": "Electrons with energies 150 - 350 keV",
+            "active": true
+          },
+          {
+            "columnName": "e2",
+            "dataType": "double precision",
+            "description": "Electrons with energies 0.35 - 1 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e3",
+            "dataType": "double precision",
+            "description": "Electrons with energies 1 - 2 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e4",
+            "dataType": "double precision",
+            "description": "Electrons with energies 2 - 4 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e5",
+            "dataType": "double precision",
+            "description": "Electrons with energies 4 - 10 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e6",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 2 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p7",
+            "dataType": "double precision",
+            "description": "Protons with energies 2 - 4 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p8",
+            "dataType": "double precision",
+            "description": "Protons with energies 4 - 9 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p9",
+            "dataType": "double precision",
+            "description": "Protons with energies 9 - 17 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p10",
+            "dataType": "double precision",
+            "description": "Protons with energies 17 - 30 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p11",
+            "dataType": "double precision",
+            "description": "Protons with energies 30 - 60 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p12",
+            "dataType": "double precision",
+            "description": "Protons with energies 60-100 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p13",
+            "dataType": "double precision",
+            "description": "Protons with energies 100-160 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p14",
+            "dataType": "double precision",
+            "description": "Protons with energies > 160 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p15",
+            "dataType": "double precision",
+            "description": "Protons with energies 1.5 - 4 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p16",
+            "dataType": "double precision",
+            "description": "Protons with energies > 30 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p17",
+            "dataType": "double precision",
+            "description": "Protons with energies > 50 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p18",
+            "dataType": "double precision",
+            "description": "Protons with energies > 100 MeV",
+            "active": true
+          },
+          {
+            "columnName": "sgmtdv",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "sgmtde",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "parity",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "doneinfo",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          }
+        ],
+        "createdAt": "2026-02-14T13:45:33.858Z",
+        "updatedAt": "2026-02-14T14:58:12.693Z",
+        "createdBy": "697908d34fff37e1e81b40f8",
+        "tagIds": [
+          "6990898a220c29a3fe30b955",
+          "6990895d220c29a3fe30b952",
+          "69908d3e79ecf2e510c96779",
+          "6990896f220c29a3fe30b954",
+          "6990896a220c29a3fe30b953"
+        ]
+      },
+      {
+        "_id": "69907c7da1d081112e65f823",
+        "connectionId": "697909804fff37e1e81b40f9",
+        "tableName": "arctica_m1_skif_hrz_1h",
+        "schemaName": "arctica",
+        "description": "Arctica M1 SKIF/SER HRZ \nParticle Count Rate\n1 hour resolution",
+        "columns": [
+          {
+            "columnName": "dt",
+            "dataType": "timestamp without time zone",
+            "description": "UT",
+            "active": true
+          },
+          {
+            "columnName": "framen",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "willinfo",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "instrcod",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "semicompl",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "dtsec",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "voltincr",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "spestart",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "spenum",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "mip3",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 1.7 MeV, Protons with energies > 50 MeV",
+            "active": true
+          },
+          {
+            "columnName": "mip1",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 50 keV, Protons with energies > 800 keV",
+            "active": true
+          },
+          {
+            "columnName": "mip2",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 1.7 MeV, Protons with energies > 50 MeV",
+            "active": true
+          },
+          {
+            "columnName": "sgmtdp",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "e1",
+            "dataType": "double precision",
+            "description": "Electrons with energies 150 - 350 keV",
+            "active": true
+          },
+          {
+            "columnName": "e2",
+            "dataType": "double precision",
+            "description": "Electrons with energies 0.35 - 1 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e3",
+            "dataType": "double precision",
+            "description": "Electrons with energies 1 - 2 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e4",
+            "dataType": "double precision",
+            "description": "Electrons with energies 2 - 4 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e5",
+            "dataType": "double precision",
+            "description": "Electrons with energies 4 - 10 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e6",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 2 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p7",
+            "dataType": "double precision",
+            "description": "Protons with energies 2 - 4 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p8",
+            "dataType": "double precision",
+            "description": "Protons with energies 4 - 9 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p9",
+            "dataType": "double precision",
+            "description": "Protons with energies 9 - 17 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p10",
+            "dataType": "double precision",
+            "description": "Protons with energies 17 - 30 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p11",
+            "dataType": "double precision",
+            "description": "Protons with energies 30 - 60 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p12",
+            "dataType": "double precision",
+            "description": "Protons with energies 60-100 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p13",
+            "dataType": "double precision",
+            "description": "Protons with energies 100-160 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p14",
+            "dataType": "double precision",
+            "description": "Protons with energies > 160 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p15",
+            "dataType": "double precision",
+            "description": "Protons with energies 1.5 - 4 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p16",
+            "dataType": "double precision",
+            "description": "Protons with energies > 30 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p17",
+            "dataType": "double precision",
+            "description": "Protons with energies > 50 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p18",
+            "dataType": "double precision",
+            "description": "Protons with energies > 100 MeV",
+            "active": true
+          },
+          {
+            "columnName": "sgmtdv",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "sgmtde",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "parity",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "doneinfo",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          }
+        ],
+        "createdAt": "2026-02-14T13:45:33.937Z",
+        "updatedAt": "2026-02-14T14:58:33.363Z",
+        "createdBy": "697908d34fff37e1e81b40f8",
+        "tagIds": [
+          "69908cc979ecf2e510c96776",
+          "6990895d220c29a3fe30b952",
+          "69908d3e79ecf2e510c96779",
+          "6990896f220c29a3fe30b954",
+          "6990896a220c29a3fe30b953"
+        ]
+      },
+      {
+        "_id": "69907c7ea1d081112e65f824",
+        "connectionId": "697909804fff37e1e81b40f9",
+        "tableName": "arctica_m1_skif_hrz_1s",
+        "schemaName": "arctica",
+        "description": "Arctica M1 SKIF/SER HRZ \nParticle Count Rate\n1 second resolution",
+        "columns": [
+          {
+            "columnName": "dt",
+            "dataType": "timestamp without time zone",
+            "description": "UT",
+            "active": true
+          },
+          {
+            "columnName": "framen",
+            "dataType": "integer",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "willinfo",
+            "dataType": "integer",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "instrcod",
+            "dataType": "integer",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "semicompl",
+            "dataType": "integer",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "dtsec",
+            "dataType": "integer",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "voltincr",
+            "dataType": "integer",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "spestart",
+            "dataType": "integer",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "spenum",
+            "dataType": "integer",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "mip3",
+            "dataType": "integer",
+            "description": "Electrons with energies > 1.7 MeV, Protons with energies > 50 MeV",
+            "active": true
+          },
+          {
+            "columnName": "mip1",
+            "dataType": "integer",
+            "description": "Electrons with energies > 50 keV, Protons with energies > 800 keV",
+            "active": true
+          },
+          {
+            "columnName": "mip2",
+            "dataType": "integer",
+            "description": "Electrons with energies > 1.7 MeV, Protons with energies > 50 MeV",
+            "active": true
+          },
+          {
+            "columnName": "sgmtdp",
+            "dataType": "integer",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "e1",
+            "dataType": "integer",
+            "description": "Electrons with energies 150 - 350 keV",
+            "active": true
+          },
+          {
+            "columnName": "e2",
+            "dataType": "integer",
+            "description": "Electrons with energies 0.35 - 1 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e3",
+            "dataType": "integer",
+            "description": "Electrons with energies 1 - 2 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e4",
+            "dataType": "integer",
+            "description": "Electrons with energies 2 - 4 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e5",
+            "dataType": "integer",
+            "description": "Electrons with energies 4 - 10 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e6",
+            "dataType": "integer",
+            "description": "Electrons with energies > 2 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p7",
+            "dataType": "integer",
+            "description": "Protons with energies 2 - 4 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p8",
+            "dataType": "integer",
+            "description": "Protons with energies 4 - 9 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p9",
+            "dataType": "integer",
+            "description": "Protons with energies 9 - 17 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p10",
+            "dataType": "integer",
+            "description": "Protons with energies 17 - 30 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p11",
+            "dataType": "integer",
+            "description": "Protons with energies 30 - 60 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p12",
+            "dataType": "integer",
+            "description": "Protons with energies 60-100 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p13",
+            "dataType": "integer",
+            "description": "Protons with energies 100-160 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p14",
+            "dataType": "integer",
+            "description": "Protons with energies > 160 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p15",
+            "dataType": "integer",
+            "description": "Protons with energies 1.5 - 4 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p16",
+            "dataType": "integer",
+            "description": "Protons with energies > 30 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p17",
+            "dataType": "integer",
+            "description": "Protons with energies > 50 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p18",
+            "dataType": "integer",
+            "description": "Protons with energies > 100 MeV",
+            "active": true
+          },
+          {
+            "columnName": "sgmtdv",
+            "dataType": "integer",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "sgmtde",
+            "dataType": "integer",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "parity",
+            "dataType": "integer",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "doneinfo",
+            "dataType": "integer",
+            "description": "",
+            "active": false
+          }
+        ],
+        "createdAt": "2026-02-14T13:45:34.010Z",
+        "updatedAt": "2026-02-14T14:58:54.598Z",
+        "createdBy": "697908d34fff37e1e81b40f8",
+        "tagIds": [
+          "69908cfc79ecf2e510c96778",
+          "6990895d220c29a3fe30b952",
+          "69908d3e79ecf2e510c96779",
+          "6990896f220c29a3fe30b954",
+          "6990896a220c29a3fe30b953"
+        ]
+      },
+      {
+        "_id": "69907c7ea1d081112e65f825",
+        "connectionId": "697909804fff37e1e81b40f9",
+        "tableName": "arctica_m1_skif_hrz_1m",
+        "schemaName": "arctica",
+        "description": "Arctica M1 SKIF/SER HRZ \nParticle Count Rate\n1 minute resolution",
+        "columns": [
+          {
+            "columnName": "dt",
+            "dataType": "timestamp without time zone",
+            "description": "UT",
+            "active": true
+          },
+          {
+            "columnName": "framen",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "willinfo",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "instrcod",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "semicompl",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "dtsec",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "voltincr",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "spestart",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "spenum",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "mip3",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 1.7 MeV, Protons with energies > 50 MeV",
+            "active": true
+          },
+          {
+            "columnName": "mip1",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 50 keV, Protons with energies > 800 keV",
+            "active": true
+          },
+          {
+            "columnName": "mip2",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 1.7 MeV, Protons with energies > 50 MeV",
+            "active": true
+          },
+          {
+            "columnName": "sgmtdp",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "e1",
+            "dataType": "double precision",
+            "description": "Electrons with energies 150 - 350 keV",
+            "active": true
+          },
+          {
+            "columnName": "e2",
+            "dataType": "double precision",
+            "description": "Electrons with energies 0.35 - 1 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e3",
+            "dataType": "double precision",
+            "description": "Electrons with energies 1 - 2 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e4",
+            "dataType": "double precision",
+            "description": "Electrons with energies 2 - 4 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e5",
+            "dataType": "double precision",
+            "description": "Electrons with energies 4 - 10 MeV",
+            "active": true
+          },
+          {
+            "columnName": "e6",
+            "dataType": "double precision",
+            "description": "Electrons with energies > 2 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p7",
+            "dataType": "double precision",
+            "description": "Protons with energies 2 - 4 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p8",
+            "dataType": "double precision",
+            "description": "Protons with energies 4 - 9 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p9",
+            "dataType": "double precision",
+            "description": "Protons with energies 9 - 17 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p10",
+            "dataType": "double precision",
+            "description": "Protons with energies 17 - 30 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p11",
+            "dataType": "double precision",
+            "description": "Protons with energies 30 - 60 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p12",
+            "dataType": "double precision",
+            "description": "Protons with energies 60-100 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p13",
+            "dataType": "double precision",
+            "description": "Protons with energies 100-160 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p14",
+            "dataType": "double precision",
+            "description": "Protons with energies > 160 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p15",
+            "dataType": "double precision",
+            "description": "Protons with energies 1.5 - 4 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p16",
+            "dataType": "double precision",
+            "description": "Protons with energies > 30 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p17",
+            "dataType": "double precision",
+            "description": "Protons with energies > 50 MeV",
+            "active": true
+          },
+          {
+            "columnName": "p18",
+            "dataType": "double precision",
+            "description": "Protons with energies > 100 MeV",
+            "active": true
+          },
+          {
+            "columnName": "sgmtdv",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "sgmtde",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "parity",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          },
+          {
+            "columnName": "doneinfo",
+            "dataType": "double precision",
+            "description": "",
+            "active": false
+          }
+        ],
+        "createdAt": "2026-02-14T13:45:34.084Z",
+        "updatedAt": "2026-02-14T14:59:12.818Z",
+        "createdBy": "697908d34fff37e1e81b40f8",
+        "tagIds": [
+          "69908cdf79ecf2e510c96777",
+          "6990895d220c29a3fe30b952",
+          "69908d3e79ecf2e510c96779",
+          "6990896f220c29a3fe30b954",
+          "6990896a220c29a3fe30b953"
+        ]
+      }
+    ],
+    "data_sets": [
+      {
+        "_id": "69790a254fff37e1e81b40fc",
+        "description": "Geomagnetic Variation Dst Index",
+        "type": null,
+        "dataSourceIds": [
+          "697909c84fff37e1e81b40fa"
+        ],
+        "dataSetIds": [],
+        "preaggregationConfig": [],
+        "createdAt": "2026-01-27T18:55:33.465Z",
+        "updatedAt": "2026-02-14T15:07:15.884Z",
+        "createdBy": "697908d34fff37e1e81b40f8",
+        "aggregationFunction": "none",
+        "aggregationInterval": 1,
+        "aggregationTimeUnit": "seconds",
+        "useAggregation": false,
+        "tagIds": [
+          "69908f7c79ecf2e510c96782",
+          "69908df679ecf2e510c9677a"
+        ]
+      },
+      {
+        "_id": "69790a324fff37e1e81b40fd",
+        "description": "Geomagnetic Kp Index",
+        "type": null,
+        "dataSourceIds": [
+          "697909c84fff37e1e81b40fb"
+        ],
+        "dataSetIds": [],
+        "preaggregationConfig": [],
+        "createdAt": "2026-01-27T18:55:46.438Z",
+        "updatedAt": "2026-02-14T15:07:29.853Z",
+        "createdBy": "697908d34fff37e1e81b40f8",
+        "aggregationFunction": "none",
+        "aggregationInterval": 1,
+        "aggregationTimeUnit": "seconds",
+        "tagIds": [
+          "69908f7c79ecf2e510c96782",
+          "69908df679ecf2e510c9677a"
+        ],
+        "useAggregation": false
+      },
+      {
+        "_id": "69790e084fff37e1e81b4105",
+        "description": "Meteor M2.4 Orbit\nPre-aggregated Data",
+        "type": "preaggregated",
+        "dataSourceIds": [
+          "69790d484fff37e1e81b4100",
+          "69790d484fff37e1e81b4101",
+          "69790d484fff37e1e81b4102",
+          "69790d484fff37e1e81b4103",
+          "69790d484fff37e1e81b4104"
+        ],
+        "dataSetIds": [],
+        "preaggregationConfig": [
+          {
+            "dataSourceId": "69790d484fff37e1e81b4100",
+            "interval": 1,
+            "timeUnit": "seconds"
+          },
+          {
+            "dataSourceId": "69790d484fff37e1e81b4101",
+            "interval": 1,
+            "timeUnit": "minutes"
+          },
+          {
+            "dataSourceId": "69790d484fff37e1e81b4102",
+            "interval": 1,
+            "timeUnit": "hours"
+          },
+          {
+            "dataSourceId": "69790d484fff37e1e81b4103",
+            "interval": 10,
+            "timeUnit": "seconds"
+          },
+          {
+            "dataSourceId": "69790d484fff37e1e81b4104",
+            "interval": 10,
+            "timeUnit": "minutes"
+          }
+        ],
+        "createdAt": "2026-01-27T19:12:08.522Z",
+        "updatedAt": "2026-02-14T15:07:53.826Z",
+        "createdBy": "697908d34fff37e1e81b40f8",
+        "aggregationFunction": "none",
+        "aggregationInterval": 1,
+        "aggregationTimeUnit": "seconds",
+        "useAggregation": false,
+        "tagIds": [
+          "69908e3879ecf2e510c9677d",
+          "69908e3379ecf2e510c9677c"
+        ]
+      },
+      {
+        "_id": "697b9e66fb870d0678cd0fc9",
+        "description": "ACE Magnetic Field\nPre-aggregated Data",
+        "type": "preaggregated",
+        "dataSourceIds": [
+          "697b9b62fb870d0678cd0fc3",
+          "697b9b62fb870d0678cd0fc4",
+          "697b9b62fb870d0678cd0fc5"
+        ],
+        "dataSetIds": [],
+        "preaggregationConfig": [
+          {
+            "dataSourceId": "697b9b62fb870d0678cd0fc3",
+            "interval": 10,
+            "timeUnit": "minutes"
+          },
+          {
+            "dataSourceId": "697b9b62fb870d0678cd0fc4",
+            "interval": 1,
+            "timeUnit": "hours"
+          },
+          {
+            "dataSourceId": "697b9b62fb870d0678cd0fc5",
+            "interval": 1,
+            "timeUnit": "minutes"
+          }
+        ],
+        "createdAt": "2026-01-29T17:52:38.297Z",
+        "updatedAt": "2026-02-14T15:08:08.162Z",
+        "createdBy": "697908d34fff37e1e81b40f8",
+        "aggregationFunction": "none",
+        "aggregationInterval": 1,
+        "aggregationTimeUnit": "seconds",
+        "useAggregation": false,
+        "tagIds": [
+          "69908eec79ecf2e510c9677f",
+          "69908efc79ecf2e510c96780"
+        ]
+      },
+      {
+        "_id": "697b9e97fb870d0678cd0fca",
+        "description": "ACE SWEPAM\nPre-aggregated Data",
+        "type": "preaggregated",
+        "dataSourceIds": [
+          "697b9b62fb870d0678cd0fc6",
+          "697b9b62fb870d0678cd0fc7",
+          "697b9b63fb870d0678cd0fc8"
+        ],
+        "dataSetIds": [],
+        "preaggregationConfig": [
+          {
+            "dataSourceId": "697b9b62fb870d0678cd0fc6",
+            "interval": 10,
+            "timeUnit": "minutes"
+          },
+          {
+            "dataSourceId": "697b9b62fb870d0678cd0fc7",
+            "interval": 1,
+            "timeUnit": "hours"
+          },
+          {
+            "dataSourceId": "697b9b63fb870d0678cd0fc8",
+            "interval": 1,
+            "timeUnit": "minutes"
+          }
+        ],
+        "createdAt": "2026-01-29T17:53:27.657Z",
+        "updatedAt": "2026-02-14T15:08:21.861Z",
+        "createdBy": "697908d34fff37e1e81b40f8",
+        "aggregationFunction": "none",
+        "aggregationInterval": 1,
+        "aggregationTimeUnit": "seconds",
+        "useAggregation": false,
+        "tagIds": [
+          "69908eec79ecf2e510c9677f",
+          "69908f4579ecf2e510c96781"
+        ]
+      },
+      {
+        "_id": "69905f19eab40b4518771295",
+        "description": "Arctica M1 SKIF/SER HRZ \nParticle Flux \nPre-aggregated Data",
+        "type": "preaggregated",
+        "dataSourceIds": [
+          "69905e01eab40b451877128f",
+          "69905e01eab40b4518771290",
+          "69905e01eab40b4518771291",
+          "69905e02eab40b4518771292",
+          "69905e02eab40b4518771293"
+        ],
+        "dataSetIds": [],
+        "preaggregationConfig": [
+          {
+            "dataSourceId": "69905e01eab40b451877128f",
+            "interval": 10,
+            "timeUnit": "minutes"
+          },
+          {
+            "dataSourceId": "69905e01eab40b4518771290",
+            "interval": 10,
+            "timeUnit": "seconds"
+          },
+          {
+            "dataSourceId": "69905e01eab40b4518771291",
+            "interval": 1,
+            "timeUnit": "hours"
+          },
+          {
+            "dataSourceId": "69905e02eab40b4518771292",
+            "interval": 1,
+            "timeUnit": "minutes"
+          },
+          {
+            "dataSourceId": "69905e02eab40b4518771293",
+            "interval": 1,
+            "timeUnit": "seconds"
+          }
+        ],
+        "useAggregation": false,
+        "aggregationFunction": "none",
+        "aggregationInterval": 1,
+        "aggregationTimeUnit": "seconds",
+        "createdAt": "2026-02-14T11:40:09.194Z",
+        "updatedAt": "2026-02-14T15:09:37.980Z",
+        "createdBy": "697908d34fff37e1e81b40f8",
+        "tagIds": [
+          "6990895d220c29a3fe30b952",
+          "6990896f220c29a3fe30b954",
+          "6990892a220c29a3fe30b950",
+          "6990896a220c29a3fe30b953"
+        ]
+      },
+      {
+        "_id": "69907ff9d481ebe6639d0432",
+        "description": "Arctica M1 SKIF/SER HRZ \nParticle Count Rate\nPre-aggregated Data",
+        "type": "preaggregated",
+        "dataSourceIds": [
+          "69907c7da1d081112e65f821",
+          "69907c7da1d081112e65f822",
+          "69907c7da1d081112e65f823",
+          "69907c7ea1d081112e65f824",
+          "69907c7ea1d081112e65f825"
+        ],
+        "dataSetIds": [],
+        "preaggregationConfig": [
+          {
+            "dataSourceId": "69907c7da1d081112e65f821",
+            "interval": 10,
+            "timeUnit": "minutes"
+          },
+          {
+            "dataSourceId": "69907c7da1d081112e65f822",
+            "interval": 10,
+            "timeUnit": "seconds"
+          },
+          {
+            "dataSourceId": "69907c7da1d081112e65f823",
+            "interval": 1,
+            "timeUnit": "hours"
+          },
+          {
+            "dataSourceId": "69907c7ea1d081112e65f824",
+            "interval": 1,
+            "timeUnit": "seconds"
+          },
+          {
+            "dataSourceId": "69907c7ea1d081112e65f825",
+            "interval": 1,
+            "timeUnit": "minutes"
+          }
+        ],
+        "useAggregation": false,
+        "aggregationFunction": "none",
+        "aggregationInterval": 1,
+        "aggregationTimeUnit": "seconds",
+        "createdAt": "2026-02-14T14:00:25.953Z",
+        "updatedAt": "2026-02-14T15:09:27.388Z",
+        "createdBy": "697908d34fff37e1e81b40f8",
+        "tagIds": [
+          "6990895d220c29a3fe30b952",
+          "69908d3e79ecf2e510c96779",
+          "6990896f220c29a3fe30b954",
+          "6990896a220c29a3fe30b953"
+        ]
+      }
+    ],
+    "tags": [
+      {
+        "_id": "6990892a220c29a3fe30b950",
+        "name": "Particle Flux",
+        "createdAt": "2026-02-14T14:39:38.538Z"
+      },
+      {
+        "_id": "69908951220c29a3fe30b951",
+        "name": "10 minutes",
+        "createdAt": "2026-02-14T14:40:17.458Z"
+      },
+      {
+        "_id": "6990895d220c29a3fe30b952",
+        "name": "Arctica",
+        "createdAt": "2026-02-14T14:40:29.883Z"
+      },
+      {
+        "_id": "6990896a220c29a3fe30b953",
+        "name": "SKIF/SER",
+        "createdAt": "2026-02-14T14:40:42.443Z"
+      },
+      {
+        "_id": "6990896f220c29a3fe30b954",
+        "name": "HRZ",
+        "createdAt": "2026-02-14T14:40:47.558Z"
+      },
+      {
+        "_id": "6990898a220c29a3fe30b955",
+        "name": "10 second",
+        "createdAt": "2026-02-14T14:41:14.972Z"
+      },
+      {
+        "_id": "69908cc979ecf2e510c96776",
+        "name": "1 hour",
+        "createdAt": "2026-02-14T14:55:05.738Z"
+      },
+      {
+        "_id": "69908cdf79ecf2e510c96777",
+        "name": "1 minutes",
+        "createdAt": "2026-02-14T14:55:27.252Z"
+      },
+      {
+        "_id": "69908cfc79ecf2e510c96778",
+        "name": "1 second",
+        "createdAt": "2026-02-14T14:55:56.318Z"
+      },
+      {
+        "_id": "69908d3e79ecf2e510c96779",
+        "name": "Count Rate",
+        "createdAt": "2026-02-14T14:57:02.963Z"
+      },
+      {
+        "_id": "69908df679ecf2e510c9677a",
+        "name": "Ground Measurements",
+        "createdAt": "2026-02-14T15:00:06.093Z"
+      },
+      {
+        "_id": "69908e1079ecf2e510c9677b",
+        "name": "3 hour",
+        "createdAt": "2026-02-14T15:00:32.847Z"
+      },
+      {
+        "_id": "69908e3379ecf2e510c9677c",
+        "name": "Meteor",
+        "createdAt": "2026-02-14T15:01:07.307Z"
+      },
+      {
+        "_id": "69908e3879ecf2e510c9677d",
+        "name": "M2.4",
+        "createdAt": "2026-02-14T15:01:12.946Z"
+      },
+      {
+        "_id": "69908e4879ecf2e510c9677e",
+        "name": "Orbit",
+        "createdAt": "2026-02-14T15:01:28.596Z"
+      },
+      {
+        "_id": "69908eec79ecf2e510c9677f",
+        "name": "ACE",
+        "createdAt": "2026-02-14T15:04:12.701Z"
+      },
+      {
+        "_id": "69908efc79ecf2e510c96780",
+        "name": "Magnetic Field",
+        "createdAt": "2026-02-14T15:04:28.866Z"
+      },
+      {
+        "_id": "69908f4579ecf2e510c96781",
+        "name": "SWEPAM",
+        "createdAt": "2026-02-14T15:05:41.589Z"
+      },
+      {
+        "_id": "69908f7c79ecf2e510c96782",
+        "name": "Index",
+        "createdAt": "2026-02-14T15:06:36.962Z"
+      }
+    ]
+  }
+}

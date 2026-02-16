@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { DataSource } from '@/types/data-source';
 import { DataSet } from '@/types/data-set';
 import Input from '@/components/ui/Input';
@@ -16,6 +17,8 @@ interface DataSetSelectionPanelProps<T extends DataSource | DataSet> {
   disabled?: boolean;
   getDisplayName: (item: T) => string;
   getDescription: (item: T) => string | undefined;
+  /** Опциональный бейдж справа от строки (например, кол-во дата-сетов для источника) */
+  getBadge?: (item: T) => ReactNode;
 }
 
 export default function DataSetSelectionPanel<T extends DataSource | DataSet>({
@@ -30,6 +33,7 @@ export default function DataSetSelectionPanel<T extends DataSource | DataSet>({
   disabled,
   getDisplayName,
   getDescription,
+  getBadge,
 }: DataSetSelectionPanelProps<T>) {
   const filteredItems = items.filter(item => {
     const displayName = getDisplayName(item).toLowerCase();
@@ -86,7 +90,7 @@ export default function DataSetSelectionPanel<T extends DataSource | DataSet>({
                         disabled={isDisabled}
                         className="mt-1 mr-3"
                       />
-                      <div className="flex-1">
+                      <div className="flex-1 min-w-0">
                         <div className="font-medium text-[var(--color-foreground)]">
                           {getDisplayName(item)}
                         </div>
@@ -96,6 +100,7 @@ export default function DataSetSelectionPanel<T extends DataSource | DataSet>({
                           </div>
                         )}
                       </div>
+                      {getBadge?.(item)}
                     </label>
                   </div>
                 );

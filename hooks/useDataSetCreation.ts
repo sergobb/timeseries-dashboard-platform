@@ -1,8 +1,10 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import type { DataSource } from '@/types/data-source';
 import type { DataSet } from '@/types/data-set';
 import type { DataSetType, TimeUnit, AggregationFunction, PreaggregationConfig } from '@/types/data-set';
+import { useTags } from '@/hooks/useTags';
+import { isResolutionTagName } from '@/lib/data-set-tags';
 
 export interface UseDataSetCreationReturn {
   dataSources: DataSource[];
@@ -61,6 +63,8 @@ export function useDataSetCreation(options?: { enabled?: boolean }): UseDataSetC
   const [aggregationFunction, setAggregationFunction] = useState<AggregationFunction>('none');
   const [aggregationInterval, setAggregationInterval] = useState(1);
   const [aggregationTimeUnit, setAggregationTimeUnit] = useState<TimeUnit>('seconds');
+  const hasInitializedTagsFromSources = useRef(false);
+  const { tags: allTags } = useTags();
 
   const loadData = useCallback(async () => {
     try {
@@ -100,6 +104,24 @@ export function useDataSetCreation(options?: { enabled?: boolean }): UseDataSetC
   useEffect(() => {
     if (selectedDataSets.size > 0) setDataSetType('combined');
   }, [selectedDataSets.size]);
+
+  useEffect(() => {
+    if (hasInitializedTagsFromSources.current || (selectedDataSources.size === 0 && selectedDataSets.size === 0) || allTags.length === 0) return;
+    const ids = new Set<string>();
+    const collect = (id: string) => {
+      const name = allTags.find((t) => t.id === id)?.name ?? '';
+      if (!isResolutionTagName(name)) ids.add(id);
+    };
+    dataSources.filter((ds) => selectedDataSources.has(ds.id)).forEach((ds) => (ds.tagIds || []).forEach(collect));
+    dataSets.filter((ds) => selectedDataSets.has(ds.id)).forEach((ds) => (ds.tagIds || []).forEach(collect));
+    if (ids.size > 0) {
+      setTagIds(Array.from(ids));
+      hasInitializedTagsFromSources.current = true;
+    }
+  }, [dataSources, dataSets, selectedDataSources, selectedDataSets, allTags]);
+
+  const selectedSourcesList = dataSources.filter((ds) => selectedDataSources.has(ds.id));
+  const selectedSetsList = dataSets.filter((ds) => selectedDataSets.has(ds.id));
 
   useEffect(() => {
     if (dataSetType === 'preaggregated' && selectedDataSources.size > 0) {
@@ -230,8 +252,6 @@ export function useDataSetCreation(options?: { enabled?: boolean }): UseDataSetC
     router,
   ]);
 
-  const selectedSourcesList = dataSources.filter((ds) => selectedDataSources.has(ds.id));
-  const selectedSetsList = dataSets.filter((ds) => selectedDataSets.has(ds.id));
   const totalSelected = selectedDataSources.size + selectedDataSets.size;
   const showTypeSelection = totalSelected > 1 && selectedDataSets.size === 0;
   const showAggregationSection = totalSelected >= 1 && (totalSelected === 1 || dataSetType === 'combined');

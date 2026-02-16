@@ -94,9 +94,12 @@ export function useDataSources(): UseDataSourcesReturn {
   });
 
   useEffect(() => {
-    const savedState = getLocalStorage<{ filterText?: string }>(STORAGE_KEY);
+    const savedState = getLocalStorage<{ filterText?: string; filterTagIds?: string[] }>(STORAGE_KEY);
     if (savedState?.filterText !== undefined) {
       setFilterText(savedState.filterText);
+    }
+    if (Array.isArray(savedState?.filterTagIds)) {
+      setFilterTagIds(savedState.filterTagIds);
     }
     setRestoring(false);
     load();
@@ -104,9 +107,9 @@ export function useDataSources(): UseDataSourcesReturn {
 
   useEffect(() => {
     if (!restoring) {
-      setLocalStorage(STORAGE_KEY, { filterText });
+      setLocalStorage(STORAGE_KEY, { filterText, filterTagIds });
     }
-  }, [filterText, restoring]);
+  }, [filterText, filterTagIds, restoring]);
 
   const onEdit = useCallback((dataSourceId: string) => router.push(`/data-sources/${dataSourceId}/edit`), [router]);
 

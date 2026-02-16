@@ -86,9 +86,12 @@ export function useDashboards(): UseDashboardsReturn {
   });
 
   useEffect(() => {
-    const savedState = getLocalStorage<{ filterText?: string }>(STORAGE_KEY);
+    const savedState = getLocalStorage<{ filterText?: string; filterTagIds?: string[] }>(STORAGE_KEY);
     if (savedState?.filterText !== undefined) {
       setFilterText(savedState.filterText);
+    }
+    if (Array.isArray(savedState?.filterTagIds)) {
+      setFilterTagIds(savedState.filterTagIds);
     }
     setRestoring(false);
     load();
@@ -96,9 +99,9 @@ export function useDashboards(): UseDashboardsReturn {
 
   useEffect(() => {
     if (!restoring) {
-      setLocalStorage(STORAGE_KEY, { filterText });
+      setLocalStorage(STORAGE_KEY, { filterText, filterTagIds });
     }
-  }, [filterText, restoring]);
+  }, [filterText, filterTagIds, restoring]);
 
   return {
     dashboards,

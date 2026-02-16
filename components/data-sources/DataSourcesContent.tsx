@@ -26,6 +26,8 @@ interface DataSourcesContentProps {
   onFilterChange: (text: string) => void;
   onEdit: (dataSourceId: string) => void;
   onDelete: (dataSourceId: string, tableName: string) => void;
+  /** Количество дата-сетов, в которых используется источник (id -> count) */
+  dataSetCountBySourceId?: Record<string, number>;
 }
 
 export default function DataSourcesContent({
@@ -40,6 +42,7 @@ export default function DataSourcesContent({
   onFilterChange,
   onEdit,
   onDelete,
+  dataSetCountBySourceId = {},
 }: DataSourcesContentProps) {
   const router = useRouter();
   return (
@@ -80,11 +83,20 @@ export default function DataSourcesContent({
           />
         ) : (
           <DataSourceGrid>
-            {filteredDataSources.map((dataSource) => (
+            {filteredDataSources.map((dataSource) => {
+              const dataSetCount = dataSetCountBySourceId[dataSource.id] ?? 0;
+              return (
               <DataSourceCard key={dataSource.id}>
-                <Text className="font-display text-xl font-semibold mb-2 block">
-                  {dataSource.schemaName ? `${dataSource.schemaName}.` : ''}{dataSource.tableName}
-                </Text>
+                <div className="flex items-start justify-between gap-2 mb-2">
+                  <Text className="font-display text-xl font-semibold block">
+                    {dataSource.schemaName ? `${dataSource.schemaName}.` : ''}{dataSource.tableName}
+                  </Text>
+                  {dataSetCount > 0 && (
+                    <Badge variant="info" className="shrink-0">
+                      {dataSetCount} data set{dataSetCount !== 1 ? 's' : ''}
+                    </Badge>
+                  )}
+                </div>
                 {dataSource.tagIds && dataSource.tagIds.length > 0 && (
                   <div className="flex flex-wrap gap-1 mb-3">
                     {tags
@@ -119,7 +131,8 @@ export default function DataSourcesContent({
                   />
                 </Flex>
               </DataSourceCard>
-            ))}
+            );
+            })}
           </DataSourceGrid>
         )}
       </div>

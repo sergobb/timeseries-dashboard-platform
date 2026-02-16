@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { DataSource } from '@/types/data-source';
 import { DataSet } from '@/types/data-set';
+import { getLocalStorage, setLocalStorage } from '@/lib/localStorage';
 
 interface UseDataSetSelectionOptions {
   /** Only allow selecting data sources (no Data Sets panel). Skips fetching data sets. */
@@ -10,11 +11,14 @@ interface UseDataSetSelectionOptions {
 
 interface UseDataSetSelectionReturn {
   dataSources: DataSource[];
+  dataSourcesFilteredByTags: DataSource[];
   dataSets: DataSet[];
   selectedDataSources: Set<string>;
   selectedDataSets: Set<string>;
   dataSourceFilter: string;
   dataSetFilter: string;
+  filterTagIds: string[];
+  toggleFilterTag: (tagId: string) => void;
   loading: boolean;
   error: string | null;
   setDataSourceFilter: (value: string) => void;
@@ -35,6 +39,14 @@ export function useDataSetSelection(options: UseDataSetSelectionOptions = {}): U
   const [selectedDataSets, setSelectedDataSets] = useState<Set<string>>(new Set());
   const [dataSourceFilter, setDataSourceFilter] = useState('');
   const [dataSetFilter, setDataSetFilter] = useState('');
+  const [filterTagIds, setFilterTagIds] = useState<string[]>([]);
+  const [restoring, setRestoring] = useState(true);
+
+  const toggleFilterTag = useCallback((tagId: string) => {
+    setFilterTagIds((prev) =>
+      prev.includes(tagId) ? prev.filter((id) => id !== tagId) : [...prev, tagId]
+    );
+  }, []);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -64,6 +76,28 @@ export function useDataSetSelection(options: UseDataSetSelectionOptions = {}): U
     load();
   }, [load]);
 
+  useEffect(() => {
+    const saved = getLocalStorage<{ dataSourceFilter?: string; filterTagIds?: string[] }>(
+      'data-set-creation-selection-state'
+    );
+    if (saved?.dataSourceFilter !== undefined) {
+      setDataSourceFilter(saved.dataSourceFilter);
+    }
+    if (Array.isArray(saved?.filterTagIds)) {
+      setFilterTagIds(saved.filterTagIds);
+    }
+    setRestoring(false);
+  }, []);
+
+  useEffect(() => {
+    if (!restoring) {
+      setLocalStorage('data-set-creation-selection-state', {
+        dataSourceFilter,
+        filterTagIds,
+      });
+    }
+  }, [dataSourceFilter, filterTagIds, restoring]);
+
   const toggleDataSource = useCallback((id: string) => {
     setSelectedDataSources(prev => {
       const newSet = new Set(prev);
@@ -91,12 +125,21 @@ export function useDataSetSelection(options: UseDataSetSelectionOptions = {}): U
   }, []);
 
   const selectAllDataSources = useCallback(() => {
-    const filtered = dataSources.filter(ds => {
-      const displayName = ds.schemaName 
-        ? `${ds.schemaName}.${ds.tableName}` 
+    let filtered = dataSources;
+    if (filterTagIds.length > 0) {
+      filtered = filtered.filter((ds) =>
+        filterTagIds.every((id) => (ds.tagIds || []).includes(id))
+      );
+    }
+    filtered = filtered.filter((ds) => {
+      const displayName = ds.schemaName
+        ? `${ds.schemaName}.${ds.tableName}`
         : ds.tableName;
-      return displayName.toLowerCase().includes(dataSourceFilter.toLowerCase()) ||
-             (ds.description && ds.description.toLowerCase().includes(dataSourceFilter.toLowerCase()));
+      return (
+        displayName.toLowerCase().includes(dataSourceFilter.toLowerCase()) ||
+        (ds.description &&
+          ds.description.toLowerCase().includes(dataSourceFilter.toLowerCase()))
+      );
     });
 
     const allSelected = filtered.length > 0 && 
@@ -116,7 +159,7 @@ export function useDataSetSelection(options: UseDataSetSelectionOptions = {}): U
         return newSet;
       });
     }
-  }, [dataSources, dataSourceFilter, selectedDataSources]);
+  }, [dataSources, dataSourceFilter, filterTagIds, selectedDataSources]);
 
   const selectAllDataSets = useCallback(() => {
     const filtered = dataSets.filter(ds => 
@@ -153,13 +196,23 @@ export function useDataSetSelection(options: UseDataSetSelectionOptions = {}): U
     router.push(`/data-sets/new/edit?${params.toString()}`);
   }, [selectedDataSources, selectedDataSets, router]);
 
+  const dataSourcesFilteredByTags =
+    filterTagIds.length === 0
+      ? dataSources
+      : dataSources.filter((ds) =>
+          filterTagIds.every((id) => (ds.tagIds || []).includes(id))
+        );
+
   return {
     dataSources,
+    dataSourcesFilteredByTags,
     dataSets,
     selectedDataSources,
     selectedDataSets,
     dataSourceFilter,
     dataSetFilter,
+    filterTagIds,
+    toggleFilterTag,
     loading,
     error,
     setDataSourceFilter,
