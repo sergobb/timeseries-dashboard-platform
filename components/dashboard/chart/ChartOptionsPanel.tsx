@@ -14,8 +14,12 @@ import YAxisOptionsComponent from '@/components/dashboard/chart/YAxisOptions';
 import SeriesForm from '@/components/dashboard/chart/SeriesForm';
 import ChartOptionsAccordion from '@/components/ui/ChartOptionsAccordion';
 import AccordionElement from '@/components/ui/AccordionElement';
+import TagFilter from '@/components/common/TagFilter';
+import Input from '@/components/ui/Input';
+import Box from '@/components/ui/Box';
 import { ChartOptions, XAxisOptions, YAxis } from '@/types/chart';
 import { DataSet } from '@/types/data-set';
+import { Tag } from '@/types/tag';
 import { Series } from '@/hooks/useChartBuilder';
 
 interface ChartOptionsPanelProps {
@@ -30,6 +34,10 @@ interface ChartOptionsPanelProps {
   yAxes: YAxis[];
   dataSetFilter: string;
   filteredDataSets: DataSet[];
+  tags: Tag[];
+  tagsLoading: boolean;
+  filterTagIds: string[];
+  onFilterTagToggle: (tagId: string) => void;
   loadingSeriesById: Record<string, boolean | undefined>;
   onDataSetFilterChange: (value: string) => void;
   onAddSeries: () => void;
@@ -54,6 +62,10 @@ export default function ChartOptionsPanel({
   yAxes,
   dataSetFilter,
   filteredDataSets,
+  tags,
+  tagsLoading,
+  filterTagIds,
+  onFilterTagToggle,
   loadingSeriesById,
   onDataSetFilterChange,
   onAddSeries,
@@ -128,6 +140,30 @@ export default function ChartOptionsPanel({
               </Button>
             </div>
 
+            <div>
+              <Label htmlFor="chart-series-dataset-filter" className="mb-1 text-xs">
+                Filter Data Sets
+              </Label>
+              <Input
+                id="chart-series-dataset-filter"
+                type="text"
+                placeholder="Filter by description..."
+                value={dataSetFilter}
+                onChange={(e) => onDataSetFilterChange(e.target.value)}
+                className="mb-2"
+              />
+              {tags.length > 0 && (
+                <Box className="mb-2">
+                  <TagFilter
+                    tags={tags}
+                    loading={tagsLoading}
+                    selectedTagIds={filterTagIds}
+                    onToggleTag={onFilterTagToggle}
+                  />
+                </Box>
+              )}
+            </div>
+
             {series.length === 0 ? (
               <Text variant="muted">
                 No series added yet. Click &quot;Add Series&quot; to get started.
@@ -140,10 +176,8 @@ export default function ChartOptionsPanel({
                     series={s}
                     index={index}
                     yAxes={yAxes}
-                    dataSetFilter={dataSetFilter}
                     filteredDataSets={filteredDataSets}
                     loadingSeries={Boolean(loadingSeriesById[s.id])}
-                    onDataSetFilterChange={onDataSetFilterChange}
                     onDataSetChange={onDataSetChange}
                     onUpdateSeries={onUpdateSeries}
                     onRemoveSeries={onRemoveSeries}
@@ -290,6 +324,10 @@ export default function ChartOptionsPanel({
     yAxes,
     dataSetFilter,
     filteredDataSets,
+    tags,
+    tagsLoading,
+    filterTagIds,
+    onFilterTagToggle,
     loadingSeriesById,
     onDataSetFilterChange,
     onAddSeries,

@@ -9,6 +9,7 @@ import { getInitialDateRange } from '@/lib/date-ranges';
 import { useChartBuilder, type Series } from '@/hooks/useChartBuilder';
 import { useChartData } from '@/hooks/useChartData';
 import { useChartLoader } from '@/hooks/useChartLoader';
+import { useTags } from '@/hooks/useTags';
 import { AccordionContainerRef } from '@/components/ui/AccordionContainer';
 import ChartBuilderHeader from './ChartBuilderHeader';
 import ChartBuilderStepper from './ChartBuilderStepper';
@@ -28,10 +29,13 @@ export default function ChartBuilder({ dashboardId, chartId }: ChartBuilderProps
   const lastSeriesIdRef = useRef<string | null>(null);
 
   const builder = useChartBuilder();
+  const { tags, loading: tagsLoading } = useTags();
   const {
     setDataSets,
     dataSetFilter,
     setDataSetFilter,
+    filterTagIds,
+    toggleFilterTag,
     filteredDataSets,
     series,
     setSeries,
@@ -133,6 +137,10 @@ export default function ChartBuilder({ dashboardId, chartId }: ChartBuilderProps
         yAxes={yAxes}
         dataSetFilter={dataSetFilter}
         filteredDataSets={filteredDataSets}
+        tags={tags}
+        tagsLoading={tagsLoading}
+        filterTagIds={filterTagIds}
+        onFilterTagToggle={toggleFilterTag}
         loadingSeriesById={chartData.loadingSeries}
         dateRange={dateRange}
         isDark={resolvedTheme === 'dark'}

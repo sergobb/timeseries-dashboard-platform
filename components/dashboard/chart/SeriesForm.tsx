@@ -18,10 +18,8 @@ interface SeriesFormProps {
   series: Series;
   index: number;
   yAxes: YAxis[];
-  dataSetFilter: string;
   filteredDataSets: DataSet[];
   loadingSeries: boolean;
-  onDataSetFilterChange: (value: string) => void;
   onDataSetChange: (seriesId: string, dataSetId: string) => void;
   onUpdateSeries: (seriesId: string, updates: Partial<Series>) => void;
   onRemoveSeries: (seriesId: string) => void;
@@ -32,10 +30,8 @@ export default function SeriesForm({
   series,
   index,
   yAxes,
-  dataSetFilter,
   filteredDataSets,
   loadingSeries,
-  onDataSetFilterChange,
   onDataSetChange,
   onUpdateSeries,
   onRemoveSeries,
@@ -59,19 +55,8 @@ export default function SeriesForm({
         label: 'Data',
         content: (
           <div className="space-y-3">
-            {/* Выбор дата сета с фильтром */}
+            {/* Выбор дата сета (фильтр по описанию и тегам — в панели Series выше) */}
             <div>
-              <Label htmlFor={`series-dataset-filter-${series.id}`} className="mb-1 text-xs">
-                Filter Data Sets
-              </Label>
-              <Input
-                id={`series-dataset-filter-${series.id}`}
-                type="text"
-                placeholder="Filter by description..."
-                value={dataSetFilter}
-                onChange={(e) => onDataSetFilterChange(e.target.value)}
-                className="mb-2"
-              />
               <Label htmlFor={`series-dataset-${series.id}`} className="mb-1 text-xs">
                 Data Set
               </Label>
@@ -257,12 +242,10 @@ export default function SeriesForm({
       },
     ] as const;
   }, [
-    dataSetFilter,
     filteredDataSets,
     loadingSeries,
     onAddYAxis,
     onDataSetChange,
-    onDataSetFilterChange,
     onUpdateSeries,
     series.chartType,
     series.dataSetId,

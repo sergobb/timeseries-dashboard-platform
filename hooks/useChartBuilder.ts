@@ -26,6 +26,7 @@ export interface Series {
 export function useChartBuilder() {
   const [dataSets, setDataSets] = useState<DataSet[]>([]);
   const [dataSetFilter, setDataSetFilter] = useState<string>('');
+  const [filterTagIds, setFilterTagIds] = useState<string[]>([]);
   const [series, setSeries] = useState<Series[]>([]);
   const [yAxes, setYAxes] = useState<YAxis[]>([]);
   const [chartOptions, setChartOptions] = useState<ChartOptions>({});
@@ -34,7 +35,17 @@ export function useChartBuilder() {
     getInitialDateRange('Last 7 Days')
   );
 
+  const toggleFilterTag = useCallback((tagId: string) => {
+    setFilterTagIds((prev) =>
+      prev.includes(tagId) ? prev.filter((id) => id !== tagId) : [...prev, tagId]
+    );
+  }, []);
+
   const filteredDataSets = dataSets.filter((ds) => {
+    if (filterTagIds.length > 0) {
+      const itemTagIds = ds.tagIds || [];
+      if (!filterTagIds.every((id) => itemTagIds.includes(id))) return false;
+    }
     if (!dataSetFilter.trim()) return true;
     const searchText = dataSetFilter.toLowerCase();
     const description = (ds.description || '').toLowerCase();
@@ -142,6 +153,8 @@ export function useChartBuilder() {
     setDataSets,
     dataSetFilter,
     setDataSetFilter,
+    filterTagIds,
+    toggleFilterTag,
     filteredDataSets,
     series,
     setSeries,

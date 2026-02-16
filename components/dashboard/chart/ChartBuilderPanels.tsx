@@ -2,6 +2,7 @@
 
 import type { ChartOptions, XAxisOptions, YAxis } from '@/types/chart';
 import type { DataSet } from '@/types/data-set';
+import type { Tag } from '@/types/tag';
 import type { Series } from '@/hooks/useChartBuilder';
 import ChartBuilderLayout from './ChartBuilderLayout';
 import ChartOptionsPanel from './ChartOptionsPanel';
@@ -16,6 +17,10 @@ interface ChartBuilderPanelsProps {
   yAxes: YAxis[];
   dataSetFilter: string;
   filteredDataSets: DataSet[];
+  tags: Tag[];
+  tagsLoading: boolean;
+  filterTagIds: string[];
+  onFilterTagToggle: (tagId: string) => void;
   loadingSeriesById: Record<string, boolean>;
   dateRange: { from: Date; to: Date };
   isDark: boolean;
@@ -41,6 +46,10 @@ export default function ChartBuilderPanels({
   yAxes,
   dataSetFilter,
   filteredDataSets,
+  tags,
+  tagsLoading,
+  filterTagIds,
+  onFilterTagToggle,
   loadingSeriesById,
   dateRange,
   isDark,
@@ -70,6 +79,10 @@ export default function ChartBuilderPanels({
           yAxes={yAxes}
           dataSetFilter={dataSetFilter}
           filteredDataSets={filteredDataSets}
+          tags={tags}
+          tagsLoading={tagsLoading}
+          filterTagIds={filterTagIds}
+          onFilterTagToggle={onFilterTagToggle}
           loadingSeriesById={loadingSeriesById}
           onDataSetFilterChange={onDataSetFilterChange}
           onAddSeries={onAddSeries}
