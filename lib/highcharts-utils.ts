@@ -425,7 +425,7 @@ export function getThemeColors(themeOrIsDark: ThemeName | boolean): ThemeColors 
   if (typeof window === 'undefined') {
     return isDark
       ? {
-          backgroundColor: '#18181b',
+          backgroundColor: '#222225',
           textColor: '#f4f4f5',
           textColorSecondary: '#d4d4d8',
           textColorMuted: '#a1a1aa',
@@ -458,7 +458,7 @@ export function getThemeColors(themeOrIsDark: ThemeName | boolean): ThemeColors 
           .filter(Boolean);
 
   return {
-    backgroundColor: getVar('--surface', isDark ? '#18181b' : '#ffffff'),
+    backgroundColor: getVar('--surface', isDark ? '#222225' : '#ffffff'),
     textColor: getVar('--foreground', isDark ? '#f4f4f5' : '#171717'),
     textColorSecondary: getVar('--muted-foreground', isDark ? '#d4d4d8' : '#666666'),
     textColorMuted: getVar('--muted-foreground', isDark ? '#a1a1aa' : '#999999'),
