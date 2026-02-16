@@ -6,9 +6,9 @@ import Select from '@/components/ui/Select';
 import Checkbox from '@/components/ui/Checkbox';
 import { PRESET_RANGES, CUSTOM_RANGE_LABEL, getInitialDateRange } from '@/lib/date-ranges';
 import { Group } from '@/types/group';
-import DashboardGroupsSelector from './DashboardGroupsSelector';
 import DateTimeRangePicker from '@/components/ui/DateTimeRangePicker';
 import TagSelector from '@/components/common/TagSelector';
+import GroupSelector from '@/components/common/GroupSelector';
 
 interface DashboardFormProps {
   title: string;
@@ -81,6 +81,15 @@ export default function DashboardForm({
         />
       </FormField>
 
+      <TagSelector
+        tags={tags}
+        loading={tagsLoading}
+        selectedTagIds={selectedTagIds}
+        onAddTag={onAddTag}
+        onRemoveTag={onRemoveTag}
+        onCreateTag={onCreateTag}
+      />
+
       <FormField label="Access">
         <label className="flex items-center gap-2 cursor-pointer">
           <Checkbox
@@ -91,24 +100,14 @@ export default function DashboardForm({
         </label>
       </FormField>
 
-      <TagSelector
-        tags={tags}
-        loading={tagsLoading}
-        selectedTagIds={selectedTagIds}
-        onAddTag={onAddTag}
-        onRemoveTag={onRemoveTag}
-        onCreateTag={onCreateTag}
+      <GroupSelector
+        groups={groups}
+        loading={groupsLoading}
+        selectedGroupIds={selectedGroupIds}
+        onAddGroup={onGroupToggle}
+        onRemoveGroup={onGroupToggle}
+        error={groupsError}
       />
-
-      <FormField label="Shared with groups">
-        <DashboardGroupsSelector
-          groups={groups}
-          selectedGroupIds={selectedGroupIds}
-          loading={groupsLoading}
-          error={groupsError}
-          onToggle={onGroupToggle}
-        />
-      </FormField>
 
       <FormField label="Default Date Range">
         <Select
