@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useRequireAuthRedirect } from '@/hooks/useRequireAuthRedirect';
 import { useDataSets } from '@/hooks/useDataSets';
 import { useTags } from '@/hooks/useTags';
@@ -10,9 +11,9 @@ import DataSetsHeader from '@/components/data-sets/DataSetsHeader';
 import DataSetsContent from '@/components/data-sets/DataSetsContent';
 
 export default function DataSetsPage() {
+  const router = useRouter();
   const { status, data } = useRequireAuthRedirect();
-  const roles = data?.user?.roles ?? [];
-  const canViewMetadata = roles.includes('metadata_editor');
+  const canViewMetadata = (data?.user?.roles ?? []).includes('metadata_editor');
   const {
     dataSets,
     loading,
@@ -59,7 +60,9 @@ export default function DataSetsPage() {
         onFilterTagToggle={toggleFilterTag}
         error={error}
         onFilterChange={setFilterText}
+        onEdit={(id) => router.push(`/data-sets/${id}/edit`)}
         onDelete={remove}
+        onCreateNew={() => router.push('/data-sets/new')}
       />
     </PageContainer>
   );

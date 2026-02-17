@@ -1,7 +1,6 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import ErrorMessage from '@/components/ErrorMessage';
 import Button from '@/components/ui/Button';
 import Flex from '@/components/ui/Flex';
@@ -12,139 +11,56 @@ import Tabs, { type TabsItem } from '@/components/ui/Tabs';
 import DashboardForm from './DashboardForm';
 import DashboardChartsSection from './DashboardChartsSection';
 import DashboardLayoutSelector from './DashboardLayoutSelector';
-import { useDashboard } from '@/hooks/useDashboard';
-import { useDashboardCharts } from '@/hooks/useDashboardCharts';
-import { useDashboardGroups } from '@/hooks/useDashboardGroups';
-import { useTags } from '@/hooks/useTags';
+import { useDashboardBuilder } from '@/hooks/useDashboardBuilder';
 
 interface DashboardBuilderProps {
   dashboardId?: string;
 }
 
 export default function DashboardBuilder({ dashboardId }: DashboardBuilderProps) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = useState<'base' | 'charts'>(() =>
-    searchParams.get('tab') === 'charts' ? 'charts' : 'base'
-  );
-  const {
-    dashboard,
-    title,
-    description,
-    isPublic,
-    defaultDateRange,
-    customDateRange,
-    groupIds,
-    showDateRangePicker,
-    layout,
-    setTitle,
-    setDescription,
-    setIsPublic,
-    setDefaultDateRange,
-    setCustomDateRange,
-    toggleGroupId,
-    addTag,
-    removeTag,
-    tagIds,
-    setShowDateRangePicker,
-    setLayout,
-    saveDashboard,
-    reloadDashboard,
-    loading,
-    error: dashboardError,
-  } = useDashboard(dashboardId);
+  const builder = useDashboardBuilder(dashboardId);
 
-  const { tags, loading: tagsLoading, createTag } = useTags();
-
-  const {
-    charts,
-    loadingCharts,
-    removeChart,
-    reorderCharts,
-    error: chartsError,
-  } = useDashboardCharts(dashboardId, dashboard?.chartIds);
-
-  const {
-    groups,
-    loading: groupsLoading,
-    error: groupsError,
-  } = useDashboardGroups();
-
-  const handleCancel = () => {
-    router.push('/dashboards');
-  };
-
-  const handleRemoveChart = useCallback(async (chartId: string) => {
-    try {
-      await removeChart(chartId);
-      await reloadDashboard();
-    } catch {
-      // Error уже обработан в хуке
-    }
-  }, [reloadDashboard, removeChart]);
-
-  const handleReorderCharts = useCallback(async (nextChartIds: string[]) => {
-    try {
-      await reorderCharts(nextChartIds);
-      await reloadDashboard();
-    } catch {
-      // Error уже обработан в хуке
-    }
-  }, [reloadDashboard, reorderCharts]);
-
-  const handleChartsPerRowChange = useCallback((next: number) => {
-    setLayout({ chartsPerRow: next });
-  }, [setLayout]);
-
-  const error = dashboardError || chartsError;
-
-  const chartCount = charts.length;
   const tabs = useMemo<TabsItem[]>(() => {
     const canManageCharts = Boolean(dashboardId);
-
     const baseTab: TabsItem = {
-        value: 'base',
-        label: 'General',
-        content: (
-          <Box className="space-y-6">
-            <DashboardForm
-              title={title}
-              description={description}
-              isPublic={isPublic}
-              defaultDateRange={defaultDateRange}
-              customDateRange={customDateRange}
-              groups={groups}
-              selectedGroupIds={groupIds}
-              groupsLoading={groupsLoading}
-              groupsError={groupsError}
-              tags={tags}
-              tagsLoading={tagsLoading}
-              selectedTagIds={tagIds}
-              onTitleChange={setTitle}
-              onDescriptionChange={setDescription}
-              onIsPublicChange={setIsPublic}
-              onDefaultDateRangeChange={setDefaultDateRange}
-              onCustomDateRangeChange={setCustomDateRange}
-              onGroupToggle={toggleGroupId}
-              onAddTag={addTag}
-              onRemoveTag={removeTag}
-              onCreateTag={createTag}
-            />
-            <DashboardLayoutSelector
-              chartsPerRow={layout.chartsPerRow}
-              showDateRangePicker={showDateRangePicker}
-              chartCount={chartCount}
-              onChartsPerRowChange={handleChartsPerRowChange}
-              onShowDateRangePickerChange={setShowDateRangePicker}
-            />
-          </Box>
-        ),
+      value: 'base',
+      label: 'General',
+      content: (
+        <Box className="space-y-6">
+          <DashboardForm
+            title={builder.title}
+            description={builder.description}
+            isPublic={builder.isPublic}
+            defaultDateRange={builder.defaultDateRange}
+            customDateRange={builder.customDateRange}
+            groups={builder.groups}
+            selectedGroupIds={builder.groupIds}
+            groupsLoading={builder.groupsLoading}
+            groupsError={builder.groupsError}
+            tags={builder.tags}
+            tagsLoading={builder.tagsLoading}
+            selectedTagIds={builder.tagIds}
+            onTitleChange={builder.setTitle}
+            onDescriptionChange={builder.setDescription}
+            onIsPublicChange={builder.setIsPublic}
+            onDefaultDateRangeChange={builder.setDefaultDateRange}
+            onCustomDateRangeChange={builder.setCustomDateRange}
+            onGroupToggle={builder.toggleGroupId}
+            onAddTag={builder.addTag}
+            onRemoveTag={builder.removeTag}
+            onCreateTag={builder.createTag}
+          />
+          <DashboardLayoutSelector
+            chartsPerRow={builder.layout.chartsPerRow}
+            showDateRangePicker={builder.showDateRangePicker}
+            chartCount={builder.charts.length}
+            onChartsPerRowChange={builder.handleChartsPerRowChange}
+            onShowDateRangePickerChange={builder.setShowDateRangePicker}
+          />
+        </Box>
+      ),
     };
-
-    if (!canManageCharts) {
-      return [baseTab];
-    }
-
+    if (!canManageCharts) return [baseTab];
     return [
       baseTab,
       {
@@ -153,88 +69,73 @@ export default function DashboardBuilder({ dashboardId }: DashboardBuilderProps)
         content: (
           <DashboardChartsSection
             dashboardId={dashboardId as string}
-            charts={charts}
-            loadingCharts={loadingCharts}
-            onRemoveChart={handleRemoveChart}
-            onReorderCharts={handleReorderCharts}
+            charts={builder.charts}
+            loadingCharts={builder.loadingCharts}
+            onRemoveChart={builder.handleRemoveChart}
+            onReorderCharts={builder.handleReorderCharts}
           />
         ),
       },
     ];
   }, [
-    addTag,
-    chartCount,
-    charts,
     dashboardId,
-    defaultDateRange,
-    description,
-    groupIds,
-    groups,
-    groupsError,
-    groupsLoading,
-    isPublic,
-    handleRemoveChart,
-    layout,
-    handleChartsPerRowChange,
-    loadingCharts,
-    setIsPublic,
-    setDefaultDateRange,
-    setDescription,
-    setShowDateRangePicker,
-    setTitle,
-    showDateRangePicker,
-    tags,
-    tagsLoading,
-    tagIds,
-    createTag,
-    removeTag,
-    title,
-    toggleGroupId,
+    builder.title,
+    builder.description,
+    builder.isPublic,
+    builder.defaultDateRange,
+    builder.customDateRange,
+    builder.groups,
+    builder.groupIds,
+    builder.groupsLoading,
+    builder.groupsError,
+    builder.tags,
+    builder.tagsLoading,
+    builder.tagIds,
+    builder.setTitle,
+    builder.setDescription,
+    builder.setIsPublic,
+    builder.setDefaultDateRange,
+    builder.setCustomDateRange,
+    builder.toggleGroupId,
+    builder.addTag,
+    builder.removeTag,
+    builder.createTag,
+    builder.layout.chartsPerRow,
+    builder.showDateRangePicker,
+    builder.charts,
+    builder.loadingCharts,
+    builder.handleChartsPerRowChange,
+    builder.setShowDateRangePicker,
+    builder.handleRemoveChart,
+    builder.handleReorderCharts,
   ]);
-
-  useEffect(() => {
-    if (!dashboardId) {
-      setActiveTab('base');
-      return;
-    }
-
-    const tab = searchParams.get('tab');
-    if (tab === 'charts') {
-      setActiveTab('charts');
-    } else if (tab === 'base') {
-      setActiveTab('base');
-    }
-  }, [dashboardId, searchParams]);
 
   return (
     <>
-      <PageHeader 
-        title={<PageTitle>{dashboardId ? 'Edit Dashboard' : 'Create Dashboard'}</PageTitle>}
+      <PageHeader
+        title={
+          <PageTitle>{dashboardId ? 'Edit Dashboard' : 'Create Dashboard'}</PageTitle>
+        }
         action={
           <Flex gap="2">
-            <Button
-              onClick={saveDashboard}
-              disabled={loading}
-            >
-              {loading ? 'Saving...' : (dashboardId ? 'Save' : 'Create')}
+            <Button onClick={builder.saveDashboard} disabled={builder.loading}>
+              {builder.loading ? 'Saving...' : dashboardId ? 'Save' : 'Create'}
             </Button>
             <Button
               type="button"
               variant="secondary"
-              onClick={handleCancel}
+              onClick={builder.handleCancel}
             >
               Cancel
             </Button>
           </Flex>
         }
       />
-      
       <Box className="space-y-6">
-        {error && <ErrorMessage message={error} />}
-
+        {builder.error && <ErrorMessage message={builder.error} />}
         <Tabs
-          value={activeTab}
-          onChange={(v) => setActiveTab(v as 'base' | 'charts')}
+          value={builder.activeTab}
+          onChange={(v) => builder.setActiveTab(v as 'base' | 'charts')}
           items={tabs}
         />
       </Box>

@@ -1,7 +1,6 @@
 'use client';
 
-import { useParams } from 'next/navigation';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useRequireAuthRedirect } from '@/hooks/useRequireAuthRedirect';
 import ErrorMessage from '@/components/ErrorMessage';
 import PageContainer from '@/components/PageContainer';
@@ -17,51 +16,18 @@ export default function EditDataSetPage() {
   const params = useParams();
   const dataSetId = params.id as string;
   const { status, data } = useRequireAuthRedirect();
-  const roles = data?.user?.roles ?? [];
-  const canViewMetadata = roles.includes('metadata_editor');
-  const {
-    dataSources,
-    dataSets,
-    selectedDataSources,
-    selectedDataSets,
-    tagIds,
-    description,
-    dataSetType,
-    preaggregationConfig,
-    useAggregation,
-    aggregationFunction,
-    aggregationInterval,
-    aggregationTimeUnit,
-    loading,
-    saving,
-    error,
-    setDescription,
-    setDataSetType,
-    setUseAggregation,
-    setAggregationFunction,
-    setAggregationInterval,
-    setAggregationTimeUnit,
-    removeDataSource,
-    removeDataSet,
-    updatePreaggregationConfig,
-    addTag,
-    removeTag,
-    save,
-  } = useDataSetEdit(dataSetId);
+  const canViewMetadata = (data?.user?.roles ?? []).includes('metadata_editor');
+  const edit = useDataSetEdit(dataSetId);
   const { tags, loading: tagsLoading, createTag } = useTags();
 
-  if (status === 'unauthenticated') {
-    return null;
-  }
-
-  if (status === 'loading' || loading) {
+  if (status === 'unauthenticated') return null;
+  if (status === 'loading' || edit.loading) {
     return (
       <PageContainer>
         <InfoMessage message="Loading..." size="base" />
       </PageContainer>
     );
   }
-
   if (!canViewMetadata) {
     return (
       <PageContainer>
@@ -73,48 +39,41 @@ export default function EditDataSetPage() {
     );
   }
 
-  const selectedSourcesList = dataSources.filter(ds => selectedDataSources.has(ds.id));
-  const selectedSetsList = dataSets.filter(ds => selectedDataSets.has(ds.id));
-  const totalSelected = selectedDataSources.size + selectedDataSets.size;
-  const showTypeSelection = totalSelected > 1 && selectedDataSets.size === 0;
-  const showAggregationSection = totalSelected >= 1 && (totalSelected === 1 || dataSetType === 'combined');
-
   return (
     <PageContainer className="min-h-screen" innerClassName="max-w-7xl mx-auto">
-        <PageTitle className="mb-6">Edit Data Set</PageTitle>
-        {error && <ErrorMessage message={error} className="mb-4" />}
+      <PageTitle className="mb-6">Edit Data Set</PageTitle>
+      {edit.error && <ErrorMessage message={edit.error} className="mb-4" />}
       <DataSetEditForm
-        description={description}
+        description={edit.description}
         tags={tags}
         tagsLoading={tagsLoading}
-        selectedTagIds={tagIds}
-        onAddTag={addTag}
-        onRemoveTag={removeTag}
+        selectedTagIds={edit.tagIds}
+        onAddTag={edit.addTag}
+        onRemoveTag={edit.removeTag}
         onCreateTag={createTag}
-        dataSetType={dataSetType}
-        selectedDataSources={selectedSourcesList}
-        selectedDataSets={selectedSetsList}
-        preaggregationConfig={preaggregationConfig}
-        showTypeSelection={showTypeSelection}
-        showAggregationSection={showAggregationSection}
-        useAggregation={useAggregation}
-        aggregationFunction={aggregationFunction}
-        aggregationInterval={aggregationInterval}
-        aggregationTimeUnit={aggregationTimeUnit}
-        saving={saving}
-        onDescriptionChange={setDescription}
-        onTypeChange={setDataSetType}
-        onRemoveDataSource={removeDataSource}
-        onRemoveDataSet={removeDataSet}
-        onPreaggregationConfigChange={updatePreaggregationConfig}
-        onUseAggregationChange={setUseAggregation}
-        onAggregationFunctionChange={setAggregationFunction}
-        onAggregationIntervalChange={setAggregationInterval}
-        onAggregationTimeUnitChange={setAggregationTimeUnit}
-        onSave={save}
+        dataSetType={edit.dataSetType}
+        selectedDataSources={edit.selectedSourcesList}
+        preaggregationConfig={edit.preaggregationConfig}
+        showTypeSelection={edit.showTypeSelection}
+        showAggregationSection={edit.showAggregationSection}
+        useAggregation={edit.useAggregation}
+        aggregationFunction={edit.aggregationFunction}
+        aggregationInterval={edit.aggregationInterval}
+        aggregationTimeUnit={edit.aggregationTimeUnit}
+        saving={edit.saving}
+        onDescriptionChange={edit.setDescription}
+        onTypeChange={edit.setDataSetType}
+        availableDataSources={edit.availableDataSources}
+        onAddDataSource={edit.addDataSource}
+        onRemoveDataSource={edit.removeDataSource}
+        onPreaggregationConfigChange={edit.updatePreaggregationConfig}
+        onUseAggregationChange={edit.setUseAggregation}
+        onAggregationFunctionChange={edit.setAggregationFunction}
+        onAggregationIntervalChange={edit.setAggregationInterval}
+        onAggregationTimeUnitChange={edit.setAggregationTimeUnit}
+        onSave={edit.save}
         onCancel={() => router.push('/data-sets')}
       />
     </PageContainer>
   );
 }
-

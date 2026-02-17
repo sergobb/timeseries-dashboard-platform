@@ -1,4 +1,3 @@
-import { useRouter } from 'next/navigation';
 import { DataSet } from '@/types/data-set';
 import { Tag } from '@/types/tag';
 import ErrorMessage from '@/components/ErrorMessage';
@@ -24,7 +23,9 @@ interface DataSetsContentProps {
   onFilterTagToggle: (tagId: string) => void;
   error: string | null;
   onFilterChange: (text: string) => void;
+  onEdit: (dataSetId: string) => void;
   onDelete: (dataSetId: string, description?: string) => void;
+  onCreateNew?: () => void;
 }
 
 export default function DataSetsContent({
@@ -37,10 +38,10 @@ export default function DataSetsContent({
   onFilterTagToggle,
   error,
   onFilterChange,
+  onEdit,
   onDelete,
+  onCreateNew,
 }: DataSetsContentProps) {
-  const router = useRouter();
-
   return (
     <>
       {error && <ErrorMessage message={error} className="mb-4" />}
@@ -69,7 +70,7 @@ export default function DataSetsContent({
           title="No data sets yet"
           description="Create your first data set from data sources."
           actionLabel="New Data Set"
-          onAction={() => router.push('/data-sets/new')}
+          onAction={onCreateNew}
         />
       ) : filteredDataSets.length === 0 ? (
         <EmptyState
@@ -98,7 +99,7 @@ export default function DataSetsContent({
               )}
               <Flex gap="2">
                 <IconButton
-                  onClick={() => router.push(`/data-sets/${dataSet.id}/edit`)}
+                  onClick={() => onEdit(dataSet.id)}
                   variant="success"
                   icon={<EditIcon className="w-4 h-4" />}
                   tooltip="Edit"

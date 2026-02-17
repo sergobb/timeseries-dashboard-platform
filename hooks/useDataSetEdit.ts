@@ -1,14 +1,18 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { DataSet, DataSetType, PreaggregationConfig, AggregationFunction, TimeUnit } from '@/types/data-set';
 import { DataSource } from '@/types/data-source';
+import { parsePreaggregationFromTableName } from '@/lib/preaggregation';
 
 interface UseDataSetEditReturn {
   dataSet: DataSet | null;
   dataSources: DataSource[];
-  dataSets: DataSet[];
   selectedDataSources: Set<string>;
-  selectedDataSets: Set<string>;
+  selectedSourcesList: DataSource[];
+  availableDataSources: DataSource[];
+  totalSelected: number;
+  showTypeSelection: boolean;
+  showAggregationSection: boolean;
   tagIds: string[];
   description: string;
   dataSetType: DataSetType;
@@ -26,8 +30,8 @@ interface UseDataSetEditReturn {
   setAggregationFunction: (value: AggregationFunction) => void;
   setAggregationInterval: (value: number) => void;
   setAggregationTimeUnit: (value: TimeUnit) => void;
+  addDataSource: (id: string) => void;
   removeDataSource: (id: string) => void;
-  removeDataSet: (id: string) => void;
   updatePreaggregationConfig: (dataSourceId: string, config: PreaggregationConfig) => void;
   addTag: (tagId: string) => void;
   removeTag: (tagId: string) => void;
@@ -38,9 +42,7 @@ export function useDataSetEdit(dataSetId: string): UseDataSetEditReturn {
   const router = useRouter();
   const [dataSet, setDataSet] = useState<DataSet | null>(null);
   const [dataSources, setDataSources] = useState<DataSource[]>([]);
-  const [dataSets, setDataSets] = useState<DataSet[]>([]);
   const [selectedDataSources, setSelectedDataSources] = useState<Set<string>>(new Set());
-  const [selectedDataSets, setSelectedDataSets] = useState<Set<string>>(new Set());
   const [tagIds, setTagIds] = useState<string[]>([]);
   const [description, setDescription] = useState('');
   const [dataSetType, setDataSetType] = useState<DataSetType>('combined');
@@ -57,10 +59,9 @@ export function useDataSetEdit(dataSetId: string): UseDataSetEditReturn {
     try {
       setError(null);
       
-      const [sourcesResponse, dataSetResponse, setsResponse] = await Promise.all([
+      const [sourcesResponse, dataSetResponse] = await Promise.all([
         fetch('/api/data-sources', { credentials: 'include' }),
         fetch(`/api/data-sets/${dataSetId}`, { credentials: 'include' }),
-        fetch('/api/data-sets', { credentials: 'include' }),
       ]);
 
       if (!sourcesResponse.ok) throw new Error('Failed to fetch data sources');
@@ -77,16 +78,6 @@ export function useDataSetEdit(dataSetId: string): UseDataSetEditReturn {
           ? dataSetData.dataSourceIds.filter((id: unknown): id is string => typeof id === 'string')
           : [];
         setSelectedDataSources(new Set<string>(dataSourceIds));
-
-        const dataSetIdsArray = Array.isArray(dataSetData.dataSetIds)
-          ? dataSetData.dataSetIds.filter((id: unknown): id is string => typeof id === 'string')
-          : [];
-        const dataSetIds = new Set<string>(dataSetIdsArray);
-        setSelectedDataSets(dataSetIds);
-        
-        if (dataSetIds.size > 0) {
-          setDataSetType('combined');
-        }
         
         if (dataSetData.preaggregationConfig?.length) {
           const configMap = new Map<string, PreaggregationConfig>();
@@ -110,11 +101,6 @@ export function useDataSetEdit(dataSetId: string): UseDataSetEditReturn {
       } else if (dataSetResponse.status === 404) {
         setError('Data set not found');
       }
-
-      if (setsResponse.ok) {
-        const setsData = await setsResponse.json();
-        setDataSets(setsData.filter((ds: DataSet) => ds.id !== dataSetId));
-      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load data');
     } finally {
@@ -127,20 +113,17 @@ export function useDataSetEdit(dataSetId: string): UseDataSetEditReturn {
   }, [load]);
 
   useEffect(() => {
-    if (selectedDataSets.size > 0) {
-      setDataSetType('combined');
-    }
-  }, [selectedDataSets.size]);
-
-  useEffect(() => {
     if (dataSetType === 'preaggregated' && selectedDataSources.size > 0) {
       const newConfig = new Map(preaggregationConfig);
       selectedDataSources.forEach(dataSourceId => {
         if (!newConfig.has(dataSourceId)) {
+          const ds = dataSources.find(d => d.id === dataSourceId);
+          const tableName = ds?.tableName ?? '';
+          const parsed = parsePreaggregationFromTableName(tableName);
           newConfig.set(dataSourceId, {
             dataSourceId,
-            interval: 1,
-            timeUnit: 'seconds',
+            interval: parsed?.interval ?? 1,
+            timeUnit: parsed?.timeUnit ?? 'seconds',
           });
         }
       });
@@ -153,7 +136,11 @@ export function useDataSetEdit(dataSetId: string): UseDataSetEditReturn {
     } else if (dataSetType !== 'preaggregated') {
       setPreaggregationConfig(new Map());
     }
-  }, [dataSetType, selectedDataSources]);
+  }, [dataSetType, selectedDataSources, dataSources]);
+
+  const addDataSource = useCallback((id: string) => {
+    setSelectedDataSources(prev => new Set(prev).add(id));
+  }, []);
 
   const removeDataSource = useCallback((id: string) => {
     setSelectedDataSources(prev => {
@@ -171,14 +158,6 @@ export function useDataSetEdit(dataSetId: string): UseDataSetEditReturn {
     setTagIds((prev) => prev.filter((id) => id !== tagId));
   }, []);
 
-  const removeDataSet = useCallback((id: string) => {
-    setSelectedDataSets(prev => {
-      const newSet = new Set(prev);
-      newSet.delete(id);
-      return newSet;
-    });
-  }, []);
-
   const updatePreaggregationConfig = useCallback((dataSourceId: string, config: PreaggregationConfig) => {
     setPreaggregationConfig(prev => {
       const newConfig = new Map(prev);
@@ -194,20 +173,14 @@ export function useDataSetEdit(dataSetId: string): UseDataSetEditReturn {
     }
 
     const selectedSources = Array.from(selectedDataSources);
-    const selectedSets = Array.from(selectedDataSets);
-    const totalSelected = selectedSources.length + selectedSets.length;
+    const totalSelected = selectedSources.length;
 
     if (totalSelected === 0) {
-      setError('At least one data source or data set must be selected');
+      setError('At least one data source must be selected');
       return;
     }
 
-    let finalType: DataSetType | undefined;
-    if (selectedSets.length > 0) {
-      finalType = 'combined';
-    } else if (totalSelected > 1) {
-      finalType = dataSetType;
-    }
+    const finalType: DataSetType | undefined = totalSelected > 1 ? dataSetType : undefined;
 
     const preaggConfig = finalType === 'preaggregated' 
       ? Array.from(preaggregationConfig.values())
@@ -225,7 +198,7 @@ export function useDataSetEdit(dataSetId: string): UseDataSetEditReturn {
           description: description.trim(),
           type: finalType,
           dataSourceIds: selectedSources,
-          dataSetIds: selectedSets,
+          dataSetIds: [],
           preaggregationConfig: preaggConfig,
           useAggregation: useAggregation,
           aggregationFunction: aggregationFunction,
@@ -246,14 +219,30 @@ export function useDataSetEdit(dataSetId: string): UseDataSetEditReturn {
     } finally {
       setSaving(false);
     }
-  }, [dataSetId, description, selectedDataSources, selectedDataSets, tagIds, dataSetType, preaggregationConfig, useAggregation, aggregationFunction, aggregationInterval, aggregationTimeUnit, router]);
+  }, [dataSetId, description, selectedDataSources, tagIds, dataSetType, preaggregationConfig, useAggregation, aggregationFunction, aggregationInterval, aggregationTimeUnit, router]);
+
+  const selectedSourcesList = useMemo(
+    () => dataSources.filter((ds) => selectedDataSources.has(ds.id)),
+    [dataSources, selectedDataSources]
+  );
+  const availableDataSources = useMemo(
+    () => dataSources.filter((ds) => !selectedDataSources.has(ds.id)),
+    [dataSources, selectedDataSources]
+  );
+  const totalSelected = selectedDataSources.size;
+  const showTypeSelection = totalSelected > 1;
+  const showAggregationSection =
+    totalSelected >= 1 && (totalSelected === 1 || dataSetType === 'combined');
 
   return {
     dataSet,
     dataSources,
-    dataSets,
     selectedDataSources,
-    selectedDataSets,
+    selectedSourcesList,
+    availableDataSources,
+    totalSelected,
+    showTypeSelection,
+    showAggregationSection,
     tagIds,
     description,
     dataSetType,
@@ -271,8 +260,8 @@ export function useDataSetEdit(dataSetId: string): UseDataSetEditReturn {
     setAggregationFunction,
     setAggregationInterval,
     setAggregationTimeUnit,
+    addDataSource,
     removeDataSource,
-    removeDataSet,
     updatePreaggregationConfig,
     addTag,
     removeTag,

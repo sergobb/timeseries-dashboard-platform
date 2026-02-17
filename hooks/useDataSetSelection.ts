@@ -7,6 +7,10 @@ import { getLocalStorage, setLocalStorage } from '@/lib/localStorage';
 interface UseDataSetSelectionOptions {
   /** Only allow selecting data sources (no Data Sets panel). Skips fetching data sets. */
   sourcesOnly?: boolean;
+  /** Show only sources not used in any data set */
+  filterUnusedOnly?: boolean;
+  /** IDs of sources that are used in at least one data set */
+  usedSourceIds?: Set<string>;
 }
 
 interface UseDataSetSelectionReturn {
@@ -31,7 +35,7 @@ interface UseDataSetSelectionReturn {
 }
 
 export function useDataSetSelection(options: UseDataSetSelectionOptions = {}): UseDataSetSelectionReturn {
-  const { sourcesOnly = false } = options;
+  const { sourcesOnly = false, filterUnusedOnly = false, usedSourceIds = new Set() } = options;
   const router = useRouter();
   const [dataSources, setDataSources] = useState<DataSource[]>([]);
   const [dataSets, setDataSets] = useState<DataSet[]>([]);
@@ -159,7 +163,7 @@ export function useDataSetSelection(options: UseDataSetSelectionOptions = {}): U
         return newSet;
       });
     }
-  }, [dataSources, dataSourceFilter, filterTagIds, selectedDataSources]);
+  }, [dataSources, dataSourceFilter, filterTagIds, selectedDataSources, filterUnusedOnly, usedSourceIds]);
 
   const selectAllDataSets = useCallback(() => {
     const filtered = dataSets.filter(ds => 
@@ -196,12 +200,15 @@ export function useDataSetSelection(options: UseDataSetSelectionOptions = {}): U
     router.push(`/data-sets/new/edit?${params.toString()}`);
   }, [selectedDataSources, selectedDataSets, router]);
 
-  const dataSourcesFilteredByTags =
+  let dataSourcesFilteredByTags =
     filterTagIds.length === 0
       ? dataSources
       : dataSources.filter((ds) =>
           filterTagIds.every((id) => (ds.tagIds || []).includes(id))
         );
+  if (filterUnusedOnly && usedSourceIds.size > 0) {
+    dataSourcesFilteredByTags = dataSourcesFilteredByTags.filter((ds) => !usedSourceIds.has(ds.id));
+  }
 
   return {
     dataSources,

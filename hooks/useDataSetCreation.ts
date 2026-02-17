@@ -1,16 +1,14 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import type { DataSource } from '@/types/data-source';
-import type { DataSet } from '@/types/data-set';
 import type { DataSetType, TimeUnit, AggregationFunction, PreaggregationConfig } from '@/types/data-set';
 import { useTags } from '@/hooks/useTags';
+import { parsePreaggregationFromTableName } from '@/lib/preaggregation';
 import { isResolutionTagName } from '@/lib/data-set-tags';
 
 export interface UseDataSetCreationReturn {
   dataSources: DataSource[];
-  dataSets: DataSet[];
   selectedDataSources: Set<string>;
-  selectedDataSets: Set<string>;
   loading: boolean;
   error: string;
   description: string;
@@ -30,13 +28,11 @@ export interface UseDataSetCreationReturn {
   setAggregationTimeUnit: (v: TimeUnit) => void;
   updatePreaggregation: (dataSourceId: string, updates: { interval?: number; timeUnit?: TimeUnit }) => void;
   removeDataSource: (id: string) => void;
-  removeDataSet: (id: string) => void;
   tagIds: string[];
   addTag: (tagId: string) => void;
   removeTag: (tagId: string) => void;
   createDataSet: () => Promise<void>;
   selectedSourcesList: DataSource[];
-  selectedSetsList: DataSet[];
   totalSelected: number;
   showTypeSelection: boolean;
   showAggregationSection: boolean;
@@ -47,9 +43,7 @@ export function useDataSetCreation(options?: { enabled?: boolean }): UseDataSetC
   const router = useRouter();
   const searchParams = useSearchParams();
   const [dataSources, setDataSources] = useState<DataSource[]>([]);
-  const [dataSets, setDataSets] = useState<DataSet[]>([]);
   const [selectedDataSources, setSelectedDataSources] = useState<Set<string>>(new Set());
-  const [selectedDataSets, setSelectedDataSets] = useState<Set<string>>(new Set());
   const [tagIds, setTagIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -64,21 +58,15 @@ export function useDataSetCreation(options?: { enabled?: boolean }): UseDataSetC
   const [aggregationInterval, setAggregationInterval] = useState(1);
   const [aggregationTimeUnit, setAggregationTimeUnit] = useState<TimeUnit>('seconds');
   const hasInitializedTagsFromSources = useRef(false);
+  const hasInitializedDescriptionFromSource = useRef(false);
   const { tags: allTags } = useTags();
 
   const loadData = useCallback(async () => {
     try {
-      const [sourcesRes, setsRes] = await Promise.all([
-        fetch('/api/data-sources', { credentials: 'include' }),
-        fetch('/api/data-sets', { credentials: 'include' }),
-      ]);
+      const sourcesRes = await fetch('/api/data-sources', { credentials: 'include' });
       if (!sourcesRes.ok) throw new Error('Failed to fetch data sources');
       const sourcesData = await sourcesRes.json();
       setDataSources(sourcesData);
-      if (setsRes.ok) {
-        const setsData = await setsRes.json();
-        setDataSets(setsData);
-      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load data');
     } finally {
@@ -92,36 +80,38 @@ export function useDataSetCreation(options?: { enabled?: boolean }): UseDataSetC
 
   useEffect(() => {
     const sourcesParam = searchParams.get('sources');
-    const setsParam = searchParams.get('sets');
     if (sourcesParam) {
       setSelectedDataSources(new Set(sourcesParam.split(',').filter(Boolean)));
-    }
-    if (setsParam) {
-      setSelectedDataSets(new Set(setsParam.split(',').filter(Boolean)));
     }
   }, [searchParams]);
 
   useEffect(() => {
-    if (selectedDataSets.size > 0) setDataSetType('combined');
-  }, [selectedDataSets.size]);
-
-  useEffect(() => {
-    if (hasInitializedTagsFromSources.current || (selectedDataSources.size === 0 && selectedDataSets.size === 0) || allTags.length === 0) return;
+    if (hasInitializedTagsFromSources.current || selectedDataSources.size === 0 || allTags.length === 0) return;
     const ids = new Set<string>();
     const collect = (id: string) => {
       const name = allTags.find((t) => t.id === id)?.name ?? '';
       if (!isResolutionTagName(name)) ids.add(id);
     };
     dataSources.filter((ds) => selectedDataSources.has(ds.id)).forEach((ds) => (ds.tagIds || []).forEach(collect));
-    dataSets.filter((ds) => selectedDataSets.has(ds.id)).forEach((ds) => (ds.tagIds || []).forEach(collect));
     if (ids.size > 0) {
       setTagIds(Array.from(ids));
       hasInitializedTagsFromSources.current = true;
     }
-  }, [dataSources, dataSets, selectedDataSources, selectedDataSets, allTags]);
+  }, [dataSources, selectedDataSources, allTags]);
 
   const selectedSourcesList = dataSources.filter((ds) => selectedDataSources.has(ds.id));
-  const selectedSetsList = dataSets.filter((ds) => selectedDataSets.has(ds.id));
+
+  useEffect(() => {
+    if (
+      hasInitializedDescriptionFromSource.current ||
+      selectedSourcesList.length === 0 ||
+      description.trim() !== ''
+    )
+      return;
+    hasInitializedDescriptionFromSource.current = true;
+    const firstSourceDesc = selectedSourcesList[0]?.description?.trim();
+    if (firstSourceDesc) setDescription(firstSourceDesc);
+  }, [selectedSourcesList, description]);
 
   useEffect(() => {
     if (dataSetType === 'preaggregated' && selectedDataSources.size > 0) {
@@ -129,7 +119,13 @@ export function useDataSetCreation(options?: { enabled?: boolean }): UseDataSetC
         const next = new Map(prev);
         selectedDataSources.forEach((dataSourceId) => {
           if (!next.has(dataSourceId)) {
-            next.set(dataSourceId, { dataSourceId, interval: 1, timeUnit: 'seconds' });
+            const ds = dataSources.find((d) => d.id === dataSourceId);
+            const parsed = parsePreaggregationFromTableName(ds?.tableName ?? '');
+            next.set(dataSourceId, {
+              dataSourceId,
+              interval: parsed?.interval ?? 1,
+              timeUnit: parsed?.timeUnit ?? 'seconds',
+            });
           }
         });
         Array.from(next.keys()).forEach((id) => {
@@ -140,7 +136,7 @@ export function useDataSetCreation(options?: { enabled?: boolean }): UseDataSetC
     } else if (dataSetType !== 'preaggregated') {
       setPreaggregationConfigState(new Map());
     }
-  }, [dataSetType, selectedDataSources]);
+  }, [dataSetType, selectedDataSources, dataSources]);
 
   const removeDataSource = useCallback((dataSourceId: string) => {
     setSelectedDataSources((prev) => {
@@ -156,14 +152,6 @@ export function useDataSetCreation(options?: { enabled?: boolean }): UseDataSetC
 
   const removeTag = useCallback((tagId: string) => {
     setTagIds((prev) => prev.filter((id) => id !== tagId));
-  }, []);
-
-  const removeDataSet = useCallback((dataSetId: string) => {
-    setSelectedDataSets((prev) => {
-      const next = new Set(prev);
-      next.delete(dataSetId);
-      return next;
-    });
   }, []);
 
   const updatePreaggregation = useCallback(
@@ -192,16 +180,13 @@ export function useDataSetCreation(options?: { enabled?: boolean }): UseDataSetC
       return;
     }
     const selectedSources = Array.from(selectedDataSources);
-    const selectedSets = Array.from(selectedDataSets);
-    const totalSelected = selectedSources.length + selectedSets.length;
+    const totalSelected = selectedSources.length;
     if (totalSelected === 0) {
       setError('At least one data source or data set must be selected');
       return;
     }
 
-    let finalType: DataSetType | undefined;
-    if (selectedSets.length > 0) finalType = 'combined';
-    else if (totalSelected > 1) finalType = dataSetType;
+    const finalType: DataSetType | undefined = totalSelected > 1 ? dataSetType : undefined;
 
     const preaggConfig: PreaggregationConfig[] =
       finalType === 'preaggregated' ? Array.from(preaggregationConfig.values()) : [];
@@ -218,7 +203,7 @@ export function useDataSetCreation(options?: { enabled?: boolean }): UseDataSetC
           description: description.trim(),
           type: finalType,
           dataSourceIds: selectedSources,
-          dataSetIds: selectedSets,
+          dataSetIds: [],
           preaggregationConfig: preaggConfig,
           useAggregation: useAggregation,
           aggregationFunction: aggregationFunction,
@@ -241,7 +226,6 @@ export function useDataSetCreation(options?: { enabled?: boolean }): UseDataSetC
   }, [
     description,
     selectedDataSources,
-    selectedDataSets,
     tagIds,
     dataSetType,
     preaggregationConfig,
@@ -252,15 +236,13 @@ export function useDataSetCreation(options?: { enabled?: boolean }): UseDataSetC
     router,
   ]);
 
-  const totalSelected = selectedDataSources.size + selectedDataSets.size;
-  const showTypeSelection = totalSelected > 1 && selectedDataSets.size === 0;
+  const totalSelected = selectedDataSources.size;
+  const showTypeSelection = totalSelected > 1;
   const showAggregationSection = totalSelected >= 1 && (totalSelected === 1 || dataSetType === 'combined');
 
   return {
     dataSources,
-    dataSets,
     selectedDataSources,
-    selectedDataSets,
     loading,
     error,
     description,
@@ -280,13 +262,11 @@ export function useDataSetCreation(options?: { enabled?: boolean }): UseDataSetC
     setAggregationTimeUnit,
     updatePreaggregation,
     removeDataSource,
-    removeDataSet,
     tagIds,
     addTag,
     removeTag,
     createDataSet,
     selectedSourcesList,
-    selectedSetsList,
     totalSelected,
     showTypeSelection,
     showAggregationSection,

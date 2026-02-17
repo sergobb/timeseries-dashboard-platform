@@ -1,4 +1,3 @@
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Dashboard } from '@/types/dashboard';
 import { Tag } from '@/types/tag';
@@ -16,7 +15,8 @@ import Badge from '@/components/ui/Badge';
 
 interface DashboardsContentProps {
   dashboards: Dashboard[];
-  filteredDashboards: Dashboard[];
+  /** Уже отсортированный список для отображения (свои дашборды первыми) */
+  displayDashboards: Dashboard[];
   filterText: string;
   tags: Tag[];
   tagsLoading: boolean;
@@ -25,12 +25,15 @@ interface DashboardsContentProps {
   error: string | null;
   onFilterChange: (text: string) => void;
   onDelete: (dashboardId: string, title: string) => void;
-  currentUserId?: string | null;
+  onEdit: (dashboardId: string) => void;
+  onCreateNew?: () => void;
+  canEdit: (dashboard: Dashboard) => boolean;
+  isOwner: (dashboard: Dashboard) => boolean;
 }
 
 export default function DashboardsContent({
   dashboards,
-  filteredDashboards,
+  displayDashboards,
   filterText,
   tags,
   tagsLoading,
@@ -39,17 +42,11 @@ export default function DashboardsContent({
   error,
   onFilterChange,
   onDelete,
-  currentUserId,
+  onEdit,
+  onCreateNew,
+  canEdit,
+  isOwner,
 }: DashboardsContentProps) {
-  const router = useRouter();
-  const isOwner = (dashboard: Dashboard) =>
-    Boolean(currentUserId && dashboard.createdBy === currentUserId);
-  const canEdit = (dashboard: Dashboard) =>
-    isOwner(dashboard) || Boolean(dashboard.canEdit);
-  const sortedDashboards = [...filteredDashboards].sort(
-    (a, b) => Number(isOwner(b)) - Number(isOwner(a)),
-  );
-
   return (
     <>
       {error && <ErrorMessage message={error} className="mb-4" />}
@@ -78,16 +75,16 @@ export default function DashboardsContent({
           title="No dashboards yet"
           description="Create your first dashboard to start visualizing data."
           actionLabel="New Dashboard"
-          onAction={() => router.push('/dashboards/new')}
+          onAction={onCreateNew}
         />
-      ) : sortedDashboards.length === 0 ? (
+      ) : displayDashboards.length === 0 ? (
         <EmptyState
           title="No dashboards match the filter"
           description="Try a different search or clear the filter."
         />
       ) : (
         <Box className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {sortedDashboards.map((dashboard) => {
+          {displayDashboards.map((dashboard) => {
             const chartCount = dashboard.chartIds?.length ?? 0;
             const updated = dashboard.updatedAt
               ? new Date(dashboard.updatedAt).toLocaleDateString(undefined, {
@@ -142,7 +139,7 @@ export default function DashboardsContent({
                     <IconButton
                       onClick={(e) => {
                         e.preventDefault();
-                        router.push(`/dashboards/${dashboard.id}/edit`);
+                        onEdit(dashboard.id);
                       }}
                       variant="secondary"
                       icon={<EditIcon className="w-4 h-4" />}

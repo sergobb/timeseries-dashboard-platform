@@ -1,5 +1,7 @@
 'use client';
 
+import { useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useDashboards } from '@/hooks/useDashboards';
 import { useTags } from '@/hooks/useTags';
@@ -7,8 +9,10 @@ import PageContainer from '@/components/PageContainer';
 import InfoMessage from '@/components/ui/InfoMessage';
 import DashboardsHeader from '@/components/dashboard/DashboardsHeader';
 import DashboardsContent from '@/components/dashboard/DashboardsContent';
+import type { Dashboard } from '@/types/dashboard';
 
 export default function DashboardsPage() {
+  const router = useRouter();
   const { data: session, status } = useSession();
   const {
     dashboards,
@@ -23,6 +27,14 @@ export default function DashboardsPage() {
   } = useDashboards();
   const { tags, loading: tagsLoading } = useTags();
 
+  const currentUserId = session?.user?.id;
+  const isOwner = (d: Dashboard) => Boolean(currentUserId && d.createdBy === currentUserId);
+  const canEdit = (d: Dashboard) => isOwner(d) || Boolean(d.canEdit);
+  const displayDashboards = useMemo(() => {
+    const owned = (d: Dashboard) => Boolean(currentUserId && d.createdBy === currentUserId);
+    return [...filteredDashboards].sort((a, b) => Number(owned(b)) - Number(owned(a)));
+  }, [filteredDashboards, currentUserId]);
+
   if (status === 'loading' || loading) {
     return (
       <PageContainer>
@@ -36,7 +48,7 @@ export default function DashboardsPage() {
       <DashboardsHeader />
       <DashboardsContent
         dashboards={dashboards}
-        filteredDashboards={filteredDashboards}
+        displayDashboards={displayDashboards}
         filterText={filterText}
         tags={tags}
         tagsLoading={tagsLoading}
@@ -45,7 +57,10 @@ export default function DashboardsPage() {
         error={error}
         onFilterChange={setFilterText}
         onDelete={remove}
-        currentUserId={session?.user?.id}
+        onEdit={(id) => router.push(`/dashboards/${id}/edit`)}
+        onCreateNew={() => router.push('/dashboards/new')}
+        canEdit={canEdit}
+        isOwner={isOwner}
       />
     </PageContainer>
   );

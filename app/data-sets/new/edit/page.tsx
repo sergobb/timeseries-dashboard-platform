@@ -82,7 +82,6 @@ function NewDataSetEditPageInner() {
       showTypeSelection={creation.showTypeSelection}
       showAggregationSection={creation.showAggregationSection}
       selectedSourcesList={creation.selectedSourcesList}
-      selectedSetsList={creation.selectedSetsList}
       preaggregationConfig={creation.preaggregationConfig}
       onDescriptionChange={creation.setDescription}
       onErrorClear={() => creation.setError('')}
@@ -92,7 +91,6 @@ function NewDataSetEditPageInner() {
       onAggregationIntervalChange={creation.setAggregationInterval}
       onAggregationTimeUnitChange={creation.setAggregationTimeUnit}
       onRemoveDataSource={creation.removeDataSource}
-      onRemoveDataSet={creation.removeDataSet}
       onPreaggChange={creation.updatePreaggregation}
       onCreate={creation.createDataSet}
       onBack={() => router.back()}
